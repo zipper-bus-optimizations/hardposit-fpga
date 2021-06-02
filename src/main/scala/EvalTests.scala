@@ -5,6 +5,10 @@ object EvalTests {
   def main(args: Array[String]): Unit = {
     val testArgs = args.slice(1, args.length).toArray
     args(0) match {
+      case "POSIT64" =>  chisel3.Driver.execute(
+          testArgs, () => new Eval_PositFMAP16_add)
+      case "POSIT32" =>  chisel3.Driver.execute(
+          testArgs, () => new Eval_PositFMAP16_add)
       case "FMAP16_add" =>
         chisel3.Driver.execute(
           testArgs, () => new Eval_PositFMAP16_add)
