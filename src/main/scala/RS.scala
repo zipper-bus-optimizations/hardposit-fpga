@@ -3,12 +3,23 @@ package hardposit
 import chisel3._
 import chisel3.util._
 
-class ReservationStation[T <: Bundle]
-	(size_buffer:Int, input_type: Bundle, result_type: Bundle){
-	val completed = Reg(Vec(Bool(), size_buffer))
-	val valid = Reg(Vec(Bool(), size_buffer))
-	val written = Reg(Vec(Bool(), size_buffer))
-	val wr_addr = Reg(Vec(UInt(48.W), size_buffer))
-	val request_operand = Reg(new input_type, size_buffer))
-	val result = Reg(Vec(new result_type, size_buffer))
+/*
+RS Entry
+------------------------------------------------------------------------------------------
+|completed(bool) | valid(bool) | written(bool) | wr_addr(48nit) |				 operand				|
+																																|	addr(nbits/48) | mode |
+------------------------------------------------------------------------------------------
+*/
+
+
+class RSEntry[T <: Bundle]（result_type:=> Bundle） extends RequestOperandEntry{
+	val completed = Bool()
+	val valid = Bool()
+	val written = Bool()
+	val wr_addr = UInt(48.W)
+	val req = new PositLocalityTopRequest
+	val result = new result_type
+}
+class ReservationStation[T <: Bundle](result_type:=> Bundle) extends Bundle{
+	val entries = Vec(new RSEntry(result_type), Params.NumRSEntries)
 }
