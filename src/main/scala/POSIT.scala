@@ -32,21 +32,16 @@ class PositResult(nbits: Int, es: Int) extends Bundle{
 
 
 class PositInterface(nbits: Int, es: Int) extends Bundle{
-	val request = new PositRequest(nbits, es)
-	val result = new PositResult(nbits, es)
+	val request = Flipped(DecoupledIO(new PositRequest(nbits, es)))
+	val result = Decoupled(new PositResult(nbits, es))
 
-	val input_valid = Input(Bool())
-	val input_ready = Output(Bool())
-
-	val output_valid = Output(Bool())
-	val output_ready = Input(Bool())
 }
 
 class Posit(nbits: Int, es: Int) extends Module {
 
   val io = IO(new PositInterface(nbits, es))
 
-	io.input_ready := io.output_ready && positDivSqrtCore.io.readyIn
+	io.request.ready := io.result.ready && positDivSqrtCore.io.readyIn
 
 	val positAddCore = Module(new PositAddCore(nbits, es))
 	val positCompare = Module(new PositCompare(nbits,es))
@@ -56,34 +51,34 @@ class Posit(nbits: Int, es: Int) extends Module {
 
 	val init_num1 = Reg(UInt(nbits.W))
 	val init_num2 = Reg(UInt(nbits.W))
-  val init_num3 = Reg(UInt(nbits.W))
+	val init_num3 = Reg(UInt(nbits.W))
 	val init_input_valid = Reg(Bool())
 	val init_inst = Reg(UInt(3.W))
 	val init_mode = Reg(UInt(2.W))
 	val init_valid = Reg(Bool())
-	when(io.output_ready && positDivSqrtCore.io.readyIn){
-		init_num1 := io.request.num1
-		init_num2 := io.request.num2
-		init_num3 := io.request.num3
-		init_valid := io.input_valid
-		init_inst := io.request.inst
-		init_mode := io.request.mode
+	when(io.result.ready && positDivSqrtCore.io.readyIn){
+		init_num1 := io.request.bits.num1
+		init_num2 := io.request.bits.num2
+		init_num3 := io.request.bits.num3
+		init_valid := io.request.valid
+		init_inst := io.request.bits.inst
+		init_mode := io.request.bits.mode
 	}
-  val num1Extractor = Module(new PositExtractor(nbits, es))
-  val num2Extractor = Module(new PositExtractor(nbits, es))
-  val num3Extractor = Module(new PositExtractor(nbits, es))
-  num1Extractor.io.in := init_num1
-  num2Extractor.io.in := init_num2
-  num3Extractor.io.in := init_num3
+	val num1Extractor = Module(new PositExtractor(nbits, es))
+	val num2Extractor = Module(new PositExtractor(nbits, es))
+	val num3Extractor = Module(new PositExtractor(nbits, es))
+	num1Extractor.io.in := init_num1
+	num2Extractor.io.in := init_num2
+	num3Extractor.io.in := init_num3
 
 	val exec_num1 = Reg(unpackedPosit(nbits, es))
 	val exec_num2 = Reg(unpackedPosit(nbits, es))
-  val exec_num3 = Reg(unpackedPosit(nbits, es))
+	val exec_num3 = Reg(unpackedPosit(nbits, es))
 	val exec_input_valid = Reg(Bool())
 	val exec_inst = Reg(UInt(3.W))
 	val exec_mode = Reg(UInt(2.W))
 	val exec_valid = Reg(Bool())
-	when(io.output_ready && positDivSqrtCore.io.readyIn){
+	when(io.result.ready && positDivSqrtCore.io.readyIn){
 		exec_num1 := num1Extractor.io.out
 		exec_num2 := num2Extractor.io.out
 		exec_num3 := num3Extractor.io.out
@@ -118,7 +113,7 @@ class Posit(nbits: Int, es: Int) extends Module {
 	val result_valid = Reg(Bool())
 	val result_lt = Reg(Bool())
 	val result_eq = Reg(Bool())
-  val result_gt = Reg(Bool())
+	val result_gt = Reg(Bool())
 
 
 	when(io.output_ready && positDivSqrtCore.io.readyIn){
@@ -154,18 +149,18 @@ class Posit(nbits: Int, es: Int) extends Module {
 				| positDivSqrtCore.io.validOut_sqrt
 	}
 
-  val positGenerator = Module(new PositGenerator(nbits, es))
-  positGenerator.io.in           := result_out
-  positGenerator.io.trailingBits := result_trailingBits
-  positGenerator.io.stickyBit    := result_stickyBit
+	val positGenerator = Module(new PositGenerator(nbits, es))
+	positGenerator.io.in           := result_out
+	positGenerator.io.trailingBits := result_trailingBits
+	positGenerator.io.stickyBit    := result_stickyBit
 
-	io.result.isZero := result_out.isZero | isZero(positGenerator.io.out)
-  io.result.isNaR  := result_out.isNaR  | isNaR(positGenerator.io.out)
-  io.result.out    := positGenerator.io.out
-	io.result.lt := result_lt
-	io.result.eq := result_eq
-	io.result.gt := result_gt
-	io.result.exceptions := positDivSqrtCore.io.exceptions
+	io.result.bits.isZero := result_out.isZero | isZero(positGenerator.io.out)
+	io.result.bits.isNaR  := result_out.isNaR  | isNaR(positGenerator.io.out)
+	io.result.bits.out    := positGenerator.io.out
+	io.result.bits.lt := result_lt
+	io.result.bits.eq := result_eq
+	io.result.bits.gt := result_gt
+	io.result.bits.exceptions := positDivSqrtCore.io.exceptions
 
-	io.output_valid := result_valid
+	io.result.valid := result_valid
 }

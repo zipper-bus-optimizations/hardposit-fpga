@@ -19,17 +19,18 @@ class PositTopMemWrite() extends Bundle{
 }
 
 class RequestOperand extends Bundle{
-	val addr = UInt(Params.EntryWidth.W)
+	val value = UInt(Params.EntryWidth.W)
 //0 for immediate, 1 for immediate value, 2 for relative distance
 	val mode = UInt(2.W)
 }
 class RequestOperandEntry extends Bundle{
-	val operands = Vec(new RequestOperand, Params.NumOperand)
+	val operands = Vec(Params.NumOperand, new RequestOperand)
 }
 
 class PositLocalityTopRequest extends Bundle{
 	val operands = Input(new RequestOperandEntry)
 	val inst = Input(UInt(3.W))
+	val mode = Input(UInt(2.W))
 }
 
 class PositLocalityTopResult extends Bundle{
@@ -42,20 +43,20 @@ class PositLocalityTopResult extends Bundle{
 	val exceptions    = Output(UInt(5.W))
 }
 
-
+class MemRead extends Bundle{
+	val req_valid = Output(Bool())
+	val req_addr = Output(UInt(48.W))
+	val data = Input(UInt(Params.EntryWidth.W))
+	val resp_valid = Input(Bool())
+	val resp_tag = Input(UInt(48.W))
+}
 class PositLocalityTopInterface extends Bundle{
-	val request = new PositTopRequest
-	val result = new PositTopResult
+	val request = Flipped(DecoupledIO(new PositLocalityTopRequest))
+	val result = DecoupledIO(new PositLocalityTopResult)
 
 	val wr_addr = Input(UInt(48.W))
 	val out_wr_addr = Output(UInt(48.W))
-
-	val input_valid = Input(Bool())
-	val input_ready = Output(Bool())
-
-
-	val output_valid = Output(Bool())
-	val output_ready = Input(Bool())
+	val op_mem_read = new MemRead
 }
 
 class PositCacheTopRequest extends Bundle{
