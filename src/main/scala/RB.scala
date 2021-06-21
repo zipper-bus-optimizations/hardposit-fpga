@@ -14,15 +14,15 @@ RB Entry
 class RBRequest extends PositLocalityTopRequest{
 	val inFetch = Vec(Params.NumOperand, Bool())
 }
-class RBEntry[T <: Bundle]（result_type:=> Bundle） extends RequestOperandEntry{
+class RBEntry extends RequestOperandEntry{
 	val completed = Bool()
 	val valid = Bool()
 	val dispatched = Bool()
 	val written = Bool()
 	val wr_addr = UInt(48.W)
 	val request = new RBRequest
-	val result = new result_type
+	val result = new PositResult(Params.Nbits, Params.ES)
 }
-class ReorderBuffer[T <: Bundle](result_type:=> Bundle) extends Bundle{
-	val entries = Vec(Params.NumRBEntries, new RBEntry(result_type))
+class ReorderBuffer extends Bundle{
+	val entries = Vec(Params.NumRBEntries, new RBEntry)
 }

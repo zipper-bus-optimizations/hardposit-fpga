@@ -12,42 +12,41 @@ object Instruction{
 	val mul = 4.U(3.W)
 	val sqrtdiv = 5.U(3.W)
 }
-class PositRequest(nbits: Int, es: Int) extends Bundle{
-	val num1 = Input(UInt(nbits.W))
-	val num2 = Input(UInt(nbits.W))
-	val num3 = Input(UInt(nbits.W))
-	val inst = Input(UInt(3.W))
-	val mode = Input(UInt(2.W))
+class PositRequest(val nbits: Int, val es: Int)  extends Bundle{
+	val num1 = UInt(nbits.W)
+	val num2 = UInt(nbits.W)
+	val num3 = UInt(nbits.W)
+	val inst = UInt(3.W)
+	val mode = UInt(2.W)
 }
 
-class PositResult(nbits: Int, es: Int) extends Bundle{
-	val isZero = Output(Bool())
-	val isNaR  = Output(Bool())
-	val out    = Output(UInt(nbits.W))
-	val lt = Output(Bool())
-	val eq = Output(Bool())
-	val gt = Output(Bool())
-	val exceptions    = Output(UInt(5.W))
+class PositResult(val nbits: Int, val es: Int)  extends Bundle{
+	val isZero = Bool()
+	val isNaR  = Bool()
+	val out    = UInt(nbits.W)
+	val lt = Bool()
+	val eq = Bool()
+	val gt = Bool()
+	val exceptions    = UInt(5.W)
 }
 
 
-class PositInterface(nbits: Int, es: Int) extends Bundle{
+class PositInterface(val nbits: Int, val es: Int) extends Bundle{
 	val request = Flipped(DecoupledIO(new PositRequest(nbits, es)))
 	val result = Decoupled(new PositResult(nbits, es))
 
 }
 
-class Posit(nbits: Int, es: Int) extends Module {
+class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams {
 
   val io = IO(new PositInterface(nbits, es))
-
-	io.request.ready := io.result.ready && positDivSqrtCore.io.readyIn
-
 	val positAddCore = Module(new PositAddCore(nbits, es))
 	val positCompare = Module(new PositCompare(nbits,es))
 	val positFMACore = Module(new PositFMACore(nbits, es))
 	val positDivSqrtCore = Module(new PositDivSqrtCore(nbits, es))
 	val positMulCore = Module(new PositMulCore(nbits, es))
+
+	io.request.ready := io.result.ready && positDivSqrtCore.io.readyIn
 
 	val init_num1 = Reg(UInt(nbits.W))
 	val init_num2 = Reg(UInt(nbits.W))
@@ -71,14 +70,25 @@ class Posit(nbits: Int, es: Int) extends Module {
 	num2Extractor.io.in := init_num2
 	num3Extractor.io.in := init_num3
 
-	val exec_num1 = Reg(unpackedPosit(nbits, es))
-	val exec_num2 = Reg(unpackedPosit(nbits, es))
-	val exec_num3 = Reg(unpackedPosit(nbits, es))
+	val exec_num1 = Reg(new unpackedPosit(nbits, es))
+	val exec_num2 = Reg(new unpackedPosit(nbits, es))
+	val exec_num3 = Reg(new unpackedPosit(nbits, es))
+	val comp_num1 = Reg(UInt(nbits.W))
+	val comp_num2 = Reg(UInt(nbits.W))
 	val exec_input_valid = Reg(Bool())
 	val exec_inst = Reg(UInt(3.W))
 	val exec_mode = Reg(UInt(2.W))
 	val exec_valid = Reg(Bool())
+	val default_unpacked = Wire(new unpackedPosit(nbits, es))
+	default_unpacked .sign := false.B
+	default_unpacked.exponent := 0.S
+	default_unpacked.fraction := 0.U
+	default_unpacked.isZero := false.B
+	default_unpacked.isNaR := false.B
+
 	when(io.result.ready && positDivSqrtCore.io.readyIn){
+		comp_num1 := init_num1
+		comp_num2 := init_num2
 		exec_num1 := num1Extractor.io.out
 		exec_num2 := num2Extractor.io.out
 		exec_num3 := num3Extractor.io.out
@@ -91,13 +101,14 @@ class Posit(nbits: Int, es: Int) extends Module {
 	positAddCore.io.num2 := exec_num2
 	positAddCore.io.sub := exec_mode(0)
 
-	positCompare.io.num1 := exec_num1
-	positCompare.io.num2 := exec_num2
+	positCompare.io.num1 := comp_num1.asSInt
+	positCompare.io.num2 := comp_num2.asSInt
 
 	positFMACore.io.num1 := exec_num1
 	positFMACore.io.num2 := exec_num2
+	positFMACore.io.num3 := default_unpacked
 	positFMACore.io.sub := exec_mode(0)
-	positFMACore.io.neg := exec_mode(1)
+	positFMACore.io.negate := exec_mode(1)
 
 	positDivSqrtCore.io.num1 := exec_num1
 	positDivSqrtCore.io.num2 := exec_num2
@@ -107,46 +118,45 @@ class Posit(nbits: Int, es: Int) extends Module {
 	positMulCore.io.num1 := exec_num1
 	positMulCore.io.num2 := exec_num2
 
-	val result_out = Reg(unpackedPosit(nbits, es))
-	val result_stickyBit = Reg(unpackedPosit(nbits, es))
-	val result_trailingBits = Reg(unpackedPosit(nbits, es))
+	val result_out = Reg(new unpackedPosit(nbits, es))
+	val result_stickyBit = Reg(Bool())
+	val result_trailingBits = Reg(UInt(trailingBitCount.W))
 	val result_valid = Reg(Bool())
 	val result_lt = Reg(Bool())
 	val result_eq = Reg(Bool())
 	val result_gt = Reg(Bool())
 
 
-	when(io.output_ready && positDivSqrtCore.io.readyIn){
-		result_out := MuxLookup( inst, 0.U, Array(
-				Instruction.addsub -> positAddCore.out,
-				Instruction.fma -> positFMACore.out,
-				Instruction.mul -> positMulCore.out,
-				Instruction.sqrtdiv -> positDivSqrtCore.out
+	when(io.result.ready && positDivSqrtCore.io.readyIn){
+		result_out := MuxLookup( io.request.bits.inst, default_unpacked, Array(
+				Instruction.addsub -> positAddCore.io.out,
+				Instruction.fma -> positFMACore.io.out,
+				Instruction.mul -> positMulCore.io.out,
+				Instruction.sqrtdiv -> positDivSqrtCore.io.out
 			)
 		)
 
-		result_stickyBit := MuxLookup( exec_inst, 0.U, Array(
-				Instruction.addsub -> positAddCore.stickyBit,
-				Instruction.fma -> positFMACore.stickyBit,
-				Instruction.mul -> positMulCore.stickyBit,
-				Instruction.sqrtdiv -> positDivSqrtCore.stickyBit
+		result_stickyBit := MuxLookup( exec_inst, 0.B, Array(
+				Instruction.addsub -> positAddCore.io.stickyBit,
+				Instruction.fma -> positFMACore.io.stickyBit,
+				Instruction.mul -> positMulCore.io.stickyBit,
+				Instruction.sqrtdiv -> positDivSqrtCore.io.stickyBit
 			)
 		)
 
 		result_trailingBits := MuxLookup( exec_inst, 0.U, Array(
-				Instruction.addsub -> positAddCore.trailingBits,
-				Instruction.fma -> positFMACore.trailingBits,
-				Instruction.mul -> positMulCore.trailingBits,
-				Instruction.sqrtdiv -> positDivSqrtCore.trailingBits
+				Instruction.addsub -> positAddCore.io.trailingBits,
+				Instruction.fma -> positFMACore.io.trailingBits,
+				Instruction.mul -> positMulCore.io.trailingBits,
+				Instruction.sqrtdiv -> positDivSqrtCore.io.trailingBits
 			)
 		)
-		result_lt := positCompare.lt
-		result_eq := positCompare.eq
-		result_gt := positCompare.gt
-		result_valid := 
-			(exec_valid && (exec_inst =/= Instruction.sqrtdiv)) 
-				| positDivSqrtCore.io.validOut_div
-				| positDivSqrtCore.io.validOut_sqrt
+		result_lt := positCompare.io.lt
+		result_eq := positCompare.io.eq
+		result_gt := positCompare.io.gt
+		result_valid := (exec_valid && (exec_inst =/= Instruction.sqrtdiv)) | 
+			positDivSqrtCore.io.validOut_div | 
+			positDivSqrtCore.io.validOut_sqrt
 	}
 
 	val positGenerator = Module(new PositGenerator(nbits, es))
