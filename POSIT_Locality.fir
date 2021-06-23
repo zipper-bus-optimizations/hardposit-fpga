@@ -2178,12 +2178,12 @@ circuit POSIT_Locality :
   module POSIT_Locality : 
     input clock : Clock
     input reset : UInt<1>
-    output io : {flip request : {flip ready : UInt<1>, valid : UInt<1>, bits : {operands : {value : UInt<64>, mode : UInt<2>}[3], inst : UInt<3>, mode : UInt<2>}}, flip wr_addr : UInt<48>, mem_write : {flip ready : UInt<1>, valid : UInt<1>, bits : {result : {isZero : UInt<1>, isNaR : UInt<1>, out : UInt<64>, lt : UInt<1>, eq : UInt<1>, gt : UInt<1>, exceptions : UInt<5>}, out_wr_addr : UInt<48>}}, op_mem_read : {req_valid : UInt<1>, req_addr : UInt<48>, flip data : UInt<64>, flip resp_valid : UInt<1>, flip resp_tag : UInt<48>}}
+    output io : {flip request : {flip ready : UInt<1>, valid : UInt<1>, bits : {operands : {value : UInt<64>, mode : UInt<2>}[3], inst : UInt<3>, mode : UInt<2>, wr_addr : UInt<48>}}, mem_write : {flip ready : UInt<1>, valid : UInt<1>, bits : {result : {isZero : UInt<1>, isNaR : UInt<1>, out : UInt<64>, lt : UInt<1>, eq : UInt<1>, gt : UInt<1>, exceptions : UInt<5>}, out_wr_addr : UInt<48>}}, op_mem_read : {req_valid : UInt<1>, req_addr : UInt<48>, flip data : UInt<64>, flip resp_valid : UInt<1>, flip resp_tag : UInt<48>}}
     
     inst pe of Posit @[POSIT_Locality.scala 10:24]
     pe.clock <= clock
     pe.reset <= reset
-    reg rb : {entries : {operands : {value : UInt<64>, mode : UInt<2>}[3], completed : UInt<1>, valid : UInt<1>, dispatched : UInt<1>, written : UInt<1>, wr_addr : UInt<48>, request : {operands : {value : UInt<64>, mode : UInt<2>}[3], inst : UInt<3>, mode : UInt<2>, inFetch : UInt<1>[3]}, result : {isZero : UInt<1>, isNaR : UInt<1>, out : UInt<64>, lt : UInt<1>, eq : UInt<1>, gt : UInt<1>, exceptions : UInt<5>}}[8]}, clock @[POSIT_Locality.scala 14:21]
+    reg rb : {entries : {operands : {value : UInt<64>, mode : UInt<2>}[3], completed : UInt<1>, valid : UInt<1>, dispatched : UInt<1>, written : UInt<1>, wr_addr : UInt<48>, request : {operands : {value : UInt<64>, mode : UInt<2>}[3], inst : UInt<3>, mode : UInt<2>, wr_addr : UInt<48>, inFetch : UInt<1>[3]}, result : {isZero : UInt<1>, isNaR : UInt<1>, out : UInt<64>, lt : UInt<1>, eq : UInt<1>, gt : UInt<1>, exceptions : UInt<5>}}[8]}, clock @[POSIT_Locality.scala 14:21]
     wire new_input_log : UInt<1> @[POSIT_Locality.scala 17:33]
     reg value : UInt<3>, clock with : (reset => (reset, UInt<3>("h00"))) @[Counter.scala 29:33]
     wire _T : UInt<1>
@@ -2204,7 +2204,7 @@ circuit POSIT_Locality :
       rb.entries[value].completed <= UInt<1>("h00") @[POSIT_Locality.scala 24:52]
       rb.entries[value].valid <= UInt<1>("h01") @[POSIT_Locality.scala 25:48]
       rb.entries[value].written <= UInt<1>("h00") @[POSIT_Locality.scala 26:50]
-      rb.entries[value].wr_addr <= io.wr_addr @[POSIT_Locality.scala 27:50]
+      rb.entries[value].wr_addr <= io.request.bits.wr_addr @[POSIT_Locality.scala 27:50]
       rb.entries[value].request.inFetch[0] <= UInt<1>("h00") @[POSIT_Locality.scala 28:58]
       rb.entries[value].request.inFetch[1] <= UInt<1>("h00") @[POSIT_Locality.scala 28:58]
       rb.entries[value].request.inFetch[2] <= UInt<1>("h00") @[POSIT_Locality.scala 28:58]
