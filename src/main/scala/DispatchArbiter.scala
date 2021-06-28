@@ -16,7 +16,7 @@ class DispatchArbiter(numBits: Int) extends Module{
 
   	for (i <- numBits-1 to 0 by -1) {
 		afterPriority(i) := 
-			Mux(i.asUInt> io.priority, io.validity(i) ,false.B)
+			Mux(i.asUInt>= io.priority, io.validity(i) ,false.B)
 		beforePriority(i) := 
 			Mux(i.asUInt< io.priority, io.validity(i)  , false.B)
   	}
@@ -36,6 +36,7 @@ class DispatchArbiter(numBits: Int) extends Module{
   }
 	val afterPriorityExist = afterPriority.exists( (x:Bool)=>x)
 	val beforePriorityExist = beforePriority.exists((x:Bool)=>x)
+
 	io.hasChosen := afterPriorityExist | beforePriorityExist
 	io.chosen := Mux(afterPriorityExist, afterPriorityChosen, beforePriorityChosen)
 }

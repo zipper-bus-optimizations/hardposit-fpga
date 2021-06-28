@@ -3,20 +3,10 @@ package hardposit
 import chisel3._
 import chisel3.util._
 
-class PositTopMemRead() extends Bundle{
-	val rdTag = Input(UInt())
-	val rdData = Input(UInt())
-	val rdValid = Input(Bool())
-
-	val rdReady= Input(Bool())
-	val rdAck = Input(UInt())
-	val rdEnable = Output(Bool())
-	val rdAddr = Output(Bool())
-}
 
 class PositTopMemWrite() extends Bundle{
 	val result = new PositLocalityTopResult
-	val out_wr_addr = UInt(48.W)
+	val wr_addr = UInt(48.W)
 }
 
 class RequestOperand extends Bundle{
@@ -54,7 +44,7 @@ class MemRead extends Bundle{
 class PositLocalityTopInterface extends Bundle{
 	val request = Flipped(DecoupledIO(new PositLocalityTopRequest))
 	val mem_write = Decoupled(new PositTopMemWrite)
-	val op_mem_read = new MemRead
+	val mem_read = new MemRead
 }
 
 // class PositCacheTopRequest extends Bundle{
@@ -80,7 +70,7 @@ class PositLocalityTopInterface extends Bundle{
 // 	val result = new PositTopResult
 
 // 	val wr_addr = Input(UInt(48.W))
-// 	val out_wr_addr = Output(UInt(48.W))
+// 	val wr_addr = Output(UInt(48.W))
 
 // 	val input_valid = Input(Bool())
 // 	val input_ready = Output(Bool())

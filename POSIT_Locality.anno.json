@@ -1,14 +1,14 @@
 [
   {
     "class":"firrtl.transforms.CombinationalPath",
-    "sink":"~POSIT_Locality|POSIT_Locality>io_op_mem_read_req_addr",
+    "sink":"~POSIT_Locality|POSIT_Locality>io_mem_read_req_addr",
     "sources":[
       "~POSIT_Locality|POSIT_Locality>io_mem_write_ready"
     ]
   },
   {
     "class":"firrtl.transforms.CombinationalPath",
-    "sink":"~POSIT_Locality|POSIT_Locality>io_op_mem_read_req_valid",
+    "sink":"~POSIT_Locality|POSIT_Locality>io_mem_read_req_valid",
     "sources":[
       "~POSIT_Locality|POSIT_Locality>io_mem_write_ready"
     ]

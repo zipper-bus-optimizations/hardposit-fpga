@@ -1,0 +1,1732 @@
+[info] welcome to sbt 1.4.9 (Ubuntu Java 11.0.11)
+[info] loading project definition from /home/chshibo/Documents/Projects/hardposit-chisel3/project
+[info] loading settings for project hardposit-chisel3 from build.sbt ...
+[info] set current project to hardposit (in build file:/home/chshibo/Documents/Projects/hardposit-chisel3/)
+[info] compiling 1 Scala source to /home/chshibo/Documents/Projects/hardposit-chisel3/target/scala-2.12/classes ...
+[info] done compiling
+[[35minfo[0m] [0.002] Elaborating design...
+[[35minfo[0m] [1.589] Done elaborating.
+Total FIRRTL Compile Time: 4834.8 ms
+Total FIRRTL Compile Time: 2789.2 ms
+End of dependency graph
+Circuit state created
+[[35minfo[0m] [0.001] SEED 1624911072547
+top level io:
+	-request:
+		-valid: 1
+		-ready: 1
+		-bits:
+			-inst: 1
+			-mode: 0
+			-wr_addr: 0
+			-operand0:
+				-value: 40
+				-mode: 0
+			-operand1:
+				-value: 2
+				-mode: 2
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 1
+		-req_addr: 2
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:110
+		-priority:0
+		-chosen:1
+		-hasChosen:1
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 0 | 3 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 1
+		-ready: 1
+		-bits:
+			-inst: 1
+			-mode: 0
+			-wr_addr: 1
+			-operand0:
+				-value: 0
+				-mode: 1
+			-operand1:
+				-value: 2
+				-mode: 2
+			-operand2:
+				-value: 1
+				-mode: 0
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 1
+		-req_addr: 3
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:10100
+		-priority:0
+		-chosen:2
+		-hasChosen:1
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 1
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 1
+		-req_addr: 2
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:100010000
+		-priority:0
+		-chosen:4
+		-hasChosen:1
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 1
+		-req_addr: 3
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:100000000
+		-priority:0
+		-chosen:8
+		-hasChosen:1
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: e4e0bc0b210f
+		-resp_tag: a0d36d383d8e
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 2 | 2 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 2 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 1
+		-data: 48
+		-resp_tag: 2
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 1
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:1
+		-priority:0
+		-chosen:0
+		-hasChosen:1
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 1 | 1 | 40 | 48 | 20 | 1 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 1
+		-data: 48
+		-resp_tag: 2
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 1
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 1 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 1
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 1
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 4c
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:1
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:1
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 0 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 1
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:10
+		-priority:0
+		-chosen:1
+		-hasChosen:1
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 1 | 1 | 4c | 48 | 1 | 1 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 1
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 0 | 1 | 1 | 0 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 1
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 0 | 1 | 1 | 0 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 1
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 0 | 1 | 1 | 0 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 1 | 1 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 1
+		-ready: 1
+		-bits:
+			-wr_addr: 1
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 1
+				-exceptions: 0
+				-out: 52
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:1
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:1
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 1 | 1 | 1 | 0 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 1 | 1 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 2
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:100
+		-priority:0
+		-chosen:2
+		-hasChosen:1
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+2 | 0 | 1 | 0 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 52 | 0 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 1 | 1 | 1 | 52 | 20 | 3 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 2
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+2 | 0 | 1 | 1 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 52 | 0 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 2
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+2 | 0 | 1 | 1 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 52 | 0 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 2
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+2 | 0 | 1 | 1 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 52 | 0 | 0 | 20 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 1 | 1 | 0 | 0 | 20 | 1 | 0 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 1
+		-ready: 1
+		-bits:
+			-wr_addr: 2
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 1
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 20
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:1
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:1
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+2 | 1 | 1 | 1 | 0 | 2 | 3 | 0 | 1 | 0 | 0 | 52 | 0 | 0 | 20 | 0 | 1 | 0 | 0 | 20 | 1 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+top level io:
+	-request:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-inst: 3
+			-mode: 0
+			-wr_addr: 2
+			-operand0:
+				-value: 1
+				-mode: 0
+			-operand1:
+				-value: 1
+				-mode: 1
+			-operand2:
+				-value: 3
+				-mode: 2
+	-mem_write:
+		-valid: 0
+		-ready: 1
+		-bits:
+			-wr_addr: 0
+			-result: 
+				-isZero: 0
+				-isNaR: 0
+				-lt: 0
+				-eq: 0
+				-gt: 0
+				-exceptions: 0
+				-out: 0
+	-mem_read:
+		-req_valid: 0
+		-req_addr: 0
+		-resp_valid: 0
+		-data: 20
+		-resp_tag: 3
+	-fetchArb:
+		-validity:0
+		-priority:0
+		-chosen:17
+		-hasChosen:0
+	-dispatchArb
+		-validity:0
+		-priority:0
+		-chosen:7
+		-hasChosen:0
+rb data: 
+idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions
+0 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 40 | 0 | 0 | 48 | 0 | 1 | 20 | 0 | 1 | 0 | 0 | 4c | 1 | 0 | 0 | 0
+1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 4c | 0 | 0 | 48 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 52 | 0 | 0 | 1 | 0
+2 | 1 | 1 | 1 | 1 | 2 | 3 | 0 | 1 | 0 | 0 | 52 | 0 | 0 | 20 | 0 | 1 | 0 | 0 | 20 | 1 | 0 | 0 | 0
+3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+pe: 
+request: valid | ready | num 1 | num2 | num3 | inst | mode
+	 0 | 1 | 0 | 0 | 0 | 0 | 0
+result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions
+	 0 | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0
+test POSIT_Locality Success: 0 tests passed in 33 cycles taking 1.634205 seconds
+[[35minfo[0m] [1.544] RAN 28 CYCLES PASSED
+[info] PositLocalitySpec:
+[info] ScalaTest
+[info] Run completed in 13 seconds, 813 milliseconds.
+[info] Total number of tests run: 0
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 0, failed 0, canceled 0, ignored 0, pending 0
+[info] No tests were executed.
+[info] Passed: Total 0, Failed 0, Errors 0, Passed 0
+[success] Total time: 24 s, completed Jun 28, 2021, 4:11:26 PM

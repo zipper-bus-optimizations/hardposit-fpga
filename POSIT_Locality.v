@@ -1942,12 +1942,12 @@ module POSIT_Locality(
   output        io_mem_write_bits_result_eq,
   output        io_mem_write_bits_result_gt,
   output [4:0]  io_mem_write_bits_result_exceptions,
-  output [47:0] io_mem_write_bits_out_wr_addr,
-  output        io_op_mem_read_req_valid,
-  output [47:0] io_op_mem_read_req_addr,
-  input  [63:0] io_op_mem_read_data,
-  input         io_op_mem_read_resp_valid,
-  input  [47:0] io_op_mem_read_resp_tag
+  output [47:0] io_mem_write_bits_wr_addr,
+  output        io_mem_read_req_valid,
+  output [47:0] io_mem_read_req_addr,
+  input  [63:0] io_mem_read_data,
+  input         io_mem_read_resp_valid,
+  input  [47:0] io_mem_read_resp_tag
 );
   wire  pe_clock; // @[POSIT_Locality.scala 10:24]
   wire  pe_reset; // @[POSIT_Locality.scala 10:24]
@@ -2793,53 +2793,53 @@ module POSIT_Locality(
   wire  _GEN_12557 = 3'h6 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_12527; // @[POSIT_Locality.scala 113:100]
   wire  _GEN_12587 = 3'h7 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_12557; // @[POSIT_Locality.scala 113:100]
   wire  _T_143 = rb_entries_0_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_13052 = {{16'd0}, io_op_mem_read_resp_tag}; // @[POSIT_Locality.scala 127:86]
+  wire [63:0] _GEN_13052 = {{16'd0}, io_mem_read_resp_tag}; // @[POSIT_Locality.scala 127:86]
   wire  _T_144 = rb_entries_0_request_operands_0_value == _GEN_13052; // @[POSIT_Locality.scala 127:86]
-  wire [63:0] _GEN_12855 = _T_144 ? io_op_mem_read_data : _GEN_1721; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12855 = _T_144 ? io_mem_read_data : _GEN_1721; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12857 = _T_143 ? _GEN_12855 : _GEN_1721; // @[POSIT_Locality.scala 126:85]
   wire  _T_145 = rb_entries_0_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
   wire  _T_146 = rb_entries_1_request_operands_1_value == _GEN_13052; // @[POSIT_Locality.scala 127:86]
-  wire [63:0] _GEN_12859 = _T_146 ? io_op_mem_read_data : _GEN_3657; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12859 = _T_146 ? io_mem_read_data : _GEN_3657; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12861 = _T_145 ? _GEN_12859 : _GEN_3657; // @[POSIT_Locality.scala 126:85]
   wire  _T_147 = rb_entries_0_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
   wire  _T_148 = rb_entries_2_request_operands_2_value == _GEN_13052; // @[POSIT_Locality.scala 127:86]
-  wire [63:0] _GEN_12863 = _T_148 ? io_op_mem_read_data : _GEN_5593; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12863 = _T_148 ? io_mem_read_data : _GEN_5593; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12865 = _T_147 ? _GEN_12863 : _GEN_5593; // @[POSIT_Locality.scala 126:85]
   wire  _T_149 = rb_entries_1_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12867 = _T_144 ? io_op_mem_read_data : _GEN_12857; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12867 = _T_144 ? io_mem_read_data : _GEN_12857; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12869 = _T_149 ? _GEN_12867 : _GEN_12857; // @[POSIT_Locality.scala 126:85]
   wire  _T_151 = rb_entries_1_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12871 = _T_146 ? io_op_mem_read_data : _GEN_12861; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12871 = _T_146 ? io_mem_read_data : _GEN_12861; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12873 = _T_151 ? _GEN_12871 : _GEN_12861; // @[POSIT_Locality.scala 126:85]
   wire  _T_153 = rb_entries_1_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12875 = _T_148 ? io_op_mem_read_data : _GEN_12865; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12875 = _T_148 ? io_mem_read_data : _GEN_12865; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12877 = _T_153 ? _GEN_12875 : _GEN_12865; // @[POSIT_Locality.scala 126:85]
   wire  _T_155 = rb_entries_2_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12879 = _T_144 ? io_op_mem_read_data : _GEN_12869; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12879 = _T_144 ? io_mem_read_data : _GEN_12869; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12881 = _T_155 ? _GEN_12879 : _GEN_12869; // @[POSIT_Locality.scala 126:85]
   wire  _T_157 = rb_entries_2_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12883 = _T_146 ? io_op_mem_read_data : _GEN_12873; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12883 = _T_146 ? io_mem_read_data : _GEN_12873; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12885 = _T_157 ? _GEN_12883 : _GEN_12873; // @[POSIT_Locality.scala 126:85]
   wire  _T_159 = rb_entries_2_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12887 = _T_148 ? io_op_mem_read_data : _GEN_12877; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12887 = _T_148 ? io_mem_read_data : _GEN_12877; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12889 = _T_159 ? _GEN_12887 : _GEN_12877; // @[POSIT_Locality.scala 126:85]
   wire  _T_161 = rb_entries_3_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12891 = _T_144 ? io_op_mem_read_data : _GEN_12881; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12891 = _T_144 ? io_mem_read_data : _GEN_12881; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12893 = _T_161 ? _GEN_12891 : _GEN_12881; // @[POSIT_Locality.scala 126:85]
   wire  _T_163 = rb_entries_3_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12895 = _T_146 ? io_op_mem_read_data : _GEN_12885; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12895 = _T_146 ? io_mem_read_data : _GEN_12885; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12897 = _T_163 ? _GEN_12895 : _GEN_12885; // @[POSIT_Locality.scala 126:85]
   wire  _T_165 = rb_entries_3_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12899 = _T_148 ? io_op_mem_read_data : _GEN_12889; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12899 = _T_148 ? io_mem_read_data : _GEN_12889; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12901 = _T_165 ? _GEN_12899 : _GEN_12889; // @[POSIT_Locality.scala 126:85]
   wire  _T_167 = rb_entries_4_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12903 = _T_144 ? io_op_mem_read_data : _GEN_12893; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12903 = _T_144 ? io_mem_read_data : _GEN_12893; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12905 = _T_167 ? _GEN_12903 : _GEN_12893; // @[POSIT_Locality.scala 126:85]
   wire  _T_169 = rb_entries_4_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12907 = _T_146 ? io_op_mem_read_data : _GEN_12897; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12907 = _T_146 ? io_mem_read_data : _GEN_12897; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12909 = _T_169 ? _GEN_12907 : _GEN_12897; // @[POSIT_Locality.scala 126:85]
   wire  _T_171 = rb_entries_4_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
-  wire [63:0] _GEN_12911 = _T_148 ? io_op_mem_read_data : _GEN_12901; // @[POSIT_Locality.scala 127:114]
+  wire [63:0] _GEN_12911 = _T_148 ? io_mem_read_data : _GEN_12901; // @[POSIT_Locality.scala 127:114]
   wire [63:0] _GEN_12913 = _T_171 ? _GEN_12911 : _GEN_12901; // @[POSIT_Locality.scala 126:85]
   wire  _T_173 = rb_entries_5_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
   wire  _T_175 = rb_entries_5_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 126:77]
@@ -2954,6 +2954,7 @@ module POSIT_Locality(
   wire [47:0] fetchOffSet_22 = rb_entries_7_request_operands_1_value[47:0]; // @[POSIT_Locality.scala 137:31 POSIT_Locality.scala 144:60]
   wire [47:0] _GEN_13000 = 5'h16 == fetchArb_io_chosen ? fetchOffSet_22 : _GEN_12999; // @[POSIT_Locality.scala 160:41]
   wire [47:0] fetchOffSet_23 = rb_entries_7_request_operands_2_value[47:0]; // @[POSIT_Locality.scala 137:31 POSIT_Locality.scala 144:60]
+  wire  _T_361 = ~reset; // @[POSIT_Locality.scala 173:23]
   Posit pe ( // @[POSIT_Locality.scala 10:24]
     .clock(pe_clock),
     .reset(pe_reset),
@@ -3005,9 +3006,9 @@ module POSIT_Locality(
   assign io_mem_write_bits_result_eq = 3'h7 == value_1 ? rb_entries_7_result_eq : _GEN_803; // @[POSIT_Locality.scala 51:34]
   assign io_mem_write_bits_result_gt = 3'h7 == value_1 ? rb_entries_7_result_gt : _GEN_804; // @[POSIT_Locality.scala 51:34]
   assign io_mem_write_bits_result_exceptions = 3'h7 == value_1 ? rb_entries_7_result_exceptions : _GEN_805; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_out_wr_addr = 3'h7 == value_1 ? rb_entries_7_wr_addr : _GEN_786; // @[POSIT_Locality.scala 50:39]
-  assign io_op_mem_read_req_valid = fetchArb_io_hasChosen; // @[POSIT_Locality.scala 159:42 POSIT_Locality.scala 163:42]
-  assign io_op_mem_read_req_addr = 5'h17 == fetchArb_io_chosen ? fetchOffSet_23 : _GEN_13000; // @[POSIT_Locality.scala 160:41 POSIT_Locality.scala 164:41]
+  assign io_mem_write_bits_wr_addr = 3'h7 == value_1 ? rb_entries_7_wr_addr : _GEN_786; // @[POSIT_Locality.scala 50:39]
+  assign io_mem_read_req_valid = fetchArb_io_hasChosen; // @[POSIT_Locality.scala 159:42 POSIT_Locality.scala 163:42]
+  assign io_mem_read_req_addr = 5'h17 == fetchArb_io_chosen ? fetchOffSet_23 : _GEN_13000; // @[POSIT_Locality.scala 160:41 POSIT_Locality.scala 164:41]
   assign pe_clock = clock;
   assign pe_reset = reset;
   assign pe_io_request_valid = _T_68 & processQueue_io_enq_ready; // @[POSIT_Locality.scala 85:37 POSIT_Locality.scala 88:37]
@@ -3762,31 +3763,31 @@ end // initial
         rb_entries_0_wr_addr <= io_request_bits_wr_addr;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_185) begin
         if (_T_144) begin
-          rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+          rb_entries_0_request_operands_0_value <= io_mem_read_data;
         end else if (_T_179) begin
           if (_T_144) begin
-            rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+            rb_entries_0_request_operands_0_value <= io_mem_read_data;
           end else if (_T_173) begin
             if (_T_144) begin
-              rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+              rb_entries_0_request_operands_0_value <= io_mem_read_data;
             end else if (_T_167) begin
               if (_T_144) begin
-                rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                rb_entries_0_request_operands_0_value <= io_mem_read_data;
               end else if (_T_161) begin
                 if (_T_144) begin
-                  rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                  rb_entries_0_request_operands_0_value <= io_mem_read_data;
                 end else if (_T_155) begin
                   if (_T_144) begin
-                    rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                    rb_entries_0_request_operands_0_value <= io_mem_read_data;
                   end else if (_T_149) begin
                     if (_T_144) begin
-                      rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                      rb_entries_0_request_operands_0_value <= io_mem_read_data;
                     end else if (_T_143) begin
                       if (_T_144) begin
-                        rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                        rb_entries_0_request_operands_0_value <= io_mem_read_data;
                       end else if (_T_71) begin
                         if (_GEN_1455) begin
                           if (3'h7 == rb_entries_0_request_operands_0_value[2:0]) begin
@@ -3847,7 +3848,7 @@ end // initial
                     end
                   end else if (_T_143) begin
                     if (_T_144) begin
-                      rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                      rb_entries_0_request_operands_0_value <= io_mem_read_data;
                     end else if (_T_71) begin
                       if (_GEN_1455) begin
                         if (3'h7 == rb_entries_0_request_operands_0_value[2:0]) begin
@@ -3900,10 +3901,10 @@ end // initial
                   end
                 end else if (_T_149) begin
                   if (_T_144) begin
-                    rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                    rb_entries_0_request_operands_0_value <= io_mem_read_data;
                   end else if (_T_143) begin
                     if (_T_144) begin
-                      rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                      rb_entries_0_request_operands_0_value <= io_mem_read_data;
                     end else begin
                       rb_entries_0_request_operands_0_value <= _GEN_1721;
                     end
@@ -3912,7 +3913,7 @@ end // initial
                   end
                 end else if (_T_143) begin
                   if (_T_144) begin
-                    rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                    rb_entries_0_request_operands_0_value <= io_mem_read_data;
                   end else begin
                     rb_entries_0_request_operands_0_value <= _GEN_1721;
                   end
@@ -3921,10 +3922,10 @@ end // initial
                 end
               end else if (_T_155) begin
                 if (_T_144) begin
-                  rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                  rb_entries_0_request_operands_0_value <= io_mem_read_data;
                 end else if (_T_149) begin
                   if (_T_144) begin
-                    rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                    rb_entries_0_request_operands_0_value <= io_mem_read_data;
                   end else begin
                     rb_entries_0_request_operands_0_value <= _GEN_12857;
                   end
@@ -3933,7 +3934,7 @@ end // initial
                 end
               end else if (_T_149) begin
                 if (_T_144) begin
-                  rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                  rb_entries_0_request_operands_0_value <= io_mem_read_data;
                 end else begin
                   rb_entries_0_request_operands_0_value <= _GEN_12857;
                 end
@@ -3942,10 +3943,10 @@ end // initial
               end
             end else if (_T_161) begin
               if (_T_144) begin
-                rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                rb_entries_0_request_operands_0_value <= io_mem_read_data;
               end else if (_T_155) begin
                 if (_T_144) begin
-                  rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                  rb_entries_0_request_operands_0_value <= io_mem_read_data;
                 end else begin
                   rb_entries_0_request_operands_0_value <= _GEN_12869;
                 end
@@ -3954,7 +3955,7 @@ end // initial
               end
             end else if (_T_155) begin
               if (_T_144) begin
-                rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                rb_entries_0_request_operands_0_value <= io_mem_read_data;
               end else begin
                 rb_entries_0_request_operands_0_value <= _GEN_12869;
               end
@@ -3963,10 +3964,10 @@ end // initial
             end
           end else if (_T_167) begin
             if (_T_144) begin
-              rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+              rb_entries_0_request_operands_0_value <= io_mem_read_data;
             end else if (_T_161) begin
               if (_T_144) begin
-                rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+                rb_entries_0_request_operands_0_value <= io_mem_read_data;
               end else begin
                 rb_entries_0_request_operands_0_value <= _GEN_12881;
               end
@@ -3975,7 +3976,7 @@ end // initial
             end
           end else if (_T_161) begin
             if (_T_144) begin
-              rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+              rb_entries_0_request_operands_0_value <= io_mem_read_data;
             end else begin
               rb_entries_0_request_operands_0_value <= _GEN_12881;
             end
@@ -3984,10 +3985,10 @@ end // initial
           end
         end else if (_T_173) begin
           if (_T_144) begin
-            rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+            rb_entries_0_request_operands_0_value <= io_mem_read_data;
           end else if (_T_167) begin
             if (_T_144) begin
-              rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+              rb_entries_0_request_operands_0_value <= io_mem_read_data;
             end else begin
               rb_entries_0_request_operands_0_value <= _GEN_12893;
             end
@@ -3996,7 +3997,7 @@ end // initial
           end
         end else if (_T_167) begin
           if (_T_144) begin
-            rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+            rb_entries_0_request_operands_0_value <= io_mem_read_data;
           end else begin
             rb_entries_0_request_operands_0_value <= _GEN_12893;
           end
@@ -4005,10 +4006,10 @@ end // initial
         end
       end else if (_T_179) begin
         if (_T_144) begin
-          rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+          rb_entries_0_request_operands_0_value <= io_mem_read_data;
         end else if (_T_173) begin
           if (_T_144) begin
-            rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+            rb_entries_0_request_operands_0_value <= io_mem_read_data;
           end else begin
             rb_entries_0_request_operands_0_value <= _GEN_12905;
           end
@@ -4017,7 +4018,7 @@ end // initial
         end
       end else if (_T_173) begin
         if (_T_144) begin
-          rb_entries_0_request_operands_0_value <= io_op_mem_read_data;
+          rb_entries_0_request_operands_0_value <= io_mem_read_data;
         end else begin
           rb_entries_0_request_operands_0_value <= _GEN_12905;
         end
@@ -4027,7 +4028,7 @@ end // initial
     end else begin
       rb_entries_0_request_operands_0_value <= _GEN_1721;
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_143) begin
         if (_T_144) begin
           rb_entries_0_request_operands_0_mode <= 2'h0;
@@ -4095,7 +4096,7 @@ end // initial
         rb_entries_0_request_operands_1_value <= io_request_bits_operands_1_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_145) begin
         if (_T_146) begin
           rb_entries_0_request_operands_1_mode <= 2'h0;
@@ -4163,7 +4164,7 @@ end // initial
         rb_entries_0_request_operands_2_value <= io_request_bits_operands_2_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_147) begin
         if (_T_148) begin
           rb_entries_0_request_operands_2_mode <= 2'h0;
@@ -4362,7 +4363,7 @@ end // initial
         rb_entries_1_request_operands_0_value <= io_request_bits_operands_0_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_149) begin
         if (_T_144) begin
           rb_entries_1_request_operands_0_mode <= 2'h0;
@@ -4401,31 +4402,31 @@ end // initial
     end else begin
       rb_entries_1_request_operands_0_mode <= _GEN_491;
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_187) begin
         if (_T_146) begin
-          rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+          rb_entries_1_request_operands_1_value <= io_mem_read_data;
         end else if (_T_181) begin
           if (_T_146) begin
-            rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+            rb_entries_1_request_operands_1_value <= io_mem_read_data;
           end else if (_T_175) begin
             if (_T_146) begin
-              rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+              rb_entries_1_request_operands_1_value <= io_mem_read_data;
             end else if (_T_169) begin
               if (_T_146) begin
-                rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                rb_entries_1_request_operands_1_value <= io_mem_read_data;
               end else if (_T_163) begin
                 if (_T_146) begin
-                  rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                  rb_entries_1_request_operands_1_value <= io_mem_read_data;
                 end else if (_T_157) begin
                   if (_T_146) begin
-                    rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                    rb_entries_1_request_operands_1_value <= io_mem_read_data;
                   end else if (_T_151) begin
                     if (_T_146) begin
-                      rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                      rb_entries_1_request_operands_1_value <= io_mem_read_data;
                     end else if (_T_145) begin
                       if (_T_146) begin
-                        rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                        rb_entries_1_request_operands_1_value <= io_mem_read_data;
                       end else if (_T_83) begin
                         if (_GEN_3391) begin
                           if (3'h7 == rb_entries_1_request_operands_1_value[2:0]) begin
@@ -4486,7 +4487,7 @@ end // initial
                     end
                   end else if (_T_145) begin
                     if (_T_146) begin
-                      rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                      rb_entries_1_request_operands_1_value <= io_mem_read_data;
                     end else if (_T_83) begin
                       if (_GEN_3391) begin
                         if (3'h7 == rb_entries_1_request_operands_1_value[2:0]) begin
@@ -4539,10 +4540,10 @@ end // initial
                   end
                 end else if (_T_151) begin
                   if (_T_146) begin
-                    rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                    rb_entries_1_request_operands_1_value <= io_mem_read_data;
                   end else if (_T_145) begin
                     if (_T_146) begin
-                      rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                      rb_entries_1_request_operands_1_value <= io_mem_read_data;
                     end else begin
                       rb_entries_1_request_operands_1_value <= _GEN_3657;
                     end
@@ -4551,7 +4552,7 @@ end // initial
                   end
                 end else if (_T_145) begin
                   if (_T_146) begin
-                    rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                    rb_entries_1_request_operands_1_value <= io_mem_read_data;
                   end else begin
                     rb_entries_1_request_operands_1_value <= _GEN_3657;
                   end
@@ -4560,10 +4561,10 @@ end // initial
                 end
               end else if (_T_157) begin
                 if (_T_146) begin
-                  rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                  rb_entries_1_request_operands_1_value <= io_mem_read_data;
                 end else if (_T_151) begin
                   if (_T_146) begin
-                    rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                    rb_entries_1_request_operands_1_value <= io_mem_read_data;
                   end else begin
                     rb_entries_1_request_operands_1_value <= _GEN_12861;
                   end
@@ -4572,7 +4573,7 @@ end // initial
                 end
               end else if (_T_151) begin
                 if (_T_146) begin
-                  rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                  rb_entries_1_request_operands_1_value <= io_mem_read_data;
                 end else begin
                   rb_entries_1_request_operands_1_value <= _GEN_12861;
                 end
@@ -4581,10 +4582,10 @@ end // initial
               end
             end else if (_T_163) begin
               if (_T_146) begin
-                rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                rb_entries_1_request_operands_1_value <= io_mem_read_data;
               end else if (_T_157) begin
                 if (_T_146) begin
-                  rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                  rb_entries_1_request_operands_1_value <= io_mem_read_data;
                 end else begin
                   rb_entries_1_request_operands_1_value <= _GEN_12873;
                 end
@@ -4593,7 +4594,7 @@ end // initial
               end
             end else if (_T_157) begin
               if (_T_146) begin
-                rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                rb_entries_1_request_operands_1_value <= io_mem_read_data;
               end else begin
                 rb_entries_1_request_operands_1_value <= _GEN_12873;
               end
@@ -4602,10 +4603,10 @@ end // initial
             end
           end else if (_T_169) begin
             if (_T_146) begin
-              rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+              rb_entries_1_request_operands_1_value <= io_mem_read_data;
             end else if (_T_163) begin
               if (_T_146) begin
-                rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+                rb_entries_1_request_operands_1_value <= io_mem_read_data;
               end else begin
                 rb_entries_1_request_operands_1_value <= _GEN_12885;
               end
@@ -4614,7 +4615,7 @@ end // initial
             end
           end else if (_T_163) begin
             if (_T_146) begin
-              rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+              rb_entries_1_request_operands_1_value <= io_mem_read_data;
             end else begin
               rb_entries_1_request_operands_1_value <= _GEN_12885;
             end
@@ -4623,10 +4624,10 @@ end // initial
           end
         end else if (_T_175) begin
           if (_T_146) begin
-            rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+            rb_entries_1_request_operands_1_value <= io_mem_read_data;
           end else if (_T_169) begin
             if (_T_146) begin
-              rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+              rb_entries_1_request_operands_1_value <= io_mem_read_data;
             end else begin
               rb_entries_1_request_operands_1_value <= _GEN_12897;
             end
@@ -4635,7 +4636,7 @@ end // initial
           end
         end else if (_T_169) begin
           if (_T_146) begin
-            rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+            rb_entries_1_request_operands_1_value <= io_mem_read_data;
           end else begin
             rb_entries_1_request_operands_1_value <= _GEN_12897;
           end
@@ -4644,10 +4645,10 @@ end // initial
         end
       end else if (_T_181) begin
         if (_T_146) begin
-          rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+          rb_entries_1_request_operands_1_value <= io_mem_read_data;
         end else if (_T_175) begin
           if (_T_146) begin
-            rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+            rb_entries_1_request_operands_1_value <= io_mem_read_data;
           end else begin
             rb_entries_1_request_operands_1_value <= _GEN_12909;
           end
@@ -4656,7 +4657,7 @@ end // initial
         end
       end else if (_T_175) begin
         if (_T_146) begin
-          rb_entries_1_request_operands_1_value <= io_op_mem_read_data;
+          rb_entries_1_request_operands_1_value <= io_mem_read_data;
         end else begin
           rb_entries_1_request_operands_1_value <= _GEN_12909;
         end
@@ -4666,7 +4667,7 @@ end // initial
     end else begin
       rb_entries_1_request_operands_1_value <= _GEN_3657;
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_151) begin
         if (_T_146) begin
           rb_entries_1_request_operands_1_mode <= 2'h0;
@@ -4734,7 +4735,7 @@ end // initial
         rb_entries_1_request_operands_2_value <= io_request_bits_operands_2_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_153) begin
         if (_T_148) begin
           rb_entries_1_request_operands_2_mode <= 2'h0;
@@ -4933,7 +4934,7 @@ end // initial
         rb_entries_2_request_operands_0_value <= io_request_bits_operands_0_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_155) begin
         if (_T_144) begin
           rb_entries_2_request_operands_0_mode <= 2'h0;
@@ -5001,7 +5002,7 @@ end // initial
         rb_entries_2_request_operands_1_value <= io_request_bits_operands_1_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_157) begin
         if (_T_146) begin
           rb_entries_2_request_operands_1_mode <= 2'h0;
@@ -5040,31 +5041,31 @@ end // initial
     end else begin
       rb_entries_2_request_operands_1_mode <= _GEN_508;
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_189) begin
         if (_T_148) begin
-          rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+          rb_entries_2_request_operands_2_value <= io_mem_read_data;
         end else if (_T_183) begin
           if (_T_148) begin
-            rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+            rb_entries_2_request_operands_2_value <= io_mem_read_data;
           end else if (_T_177) begin
             if (_T_148) begin
-              rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+              rb_entries_2_request_operands_2_value <= io_mem_read_data;
             end else if (_T_171) begin
               if (_T_148) begin
-                rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                rb_entries_2_request_operands_2_value <= io_mem_read_data;
               end else if (_T_165) begin
                 if (_T_148) begin
-                  rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                  rb_entries_2_request_operands_2_value <= io_mem_read_data;
                 end else if (_T_159) begin
                   if (_T_148) begin
-                    rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                    rb_entries_2_request_operands_2_value <= io_mem_read_data;
                   end else if (_T_153) begin
                     if (_T_148) begin
-                      rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                      rb_entries_2_request_operands_2_value <= io_mem_read_data;
                     end else if (_T_147) begin
                       if (_T_148) begin
-                        rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                        rb_entries_2_request_operands_2_value <= io_mem_read_data;
                       end else if (_T_95) begin
                         if (_GEN_5327) begin
                           if (3'h7 == rb_entries_2_request_operands_2_value[2:0]) begin
@@ -5125,7 +5126,7 @@ end // initial
                     end
                   end else if (_T_147) begin
                     if (_T_148) begin
-                      rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                      rb_entries_2_request_operands_2_value <= io_mem_read_data;
                     end else if (_T_95) begin
                       if (_GEN_5327) begin
                         if (3'h7 == rb_entries_2_request_operands_2_value[2:0]) begin
@@ -5178,10 +5179,10 @@ end // initial
                   end
                 end else if (_T_153) begin
                   if (_T_148) begin
-                    rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                    rb_entries_2_request_operands_2_value <= io_mem_read_data;
                   end else if (_T_147) begin
                     if (_T_148) begin
-                      rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                      rb_entries_2_request_operands_2_value <= io_mem_read_data;
                     end else begin
                       rb_entries_2_request_operands_2_value <= _GEN_5593;
                     end
@@ -5190,7 +5191,7 @@ end // initial
                   end
                 end else if (_T_147) begin
                   if (_T_148) begin
-                    rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                    rb_entries_2_request_operands_2_value <= io_mem_read_data;
                   end else begin
                     rb_entries_2_request_operands_2_value <= _GEN_5593;
                   end
@@ -5199,10 +5200,10 @@ end // initial
                 end
               end else if (_T_159) begin
                 if (_T_148) begin
-                  rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                  rb_entries_2_request_operands_2_value <= io_mem_read_data;
                 end else if (_T_153) begin
                   if (_T_148) begin
-                    rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                    rb_entries_2_request_operands_2_value <= io_mem_read_data;
                   end else begin
                     rb_entries_2_request_operands_2_value <= _GEN_12865;
                   end
@@ -5211,7 +5212,7 @@ end // initial
                 end
               end else if (_T_153) begin
                 if (_T_148) begin
-                  rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                  rb_entries_2_request_operands_2_value <= io_mem_read_data;
                 end else begin
                   rb_entries_2_request_operands_2_value <= _GEN_12865;
                 end
@@ -5220,10 +5221,10 @@ end // initial
               end
             end else if (_T_165) begin
               if (_T_148) begin
-                rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                rb_entries_2_request_operands_2_value <= io_mem_read_data;
               end else if (_T_159) begin
                 if (_T_148) begin
-                  rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                  rb_entries_2_request_operands_2_value <= io_mem_read_data;
                 end else begin
                   rb_entries_2_request_operands_2_value <= _GEN_12877;
                 end
@@ -5232,7 +5233,7 @@ end // initial
               end
             end else if (_T_159) begin
               if (_T_148) begin
-                rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                rb_entries_2_request_operands_2_value <= io_mem_read_data;
               end else begin
                 rb_entries_2_request_operands_2_value <= _GEN_12877;
               end
@@ -5241,10 +5242,10 @@ end // initial
             end
           end else if (_T_171) begin
             if (_T_148) begin
-              rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+              rb_entries_2_request_operands_2_value <= io_mem_read_data;
             end else if (_T_165) begin
               if (_T_148) begin
-                rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+                rb_entries_2_request_operands_2_value <= io_mem_read_data;
               end else begin
                 rb_entries_2_request_operands_2_value <= _GEN_12889;
               end
@@ -5253,7 +5254,7 @@ end // initial
             end
           end else if (_T_165) begin
             if (_T_148) begin
-              rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+              rb_entries_2_request_operands_2_value <= io_mem_read_data;
             end else begin
               rb_entries_2_request_operands_2_value <= _GEN_12889;
             end
@@ -5262,10 +5263,10 @@ end // initial
           end
         end else if (_T_177) begin
           if (_T_148) begin
-            rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+            rb_entries_2_request_operands_2_value <= io_mem_read_data;
           end else if (_T_171) begin
             if (_T_148) begin
-              rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+              rb_entries_2_request_operands_2_value <= io_mem_read_data;
             end else begin
               rb_entries_2_request_operands_2_value <= _GEN_12901;
             end
@@ -5274,7 +5275,7 @@ end // initial
           end
         end else if (_T_171) begin
           if (_T_148) begin
-            rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+            rb_entries_2_request_operands_2_value <= io_mem_read_data;
           end else begin
             rb_entries_2_request_operands_2_value <= _GEN_12901;
           end
@@ -5283,10 +5284,10 @@ end // initial
         end
       end else if (_T_183) begin
         if (_T_148) begin
-          rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+          rb_entries_2_request_operands_2_value <= io_mem_read_data;
         end else if (_T_177) begin
           if (_T_148) begin
-            rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+            rb_entries_2_request_operands_2_value <= io_mem_read_data;
           end else begin
             rb_entries_2_request_operands_2_value <= _GEN_12913;
           end
@@ -5295,7 +5296,7 @@ end // initial
         end
       end else if (_T_177) begin
         if (_T_148) begin
-          rb_entries_2_request_operands_2_value <= io_op_mem_read_data;
+          rb_entries_2_request_operands_2_value <= io_mem_read_data;
         end else begin
           rb_entries_2_request_operands_2_value <= _GEN_12913;
         end
@@ -5305,7 +5306,7 @@ end // initial
     end else begin
       rb_entries_2_request_operands_2_value <= _GEN_5593;
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_159) begin
         if (_T_148) begin
           rb_entries_2_request_operands_2_mode <= 2'h0;
@@ -5504,7 +5505,7 @@ end // initial
         rb_entries_3_request_operands_0_value <= io_request_bits_operands_0_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_161) begin
         if (_T_144) begin
           rb_entries_3_request_operands_0_mode <= 2'h0;
@@ -5572,7 +5573,7 @@ end // initial
         rb_entries_3_request_operands_1_value <= io_request_bits_operands_1_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_163) begin
         if (_T_146) begin
           rb_entries_3_request_operands_1_mode <= 2'h0;
@@ -5640,7 +5641,7 @@ end // initial
         rb_entries_3_request_operands_2_value <= io_request_bits_operands_2_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_165) begin
         if (_T_148) begin
           rb_entries_3_request_operands_2_mode <= 2'h0;
@@ -5839,7 +5840,7 @@ end // initial
         rb_entries_4_request_operands_0_value <= io_request_bits_operands_0_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_167) begin
         if (_T_144) begin
           rb_entries_4_request_operands_0_mode <= 2'h0;
@@ -5907,7 +5908,7 @@ end // initial
         rb_entries_4_request_operands_1_value <= io_request_bits_operands_1_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_169) begin
         if (_T_146) begin
           rb_entries_4_request_operands_1_mode <= 2'h0;
@@ -5975,7 +5976,7 @@ end // initial
         rb_entries_4_request_operands_2_value <= io_request_bits_operands_2_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_171) begin
         if (_T_148) begin
           rb_entries_4_request_operands_2_mode <= 2'h0;
@@ -6174,7 +6175,7 @@ end // initial
         rb_entries_5_request_operands_0_value <= io_request_bits_operands_0_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_173) begin
         if (_T_144) begin
           rb_entries_5_request_operands_0_mode <= 2'h0;
@@ -6242,7 +6243,7 @@ end // initial
         rb_entries_5_request_operands_1_value <= io_request_bits_operands_1_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_175) begin
         if (_T_146) begin
           rb_entries_5_request_operands_1_mode <= 2'h0;
@@ -6310,7 +6311,7 @@ end // initial
         rb_entries_5_request_operands_2_value <= io_request_bits_operands_2_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_177) begin
         if (_T_148) begin
           rb_entries_5_request_operands_2_mode <= 2'h0;
@@ -6509,7 +6510,7 @@ end // initial
         rb_entries_6_request_operands_0_value <= io_request_bits_operands_0_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_179) begin
         if (_T_144) begin
           rb_entries_6_request_operands_0_mode <= 2'h0;
@@ -6577,7 +6578,7 @@ end // initial
         rb_entries_6_request_operands_1_value <= io_request_bits_operands_1_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_181) begin
         if (_T_146) begin
           rb_entries_6_request_operands_1_mode <= 2'h0;
@@ -6645,7 +6646,7 @@ end // initial
         rb_entries_6_request_operands_2_value <= io_request_bits_operands_2_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_183) begin
         if (_T_148) begin
           rb_entries_6_request_operands_2_mode <= 2'h0;
@@ -6844,7 +6845,7 @@ end // initial
         rb_entries_7_request_operands_0_value <= io_request_bits_operands_0_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_185) begin
         if (_T_144) begin
           rb_entries_7_request_operands_0_mode <= 2'h0;
@@ -6912,7 +6913,7 @@ end // initial
         rb_entries_7_request_operands_1_value <= io_request_bits_operands_1_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_187) begin
         if (_T_146) begin
           rb_entries_7_request_operands_1_mode <= 2'h0;
@@ -6980,7 +6981,7 @@ end // initial
         rb_entries_7_request_operands_2_value <= io_request_bits_operands_2_value;
       end
     end
-    if (io_op_mem_read_resp_valid) begin
+    if (io_mem_read_resp_valid) begin
       if (_T_189) begin
         if (_T_148) begin
           rb_entries_7_request_operands_2_mode <= 2'h0;
@@ -7139,5 +7140,566 @@ end // initial
     end else if (wbCountOn) begin
       value_1 <= _T_11;
     end
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 173:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 174:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 175:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 176:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 177:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 178:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 179:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 180:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 182:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 183:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 184:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 182:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 183:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 184:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 182:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 183:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 184:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t-mem_write:\n"); // @[POSIT_Locality.scala 187:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_mem_write_valid); // @[POSIT_Locality.scala 188:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_mem_write_ready); // @[POSIT_Locality.scala 189:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 190:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_mem_write_bits_wr_addr); // @[POSIT_Locality.scala 191:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t-result: \n"); // @[POSIT_Locality.scala 192:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-isZero: %b\n",io_mem_write_bits_result_isZero); // @[POSIT_Locality.scala 193:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-isNaR: %b\n",io_mem_write_bits_result_isNaR); // @[POSIT_Locality.scala 194:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-lt: %b\n",io_mem_write_bits_result_lt); // @[POSIT_Locality.scala 195:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-eq: %b\n",io_mem_write_bits_result_eq); // @[POSIT_Locality.scala 196:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-gt: %b\n",io_mem_write_bits_result_gt); // @[POSIT_Locality.scala 197:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-exceptions: %x\n",io_mem_write_bits_result_exceptions); // @[POSIT_Locality.scala 198:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t\t\t-out: %x\n",io_mem_write_bits_result_out); // @[POSIT_Locality.scala 199:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 201:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 202:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 203:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 204:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 205:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 206:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 209:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 210:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,1'h1,1'h0,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,rb_entries_0_request_inFetch_0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,rb_entries_0_request_inFetch_1,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,rb_entries_0_request_inFetch_2,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,1'h1,1'h0,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,rb_entries_1_request_inFetch_0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,rb_entries_1_request_inFetch_1,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,rb_entries_1_request_inFetch_2,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,1'h1,1'h0,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,rb_entries_2_request_inFetch_0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,rb_entries_2_request_inFetch_1,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,rb_entries_2_request_inFetch_2,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,1'h1,1'h0,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,rb_entries_3_request_inFetch_0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,rb_entries_3_request_inFetch_1,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,rb_entries_3_request_inFetch_2,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h4,rb_entries_4_completed,1'h1,1'h0,rb_entries_4_written,rb_entries_4_wr_addr,rb_entries_4_request_inst,rb_entries_4_request_mode,rb_entries_4_request_operands_0_value,rb_entries_4_request_operands_0_mode,rb_entries_4_request_inFetch_0,rb_entries_4_request_operands_1_value,rb_entries_4_request_operands_1_mode,rb_entries_4_request_inFetch_1,rb_entries_4_request_operands_2_value,rb_entries_4_request_operands_2_mode,rb_entries_4_request_inFetch_2,rb_entries_4_result_isZero,rb_entries_4_result_isNaR,rb_entries_4_result_out,rb_entries_4_result_lt,rb_entries_4_result_eq,rb_entries_4_result_gt,rb_entries_4_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h5,rb_entries_5_completed,1'h1,1'h0,rb_entries_5_written,rb_entries_5_wr_addr,rb_entries_5_request_inst,rb_entries_5_request_mode,rb_entries_5_request_operands_0_value,rb_entries_5_request_operands_0_mode,rb_entries_5_request_inFetch_0,rb_entries_5_request_operands_1_value,rb_entries_5_request_operands_1_mode,rb_entries_5_request_inFetch_1,rb_entries_5_request_operands_2_value,rb_entries_5_request_operands_2_mode,rb_entries_5_request_inFetch_2,rb_entries_5_result_isZero,rb_entries_5_result_isNaR,rb_entries_5_result_out,rb_entries_5_result_lt,rb_entries_5_result_eq,rb_entries_5_result_gt,rb_entries_5_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h6,rb_entries_6_completed,1'h1,1'h0,rb_entries_6_written,rb_entries_6_wr_addr,rb_entries_6_request_inst,rb_entries_6_request_mode,rb_entries_6_request_operands_0_value,rb_entries_6_request_operands_0_mode,rb_entries_6_request_inFetch_0,rb_entries_6_request_operands_1_value,rb_entries_6_request_operands_1_mode,rb_entries_6_request_inFetch_1,rb_entries_6_request_operands_2_value,rb_entries_6_request_operands_2_mode,rb_entries_6_request_inFetch_2,rb_entries_6_result_isZero,rb_entries_6_result_isNaR,rb_entries_6_result_out,rb_entries_6_result_lt,rb_entries_6_result_eq,rb_entries_6_result_gt,rb_entries_6_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"%d | %b | %b  | %b  | %b  | %x | %x | %x | %x | %b | %b | %x | %b | %b | %x | %b | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h7,rb_entries_7_completed,1'h1,1'h0,rb_entries_7_written,rb_entries_7_wr_addr,rb_entries_7_request_inst,rb_entries_7_request_mode,rb_entries_7_request_operands_0_value,rb_entries_7_request_operands_0_mode,rb_entries_7_request_inFetch_0,rb_entries_7_request_operands_1_value,rb_entries_7_request_operands_1_mode,rb_entries_7_request_inFetch_1,rb_entries_7_request_operands_2_value,rb_entries_7_request_operands_2_mode,rb_entries_7_request_inFetch_2,rb_entries_7_result_isZero,rb_entries_7_result_isNaR,rb_entries_7_result_out,rb_entries_7_result_lt,rb_entries_7_result_eq,rb_entries_7_result_gt,rb_entries_7_result_exceptions); // @[POSIT_Locality.scala 217:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 223:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 227:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t %b | %b | %x | %x | %x | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 228:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 229:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_361) begin
+          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 231:23]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
   end
 endmodule
