@@ -21,7 +21,7 @@ class RequestOperandEntry extends Bundle{
 class PositLocalityTopRequest extends RequestOperandEntry{
 	val inst = UInt(3.W)
 	val mode = UInt(2.W)
-	val wr_addr = UInt(48.W)
+	val wr_addr = UInt(8.W)
 }
 
 class PositLocalityTopResult extends Bundle{
@@ -36,10 +36,10 @@ class PositLocalityTopResult extends Bundle{
 
 class MemRead extends Bundle{
 	val req_valid = Output(Bool())
-	val req_addr = Output(UInt(48.W))
-	val data = Input(UInt(Params.EntryWidth.W))
+	val req_addr = Output(UInt(8.W))
+	val data = Input(UInt(Params.Nbits.W))
 	val resp_valid = Input(Bool())
-	val resp_tag = Input(UInt(48.W))
+	val resp_tag = Input(UInt(8.W))
 }
 class PositLocalityTopInterface extends Bundle{
 	val request = Flipped(DecoupledIO(new PositLocalityTopRequest))
