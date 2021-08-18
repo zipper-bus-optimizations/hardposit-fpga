@@ -131,7 +131,7 @@ module ofs_plat_afu
     t_ccip_clAdd  req_base_address;
     t_ccip_clAdd  resp_base_address;
     logic[7:0] req_granularity;
-    logic[7:0] resp_granularity;
+    logic[5:0] resp_granularity;
 
     t_ccip_mmioData mmio_write_data;
     assign mmio_write_data = host_ccip.sRx.c0.data[CCIP_MMIODATA_WIDTH-1:0];
@@ -144,7 +144,7 @@ module ofs_plat_afu
           end
           else begin
             resp_base_address <= #1 mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
-            resp_granularity <= #1 mmio_write_data[ CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH];
+            resp_granularity <= #1 mmio_write_data[ CCIP_CLADDR_WIDTH+6-1: CCIP_CLADDR_WIDTH];
           end
         end
       end
@@ -164,13 +164,13 @@ module ofs_plat_afu
     // flip the reset n
     assign reset = ~reset_n;
     assign req_valid = is_csr_write && (mmio_write_data[CCIP_MMIODATA_WIDTH-1] == 'b0);
-    assign mode = mmio_write_data[42:41];
-    assign inst = mmio_write_data[40:38];
-    assign operands_mode[0] = mmio_write_data[37:36];
-    assign operands_value[0] = mmio_write_data[35:28];
-    assign operands_mode[1] = mmio_write_data[27:26];
-    assign operands_value[1] = mmio_write_data[25:18];
-    assign operands_mode[2] = mmio_write_data[17:16];
+    assign mode = mmio_write_data[60:59];
+    assign inst = mmio_write_data[58:56];
+    assign operands_mode[0] = mmio_write_data[55:48];
+    assign operands_value[0] = mmio_write_data[47:40];
+    assign operands_mode[1] = mmio_write_data[39:32];
+    assign operands_value[1] = mmio_write_data[31:24];
+    assign operands_mode[2] = mmio_write_data[23:16];
     assign operands_value[2] = mmio_write_data[16:8];
     assign wr_addr = resp_base_address + resp_granularity*mmio_write_data[7:0];
 
@@ -260,7 +260,8 @@ module ofs_plat_afu
     assign wr_byte_offset = resp_granularity*mem_write_bits_wr_addr;
     assign wr_mem_hdr_addr = resp_base_address + (wr_byte_offset>>6);
     always_ff @( posedge clk ) begin
-      host_ccip.sTx.c1.hdr.byte_len <= #1 wr_byte_offset[5:0];
+      host_ccip.sTx.c1.hdr.byte_len <= #1 resp_granularity;
+      host_ccip.sTx.c1.hdr.byte_start <= #1 wr_byte_offset[5:0];
       host_ccip.sTx.c1.hdr.vc_sel <= #1 2'b0;
       host_ccip.sTx.c1.hdr.sop <= #1 'b1;
       host_ccip.sTx.c1.hdr.mode <= #1 eMOD_BYTE;
@@ -268,10 +269,9 @@ module ofs_plat_afu
       host_ccip.sTx.c1.hdr.req_type <= #1 eREQ_RDLINE_S;
       host_ccip.sTx.c1.hdr.address <= #1 eREQ_WRLINE_I ;
       host_ccip.sTx.c1.hdr.mdata <= #1'b0;
-      host_ccip.sTx.c1.data <= #1 { mem_write_bits_result_out,
-                      3'b0, mem_write_bits_result_isZero, mem_write_bits_result_isNaR,
+      host_ccip.sTx.c1.data <= #1 {3'b0, mem_write_bits_result_isZero, mem_write_bits_result_isNaR,
                       mem_write_bits_result_lt, mem_write_bits_result_eq, 
-                      mem_write_bits_result_gt, 4'b0,mem_write_bits_result_exceptions};
+                      mem_write_bits_result_gt, mem_write_bits_result_out};
       host_ccip.sTx.c1.valid <= #1 mem_write_req_valid;
     end
 
