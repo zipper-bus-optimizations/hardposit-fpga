@@ -106,6 +106,7 @@ module PositCompare(
   assign io_gt = _T_2 & _T_3; // @[PositCompare.scala 16:9]
 endmodule
 module PositFMACore(
+  input         clock,
   input         io_num1_sign,
   input  [8:0]  io_num1_exponent,
   input  [27:0] io_num1_fraction,
@@ -123,141 +124,253 @@ module PositFMACore(
   input         io_num3_isNaR,
   input         io_sub,
   input         io_negate,
+  input         io_input_valid,
   output [1:0]  io_trailingBits,
   output        io_stickyBit,
   output        io_out_sign,
   output [8:0]  io_out_exponent,
   output [27:0] io_out_fraction,
   output        io_out_isZero,
-  output        io_out_isNaR
+  output        io_out_isNaR,
+  output        io_output_valid
 );
-  wire  _T = io_num1_sign ^ io_num2_sign; // @[PositFMA.scala 24:31]
-  wire  productSign = _T ^ io_negate; // @[PositFMA.scala 24:43]
-  wire  _T_1 = io_num3_sign ^ io_negate; // @[PositFMA.scala 25:31]
-  wire  addendSign = _T_1 ^ io_sub; // @[PositFMA.scala 25:43]
-  wire [9:0] productExponent = $signed(io_num1_exponent) + $signed(io_num2_exponent); // @[PositFMA.scala 27:39]
-  wire [55:0] productFraction = io_num1_fraction * io_num2_fraction; // @[PositFMA.scala 29:63]
-  wire  prodOverflow = productFraction[55]; // @[PositFMA.scala 31:44]
-  wire [54:0] normProductFraction = prodOverflow ? productFraction[55:1] : productFraction[54:0]; // @[PositFMA.scala 33:8]
-  wire [1:0] _T_6 = {1'h0,prodOverflow}; // @[PositFMA.scala 34:76]
-  wire [9:0] _GEN_0 = {{8{_T_6[1]}},_T_6}; // @[PositFMA.scala 34:45]
-  wire [9:0] normProductExponent = $signed(productExponent) + $signed(_GEN_0); // @[PositFMA.scala 34:45]
-  wire  prodStickyBit = prodOverflow & productFraction[0]; // @[PositFMA.scala 35:42]
-  wire [54:0] _T_10 = {io_num3_fraction,27'h0}; // @[Cat.scala 30:58]
-  wire [54:0] addendFraction = io_num3_isZero ? 55'h0 : _T_10; // @[PositFMA.scala 38:27]
-  wire  _T_11 = ~io_num3_isZero; // @[PositFMA.scala 42:5]
-  wire [9:0] _GEN_1 = {{1{io_num3_exponent[8]}},io_num3_exponent}; // @[PositFMA.scala 43:24]
-  wire  _T_12 = $signed(_GEN_1) > $signed(normProductExponent); // @[PositFMA.scala 43:24]
-  wire  _T_13 = $signed(_GEN_1) == $signed(normProductExponent); // @[PositFMA.scala 44:25]
-  wire  _T_14 = addendFraction > normProductFraction; // @[PositFMA.scala 44:68]
-  wire  _T_15 = _T_13 & _T_14; // @[PositFMA.scala 44:49]
-  wire  _T_16 = _T_12 | _T_15; // @[PositFMA.scala 43:47]
-  wire  isAddendGtProduct = _T_11 & _T_16; // @[PositFMA.scala 42:19]
-  wire [9:0] gExp = isAddendGtProduct ? $signed({{1{io_num3_exponent[8]}},io_num3_exponent}) : $signed(normProductExponent); // @[PositFMA.scala 46:18]
-  wire [54:0] gFrac = isAddendGtProduct ? addendFraction : normProductFraction; // @[PositFMA.scala 47:18]
-  wire  gSign = isAddendGtProduct ? addendSign : productSign; // @[PositFMA.scala 48:18]
-  wire [9:0] lExp = isAddendGtProduct ? $signed(normProductExponent) : $signed({{1{io_num3_exponent[8]}},io_num3_exponent}); // @[PositFMA.scala 50:18]
-  wire [54:0] lFrac = isAddendGtProduct ? normProductFraction : addendFraction; // @[PositFMA.scala 51:18]
-  wire  lSign = isAddendGtProduct ? productSign : addendSign; // @[PositFMA.scala 52:18]
-  wire [9:0] expDiff = $signed(gExp) - $signed(lExp); // @[PositFMA.scala 54:37]
-  wire  shftInBound = expDiff < 10'h37; // @[PositFMA.scala 55:29]
-  wire [54:0] _T_20 = lFrac >> expDiff; // @[PositFMA.scala 57:28]
-  wire [55:0] shiftedLFrac = shftInBound ? {{1'd0}, _T_20} : 56'h0; // @[PositFMA.scala 57:8]
-  wire [1023:0] _T_21 = 1024'h1 << expDiff; // @[OneHot.scala 58:35]
-  wire [1023:0] _T_23 = _T_21 - 1024'h1; // @[common.scala 23:44]
-  wire [55:0] lfracStickyMask = _T_23[55:0]; // @[PositFMA.scala 59:26]
-  wire [55:0] _GEN_3 = {{1'd0}, lFrac}; // @[PositFMA.scala 60:31]
-  wire [55:0] _T_24 = _GEN_3 & lfracStickyMask; // @[PositFMA.scala 60:31]
-  wire  lFracStickyBit = _T_24 != 56'h0; // @[PositFMA.scala 60:53]
-  wire  _T_25 = gSign ^ lSign; // @[PositFMA.scala 62:28]
-  wire  isAddition = ~_T_25; // @[PositFMA.scala 62:20]
-  wire [55:0] _T_26 = ~shiftedLFrac; // @[PositFMA.scala 64:35]
-  wire [55:0] _T_28 = _T_26 + 56'h1; // @[PositFMA.scala 64:49]
-  wire [55:0] signedLFrac = isAddition ? shiftedLFrac : _T_28; // @[PositFMA.scala 64:8]
-  wire [55:0] _GEN_4 = {{1'd0}, gFrac}; // @[PositFMA.scala 66:55]
-  wire [56:0] _T_29 = _GEN_4 + signedLFrac; // @[PositFMA.scala 66:55]
-  wire [55:0] fmaFraction = _T_29[55:0];
-  wire  fmaOverflow = isAddition & fmaFraction[55]; // @[PositFMA.scala 68:32]
-  wire [55:0] _T_32 = {fmaFraction[54:0],1'h0}; // @[Cat.scala 30:58]
-  wire [55:0] adjFmaFraction = fmaOverflow ? fmaFraction : _T_32; // @[PositFMA.scala 70:8]
-  wire [1:0] _T_34 = {1'h0,fmaOverflow}; // @[PositFMA.scala 71:59]
-  wire [9:0] _GEN_5 = {{8{_T_34[1]}},_T_34}; // @[PositFMA.scala 71:29]
-  wire [9:0] adjFmaExponent = $signed(gExp) + $signed(_GEN_5); // @[PositFMA.scala 71:29]
-  wire [5:0] _T_93 = adjFmaFraction[1] ? 6'h36 : 6'h37; // @[Mux.scala 47:69]
-  wire [5:0] _T_94 = adjFmaFraction[2] ? 6'h35 : _T_93; // @[Mux.scala 47:69]
-  wire [5:0] _T_95 = adjFmaFraction[3] ? 6'h34 : _T_94; // @[Mux.scala 47:69]
-  wire [5:0] _T_96 = adjFmaFraction[4] ? 6'h33 : _T_95; // @[Mux.scala 47:69]
-  wire [5:0] _T_97 = adjFmaFraction[5] ? 6'h32 : _T_96; // @[Mux.scala 47:69]
-  wire [5:0] _T_98 = adjFmaFraction[6] ? 6'h31 : _T_97; // @[Mux.scala 47:69]
-  wire [5:0] _T_99 = adjFmaFraction[7] ? 6'h30 : _T_98; // @[Mux.scala 47:69]
-  wire [5:0] _T_100 = adjFmaFraction[8] ? 6'h2f : _T_99; // @[Mux.scala 47:69]
-  wire [5:0] _T_101 = adjFmaFraction[9] ? 6'h2e : _T_100; // @[Mux.scala 47:69]
-  wire [5:0] _T_102 = adjFmaFraction[10] ? 6'h2d : _T_101; // @[Mux.scala 47:69]
-  wire [5:0] _T_103 = adjFmaFraction[11] ? 6'h2c : _T_102; // @[Mux.scala 47:69]
-  wire [5:0] _T_104 = adjFmaFraction[12] ? 6'h2b : _T_103; // @[Mux.scala 47:69]
-  wire [5:0] _T_105 = adjFmaFraction[13] ? 6'h2a : _T_104; // @[Mux.scala 47:69]
-  wire [5:0] _T_106 = adjFmaFraction[14] ? 6'h29 : _T_105; // @[Mux.scala 47:69]
-  wire [5:0] _T_107 = adjFmaFraction[15] ? 6'h28 : _T_106; // @[Mux.scala 47:69]
-  wire [5:0] _T_108 = adjFmaFraction[16] ? 6'h27 : _T_107; // @[Mux.scala 47:69]
-  wire [5:0] _T_109 = adjFmaFraction[17] ? 6'h26 : _T_108; // @[Mux.scala 47:69]
-  wire [5:0] _T_110 = adjFmaFraction[18] ? 6'h25 : _T_109; // @[Mux.scala 47:69]
-  wire [5:0] _T_111 = adjFmaFraction[19] ? 6'h24 : _T_110; // @[Mux.scala 47:69]
-  wire [5:0] _T_112 = adjFmaFraction[20] ? 6'h23 : _T_111; // @[Mux.scala 47:69]
-  wire [5:0] _T_113 = adjFmaFraction[21] ? 6'h22 : _T_112; // @[Mux.scala 47:69]
-  wire [5:0] _T_114 = adjFmaFraction[22] ? 6'h21 : _T_113; // @[Mux.scala 47:69]
-  wire [5:0] _T_115 = adjFmaFraction[23] ? 6'h20 : _T_114; // @[Mux.scala 47:69]
-  wire [5:0] _T_116 = adjFmaFraction[24] ? 6'h1f : _T_115; // @[Mux.scala 47:69]
-  wire [5:0] _T_117 = adjFmaFraction[25] ? 6'h1e : _T_116; // @[Mux.scala 47:69]
-  wire [5:0] _T_118 = adjFmaFraction[26] ? 6'h1d : _T_117; // @[Mux.scala 47:69]
-  wire [5:0] _T_119 = adjFmaFraction[27] ? 6'h1c : _T_118; // @[Mux.scala 47:69]
-  wire [5:0] _T_120 = adjFmaFraction[28] ? 6'h1b : _T_119; // @[Mux.scala 47:69]
-  wire [5:0] _T_121 = adjFmaFraction[29] ? 6'h1a : _T_120; // @[Mux.scala 47:69]
-  wire [5:0] _T_122 = adjFmaFraction[30] ? 6'h19 : _T_121; // @[Mux.scala 47:69]
-  wire [5:0] _T_123 = adjFmaFraction[31] ? 6'h18 : _T_122; // @[Mux.scala 47:69]
-  wire [5:0] _T_124 = adjFmaFraction[32] ? 6'h17 : _T_123; // @[Mux.scala 47:69]
-  wire [5:0] _T_125 = adjFmaFraction[33] ? 6'h16 : _T_124; // @[Mux.scala 47:69]
-  wire [5:0] _T_126 = adjFmaFraction[34] ? 6'h15 : _T_125; // @[Mux.scala 47:69]
-  wire [5:0] _T_127 = adjFmaFraction[35] ? 6'h14 : _T_126; // @[Mux.scala 47:69]
-  wire [5:0] _T_128 = adjFmaFraction[36] ? 6'h13 : _T_127; // @[Mux.scala 47:69]
-  wire [5:0] _T_129 = adjFmaFraction[37] ? 6'h12 : _T_128; // @[Mux.scala 47:69]
-  wire [5:0] _T_130 = adjFmaFraction[38] ? 6'h11 : _T_129; // @[Mux.scala 47:69]
-  wire [5:0] _T_131 = adjFmaFraction[39] ? 6'h10 : _T_130; // @[Mux.scala 47:69]
-  wire [5:0] _T_132 = adjFmaFraction[40] ? 6'hf : _T_131; // @[Mux.scala 47:69]
-  wire [5:0] _T_133 = adjFmaFraction[41] ? 6'he : _T_132; // @[Mux.scala 47:69]
-  wire [5:0] _T_134 = adjFmaFraction[42] ? 6'hd : _T_133; // @[Mux.scala 47:69]
-  wire [5:0] _T_135 = adjFmaFraction[43] ? 6'hc : _T_134; // @[Mux.scala 47:69]
-  wire [5:0] _T_136 = adjFmaFraction[44] ? 6'hb : _T_135; // @[Mux.scala 47:69]
-  wire [5:0] _T_137 = adjFmaFraction[45] ? 6'ha : _T_136; // @[Mux.scala 47:69]
-  wire [5:0] _T_138 = adjFmaFraction[46] ? 6'h9 : _T_137; // @[Mux.scala 47:69]
-  wire [5:0] _T_139 = adjFmaFraction[47] ? 6'h8 : _T_138; // @[Mux.scala 47:69]
-  wire [5:0] _T_140 = adjFmaFraction[48] ? 6'h7 : _T_139; // @[Mux.scala 47:69]
-  wire [5:0] _T_141 = adjFmaFraction[49] ? 6'h6 : _T_140; // @[Mux.scala 47:69]
-  wire [5:0] _T_142 = adjFmaFraction[50] ? 6'h5 : _T_141; // @[Mux.scala 47:69]
-  wire [5:0] _T_143 = adjFmaFraction[51] ? 6'h4 : _T_142; // @[Mux.scala 47:69]
-  wire [5:0] _T_144 = adjFmaFraction[52] ? 6'h3 : _T_143; // @[Mux.scala 47:69]
-  wire [5:0] _T_145 = adjFmaFraction[53] ? 6'h2 : _T_144; // @[Mux.scala 47:69]
-  wire [5:0] _T_146 = adjFmaFraction[54] ? 6'h1 : _T_145; // @[Mux.scala 47:69]
-  wire [5:0] normalizationFactor = adjFmaFraction[55] ? 6'h0 : _T_146; // @[Mux.scala 47:69]
-  wire [5:0] _T_147 = adjFmaFraction[55] ? 6'h0 : _T_146; // @[PositFMA.scala 74:69]
-  wire [9:0] _GEN_6 = {{4{_T_147[5]}},_T_147}; // @[PositFMA.scala 74:40]
-  wire [10:0] normFmaExponent = $signed(adjFmaExponent) - $signed(_GEN_6); // @[PositFMA.scala 74:40]
-  wire [118:0] _GEN_7 = {{63'd0}, adjFmaFraction}; // @[PositFMA.scala 75:41]
-  wire [118:0] _T_148 = _GEN_7 << normalizationFactor; // @[PositFMA.scala 75:41]
-  wire [55:0] normFmaFraction = _T_148[55:0]; // @[PositFMA.scala 75:64]
-  wire  _T_149 = io_num1_isNaR | io_num2_isNaR; // @[PositFMA.scala 78:33]
-  wire  result_isNaR = _T_149 | io_num3_isNaR; // @[PositFMA.scala 78:46]
-  wire  _T_151 = ~result_isNaR; // @[PositFMA.scala 79:22]
-  wire  _T_152 = io_num1_isZero | io_num2_isZero; // @[PositFMA.scala 79:52]
-  wire  _T_153 = _T_152 & io_num3_isZero; // @[PositFMA.scala 79:67]
-  wire  _T_157 = prodStickyBit | lFracStickyBit; // @[PositFMA.scala 85:36]
-  wire  _T_159 = normFmaFraction[25:0] != 26'h0; // @[PositFMA.scala 85:130]
-  assign io_trailingBits = normFmaFraction[27:26]; // @[PositFMA.scala 84:19]
-  assign io_stickyBit = _T_157 | _T_159; // @[PositFMA.scala 85:19]
-  assign io_out_sign = isAddendGtProduct ? addendSign : productSign; // @[PositFMA.scala 87:10]
-  assign io_out_exponent = normFmaExponent[8:0]; // @[PositFMA.scala 87:10]
-  assign io_out_fraction = normFmaFraction[55:28]; // @[PositFMA.scala 87:10]
-  assign io_out_isZero = _T_151 & _T_153; // @[PositFMA.scala 87:10]
-  assign io_out_isNaR = _T_149 | io_num3_isNaR; // @[PositFMA.scala 87:10]
+  wire [9:0] productExponent = $signed(io_num1_exponent) + $signed(io_num2_exponent); // @[PositFMA.scala 25:39]
+  wire [55:0] productFraction = io_num1_fraction * io_num2_fraction; // @[PositFMA.scala 27:63]
+  wire  prodOverflow = productFraction[55]; // @[PositFMA.scala 29:44]
+  wire [54:0] normProductFraction = prodOverflow ? productFraction[55:1] : productFraction[54:0]; // @[PositFMA.scala 31:8]
+  wire [1:0] _T_4 = {1'h0,prodOverflow}; // @[PositFMA.scala 32:76]
+  wire [9:0] _GEN_0 = {{8{_T_4[1]}},_T_4}; // @[PositFMA.scala 32:45]
+  wire [9:0] normProductExponent = $signed(productExponent) + $signed(_GEN_0); // @[PositFMA.scala 32:45]
+  wire  prodStickyBit = prodOverflow & productFraction[0]; // @[PositFMA.scala 33:42]
+  wire [54:0] _T_8 = {io_num3_fraction,27'h0}; // @[Cat.scala 30:58]
+  wire [54:0] addendFraction = io_num3_isZero ? 55'h0 : _T_8; // @[PositFMA.scala 36:27]
+  wire  _T_9 = io_num1_sign ^ io_num2_sign; // @[PositFMA.scala 39:39]
+  reg  productSign; // @[PositFMA.scala 39:28]
+  reg [31:0] _RAND_0;
+  wire  _T_11 = io_num3_sign ^ io_negate; // @[PositFMA.scala 40:39]
+  reg  addendSign; // @[PositFMA.scala 40:28]
+  reg [31:0] _RAND_1;
+  reg [8:0] addendExponent_n; // @[PositFMA.scala 41:33]
+  reg [31:0] _RAND_2;
+  reg [9:0] normProductExponent_n; // @[PositFMA.scala 42:38]
+  reg [31:0] _RAND_3;
+  reg [54:0] addendFraction_n; // @[PositFMA.scala 43:33]
+  reg [63:0] _RAND_4;
+  reg [54:0] normProductFraction_n; // @[PositFMA.scala 44:38]
+  reg [63:0] _RAND_5;
+  wire  _T_13 = ~io_num3_isZero; // @[PositFMA.scala 46:13]
+  wire [9:0] _GEN_1 = {{1{io_num3_exponent[8]}},io_num3_exponent}; // @[PositFMA.scala 47:24]
+  wire  _T_14 = $signed(_GEN_1) > $signed(normProductExponent); // @[PositFMA.scala 47:24]
+  wire  _T_15 = $signed(_GEN_1) == $signed(normProductExponent); // @[PositFMA.scala 48:25]
+  wire  _T_16 = addendFraction > normProductFraction; // @[PositFMA.scala 48:68]
+  wire  _T_17 = _T_15 & _T_16; // @[PositFMA.scala 48:49]
+  wire  _T_18 = _T_14 | _T_17; // @[PositFMA.scala 47:47]
+  reg  isAddendGtProduct; // @[PositFMA.scala 46:12]
+  reg [31:0] _RAND_6;
+  wire [9:0] gExp = isAddendGtProduct ? $signed({{1{addendExponent_n[8]}},addendExponent_n}) : $signed(normProductExponent_n); // @[PositFMA.scala 50:18]
+  wire [54:0] gFrac = isAddendGtProduct ? addendFraction_n : normProductFraction_n; // @[PositFMA.scala 51:18]
+  wire  gSign = isAddendGtProduct ? addendSign : productSign; // @[PositFMA.scala 52:18]
+  wire [9:0] lExp = isAddendGtProduct ? $signed(normProductExponent_n) : $signed({{1{addendExponent_n[8]}},addendExponent_n}); // @[PositFMA.scala 54:18]
+  wire [54:0] lFrac = isAddendGtProduct ? normProductFraction_n : addendFraction_n; // @[PositFMA.scala 55:18]
+  wire  lSign = isAddendGtProduct ? productSign : addendSign; // @[PositFMA.scala 56:18]
+  wire [9:0] expDiff = $signed(gExp) - $signed(lExp); // @[PositFMA.scala 58:37]
+  wire  shftInBound = expDiff < 10'h37; // @[PositFMA.scala 59:29]
+  wire [54:0] _T_23 = lFrac >> expDiff; // @[PositFMA.scala 61:28]
+  wire [55:0] shiftedLFrac = shftInBound ? {{1'd0}, _T_23} : 56'h0; // @[PositFMA.scala 61:8]
+  wire [1023:0] _T_24 = 1024'h1 << expDiff; // @[OneHot.scala 58:35]
+  wire [1023:0] _T_26 = _T_24 - 1024'h1; // @[common.scala 23:44]
+  wire [55:0] lfracStickyMask = _T_26[55:0]; // @[PositFMA.scala 63:26]
+  wire [55:0] _GEN_3 = {{1'd0}, lFrac}; // @[PositFMA.scala 64:31]
+  wire [55:0] _T_27 = _GEN_3 & lfracStickyMask; // @[PositFMA.scala 64:31]
+  wire  lFracStickyBit = _T_27 != 56'h0; // @[PositFMA.scala 64:53]
+  wire  _T_28 = gSign ^ lSign; // @[PositFMA.scala 66:28]
+  wire  isAddition = ~_T_28; // @[PositFMA.scala 66:20]
+  wire [55:0] _T_29 = ~shiftedLFrac; // @[PositFMA.scala 68:35]
+  wire [55:0] _T_31 = _T_29 + 56'h1; // @[PositFMA.scala 68:49]
+  wire [55:0] signedLFrac = isAddition ? shiftedLFrac : _T_31; // @[PositFMA.scala 68:8]
+  wire [55:0] _GEN_4 = {{1'd0}, gFrac}; // @[PositFMA.scala 70:55]
+  wire [56:0] _T_32 = _GEN_4 + signedLFrac; // @[PositFMA.scala 70:55]
+  wire [55:0] fmaFraction = _T_32[55:0];
+  wire  fmaOverflow = isAddition & fmaFraction[55]; // @[PositFMA.scala 72:32]
+  wire [55:0] _T_35 = {fmaFraction[54:0],1'h0}; // @[Cat.scala 30:58]
+  wire [55:0] adjFmaFraction = fmaOverflow ? fmaFraction : _T_35; // @[PositFMA.scala 74:8]
+  wire [1:0] _T_37 = {1'h0,fmaOverflow}; // @[PositFMA.scala 75:59]
+  wire [9:0] _GEN_5 = {{8{_T_37[1]}},_T_37}; // @[PositFMA.scala 75:29]
+  wire [9:0] adjFmaExponent = $signed(gExp) + $signed(_GEN_5); // @[PositFMA.scala 75:29]
+  wire [5:0] _T_96 = adjFmaFraction[1] ? 6'h36 : 6'h37; // @[Mux.scala 47:69]
+  wire [5:0] _T_97 = adjFmaFraction[2] ? 6'h35 : _T_96; // @[Mux.scala 47:69]
+  wire [5:0] _T_98 = adjFmaFraction[3] ? 6'h34 : _T_97; // @[Mux.scala 47:69]
+  wire [5:0] _T_99 = adjFmaFraction[4] ? 6'h33 : _T_98; // @[Mux.scala 47:69]
+  wire [5:0] _T_100 = adjFmaFraction[5] ? 6'h32 : _T_99; // @[Mux.scala 47:69]
+  wire [5:0] _T_101 = adjFmaFraction[6] ? 6'h31 : _T_100; // @[Mux.scala 47:69]
+  wire [5:0] _T_102 = adjFmaFraction[7] ? 6'h30 : _T_101; // @[Mux.scala 47:69]
+  wire [5:0] _T_103 = adjFmaFraction[8] ? 6'h2f : _T_102; // @[Mux.scala 47:69]
+  wire [5:0] _T_104 = adjFmaFraction[9] ? 6'h2e : _T_103; // @[Mux.scala 47:69]
+  wire [5:0] _T_105 = adjFmaFraction[10] ? 6'h2d : _T_104; // @[Mux.scala 47:69]
+  wire [5:0] _T_106 = adjFmaFraction[11] ? 6'h2c : _T_105; // @[Mux.scala 47:69]
+  wire [5:0] _T_107 = adjFmaFraction[12] ? 6'h2b : _T_106; // @[Mux.scala 47:69]
+  wire [5:0] _T_108 = adjFmaFraction[13] ? 6'h2a : _T_107; // @[Mux.scala 47:69]
+  wire [5:0] _T_109 = adjFmaFraction[14] ? 6'h29 : _T_108; // @[Mux.scala 47:69]
+  wire [5:0] _T_110 = adjFmaFraction[15] ? 6'h28 : _T_109; // @[Mux.scala 47:69]
+  wire [5:0] _T_111 = adjFmaFraction[16] ? 6'h27 : _T_110; // @[Mux.scala 47:69]
+  wire [5:0] _T_112 = adjFmaFraction[17] ? 6'h26 : _T_111; // @[Mux.scala 47:69]
+  wire [5:0] _T_113 = adjFmaFraction[18] ? 6'h25 : _T_112; // @[Mux.scala 47:69]
+  wire [5:0] _T_114 = adjFmaFraction[19] ? 6'h24 : _T_113; // @[Mux.scala 47:69]
+  wire [5:0] _T_115 = adjFmaFraction[20] ? 6'h23 : _T_114; // @[Mux.scala 47:69]
+  wire [5:0] _T_116 = adjFmaFraction[21] ? 6'h22 : _T_115; // @[Mux.scala 47:69]
+  wire [5:0] _T_117 = adjFmaFraction[22] ? 6'h21 : _T_116; // @[Mux.scala 47:69]
+  wire [5:0] _T_118 = adjFmaFraction[23] ? 6'h20 : _T_117; // @[Mux.scala 47:69]
+  wire [5:0] _T_119 = adjFmaFraction[24] ? 6'h1f : _T_118; // @[Mux.scala 47:69]
+  wire [5:0] _T_120 = adjFmaFraction[25] ? 6'h1e : _T_119; // @[Mux.scala 47:69]
+  wire [5:0] _T_121 = adjFmaFraction[26] ? 6'h1d : _T_120; // @[Mux.scala 47:69]
+  wire [5:0] _T_122 = adjFmaFraction[27] ? 6'h1c : _T_121; // @[Mux.scala 47:69]
+  wire [5:0] _T_123 = adjFmaFraction[28] ? 6'h1b : _T_122; // @[Mux.scala 47:69]
+  wire [5:0] _T_124 = adjFmaFraction[29] ? 6'h1a : _T_123; // @[Mux.scala 47:69]
+  wire [5:0] _T_125 = adjFmaFraction[30] ? 6'h19 : _T_124; // @[Mux.scala 47:69]
+  wire [5:0] _T_126 = adjFmaFraction[31] ? 6'h18 : _T_125; // @[Mux.scala 47:69]
+  wire [5:0] _T_127 = adjFmaFraction[32] ? 6'h17 : _T_126; // @[Mux.scala 47:69]
+  wire [5:0] _T_128 = adjFmaFraction[33] ? 6'h16 : _T_127; // @[Mux.scala 47:69]
+  wire [5:0] _T_129 = adjFmaFraction[34] ? 6'h15 : _T_128; // @[Mux.scala 47:69]
+  wire [5:0] _T_130 = adjFmaFraction[35] ? 6'h14 : _T_129; // @[Mux.scala 47:69]
+  wire [5:0] _T_131 = adjFmaFraction[36] ? 6'h13 : _T_130; // @[Mux.scala 47:69]
+  wire [5:0] _T_132 = adjFmaFraction[37] ? 6'h12 : _T_131; // @[Mux.scala 47:69]
+  wire [5:0] _T_133 = adjFmaFraction[38] ? 6'h11 : _T_132; // @[Mux.scala 47:69]
+  wire [5:0] _T_134 = adjFmaFraction[39] ? 6'h10 : _T_133; // @[Mux.scala 47:69]
+  wire [5:0] _T_135 = adjFmaFraction[40] ? 6'hf : _T_134; // @[Mux.scala 47:69]
+  wire [5:0] _T_136 = adjFmaFraction[41] ? 6'he : _T_135; // @[Mux.scala 47:69]
+  wire [5:0] _T_137 = adjFmaFraction[42] ? 6'hd : _T_136; // @[Mux.scala 47:69]
+  wire [5:0] _T_138 = adjFmaFraction[43] ? 6'hc : _T_137; // @[Mux.scala 47:69]
+  wire [5:0] _T_139 = adjFmaFraction[44] ? 6'hb : _T_138; // @[Mux.scala 47:69]
+  wire [5:0] _T_140 = adjFmaFraction[45] ? 6'ha : _T_139; // @[Mux.scala 47:69]
+  wire [5:0] _T_141 = adjFmaFraction[46] ? 6'h9 : _T_140; // @[Mux.scala 47:69]
+  wire [5:0] _T_142 = adjFmaFraction[47] ? 6'h8 : _T_141; // @[Mux.scala 47:69]
+  wire [5:0] _T_143 = adjFmaFraction[48] ? 6'h7 : _T_142; // @[Mux.scala 47:69]
+  wire [5:0] _T_144 = adjFmaFraction[49] ? 6'h6 : _T_143; // @[Mux.scala 47:69]
+  wire [5:0] _T_145 = adjFmaFraction[50] ? 6'h5 : _T_144; // @[Mux.scala 47:69]
+  wire [5:0] _T_146 = adjFmaFraction[51] ? 6'h4 : _T_145; // @[Mux.scala 47:69]
+  wire [5:0] _T_147 = adjFmaFraction[52] ? 6'h3 : _T_146; // @[Mux.scala 47:69]
+  wire [5:0] _T_148 = adjFmaFraction[53] ? 6'h2 : _T_147; // @[Mux.scala 47:69]
+  wire [5:0] _T_149 = adjFmaFraction[54] ? 6'h1 : _T_148; // @[Mux.scala 47:69]
+  wire [5:0] normalizationFactor = adjFmaFraction[55] ? 6'h0 : _T_149; // @[Mux.scala 47:69]
+  wire [5:0] _T_150 = adjFmaFraction[55] ? 6'h0 : _T_149; // @[PositFMA.scala 78:69]
+  wire [9:0] _GEN_6 = {{4{_T_150[5]}},_T_150}; // @[PositFMA.scala 78:40]
+  wire [10:0] normFmaExponent = $signed(adjFmaExponent) - $signed(_GEN_6); // @[PositFMA.scala 78:40]
+  wire [118:0] _GEN_7 = {{63'd0}, adjFmaFraction}; // @[PositFMA.scala 79:41]
+  wire [118:0] _T_151 = _GEN_7 << normalizationFactor; // @[PositFMA.scala 79:41]
+  wire [55:0] normFmaFraction = _T_151[55:0]; // @[PositFMA.scala 79:64]
+  wire  _T_152 = io_num1_isNaR | io_num2_isNaR; // @[PositFMA.scala 83:41]
+  reg  result_isNaR; // @[PositFMA.scala 83:29]
+  reg [31:0] _RAND_7;
+  wire  _T_154 = io_num1_isZero | io_num2_isZero; // @[PositFMA.scala 84:56]
+  reg  result_isZero_second_half; // @[PositFMA.scala 84:42]
+  reg [31:0] _RAND_8;
+  reg  intermediate_valid; // @[PositFMA.scala 85:35]
+  reg [31:0] _RAND_9;
+  wire  _T_156 = ~result_isNaR; // @[PositFMA.scala 87:22]
+  wire  _T_160 = prodStickyBit | lFracStickyBit; // @[PositFMA.scala 93:36]
+  wire  _T_162 = normFmaFraction[25:0] != 26'h0; // @[PositFMA.scala 93:130]
+  assign io_trailingBits = normFmaFraction[27:26]; // @[PositFMA.scala 92:19]
+  assign io_stickyBit = _T_160 | _T_162; // @[PositFMA.scala 93:19]
+  assign io_out_sign = isAddendGtProduct ? addendSign : productSign; // @[PositFMA.scala 95:10]
+  assign io_out_exponent = normFmaExponent[8:0]; // @[PositFMA.scala 95:10]
+  assign io_out_fraction = normFmaFraction[55:28]; // @[PositFMA.scala 95:10]
+  assign io_out_isZero = _T_156 & result_isZero_second_half; // @[PositFMA.scala 95:10]
+  assign io_out_isNaR = result_isNaR; // @[PositFMA.scala 95:10]
+  assign io_output_valid = intermediate_valid; // @[PositFMA.scala 96:19]
+`ifdef RANDOMIZE_GARBAGE_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_INVALID_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_REG_INIT
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+`define RANDOMIZE
+`endif
+`ifndef RANDOM
+`define RANDOM $random
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+  integer initvar;
+`endif
+`ifndef SYNTHESIS
+initial begin
+  `ifdef RANDOMIZE
+    `ifdef INIT_RANDOM
+      `INIT_RANDOM
+    `endif
+    `ifndef VERILATOR
+      `ifdef RANDOMIZE_DELAY
+        #`RANDOMIZE_DELAY begin end
+      `else
+        #0.002 begin end
+      `endif
+    `endif
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_0 = {1{`RANDOM}};
+  productSign = _RAND_0[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_1 = {1{`RANDOM}};
+  addendSign = _RAND_1[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_2 = {1{`RANDOM}};
+  addendExponent_n = _RAND_2[8:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_3 = {1{`RANDOM}};
+  normProductExponent_n = _RAND_3[9:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_4 = {2{`RANDOM}};
+  addendFraction_n = _RAND_4[54:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_5 = {2{`RANDOM}};
+  normProductFraction_n = _RAND_5[54:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_6 = {1{`RANDOM}};
+  isAddendGtProduct = _RAND_6[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_7 = {1{`RANDOM}};
+  result_isNaR = _RAND_7[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_8 = {1{`RANDOM}};
+  result_isZero_second_half = _RAND_8[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_9 = {1{`RANDOM}};
+  intermediate_valid = _RAND_9[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `endif // RANDOMIZE
+end // initial
+`endif // SYNTHESIS
+  always @(posedge clock) begin
+    productSign <= _T_9 ^ io_negate;
+    addendSign <= _T_11 ^ io_sub;
+    addendExponent_n <= io_num3_exponent;
+    normProductExponent_n <= $signed(productExponent) + $signed(_GEN_0);
+    if (io_num3_isZero) begin
+      addendFraction_n <= 55'h0;
+    end else begin
+      addendFraction_n <= _T_8;
+    end
+    if (prodOverflow) begin
+      normProductFraction_n <= productFraction[55:1];
+    end else begin
+      normProductFraction_n <= productFraction[54:0];
+    end
+    isAddendGtProduct <= _T_13 & _T_18;
+    result_isNaR <= _T_152 | io_num3_isNaR;
+    result_isZero_second_half <= _T_154 & io_num3_isZero;
+    intermediate_valid <= io_input_valid;
+  end
 endmodule
 module PositDivSqrtCore(
   input         clock,
@@ -755,6 +868,7 @@ module Posit(
   wire  positCompare_io_lt; // @[POSIT.scala 44:34]
   wire  positCompare_io_eq; // @[POSIT.scala 44:34]
   wire  positCompare_io_gt; // @[POSIT.scala 44:34]
+  wire  positFMACore_clock; // @[POSIT.scala 45:34]
   wire  positFMACore_io_num1_sign; // @[POSIT.scala 45:34]
   wire [8:0] positFMACore_io_num1_exponent; // @[POSIT.scala 45:34]
   wire [27:0] positFMACore_io_num1_fraction; // @[POSIT.scala 45:34]
@@ -772,6 +886,7 @@ module Posit(
   wire  positFMACore_io_num3_isNaR; // @[POSIT.scala 45:34]
   wire  positFMACore_io_sub; // @[POSIT.scala 45:34]
   wire  positFMACore_io_negate; // @[POSIT.scala 45:34]
+  wire  positFMACore_io_input_valid; // @[POSIT.scala 45:34]
   wire [1:0] positFMACore_io_trailingBits; // @[POSIT.scala 45:34]
   wire  positFMACore_io_stickyBit; // @[POSIT.scala 45:34]
   wire  positFMACore_io_out_sign; // @[POSIT.scala 45:34]
@@ -779,6 +894,7 @@ module Posit(
   wire [27:0] positFMACore_io_out_fraction; // @[POSIT.scala 45:34]
   wire  positFMACore_io_out_isZero; // @[POSIT.scala 45:34]
   wire  positFMACore_io_out_isNaR; // @[POSIT.scala 45:34]
+  wire  positFMACore_io_output_valid; // @[POSIT.scala 45:34]
   wire  positDivSqrtCore_clock; // @[POSIT.scala 46:38]
   wire  positDivSqrtCore_reset; // @[POSIT.scala 46:38]
   wire  positDivSqrtCore_io_validIn; // @[POSIT.scala 46:38]
@@ -839,14 +955,14 @@ module Posit(
   wire [27:0] num3Extractor_io_out_fraction; // @[POSIT.scala 68:35]
   wire  num3Extractor_io_out_isZero; // @[POSIT.scala 68:35]
   wire  num3Extractor_io_out_isNaR; // @[POSIT.scala 68:35]
-  wire  positGenerator_io_in_sign; // @[POSIT.scala 162:36]
-  wire [8:0] positGenerator_io_in_exponent; // @[POSIT.scala 162:36]
-  wire [27:0] positGenerator_io_in_fraction; // @[POSIT.scala 162:36]
-  wire  positGenerator_io_in_isZero; // @[POSIT.scala 162:36]
-  wire  positGenerator_io_in_isNaR; // @[POSIT.scala 162:36]
-  wire [1:0] positGenerator_io_trailingBits; // @[POSIT.scala 162:36]
-  wire  positGenerator_io_stickyBit; // @[POSIT.scala 162:36]
-  wire [31:0] positGenerator_io_out; // @[POSIT.scala 162:36]
+  wire  positGenerator_io_in_sign; // @[POSIT.scala 163:36]
+  wire [8:0] positGenerator_io_in_exponent; // @[POSIT.scala 163:36]
+  wire [27:0] positGenerator_io_in_fraction; // @[POSIT.scala 163:36]
+  wire  positGenerator_io_in_isZero; // @[POSIT.scala 163:36]
+  wire  positGenerator_io_in_isNaR; // @[POSIT.scala 163:36]
+  wire [1:0] positGenerator_io_trailingBits; // @[POSIT.scala 163:36]
+  wire  positGenerator_io_stickyBit; // @[POSIT.scala 163:36]
+  wire [31:0] positGenerator_io_out; // @[POSIT.scala 163:36]
   wire  _T = io_result_ready & positDivSqrtCore_io_readyIn; // @[POSIT.scala 49:45]
   reg [31:0] init_num1; // @[POSIT.scala 51:32]
   reg [31:0] _RAND_0;
@@ -900,46 +1016,50 @@ module Posit(
   reg [31:0] _RAND_24;
   reg  exec_valid; // @[POSIT.scala 81:33]
   reg [31:0] _RAND_25;
-  wire  _T_15 = exec_inst == 3'h5; // @[POSIT.scala 116:64]
-  reg  result_out_sign; // @[POSIT.scala 121:33]
+  wire  _T_14 = exec_inst == 3'h3; // @[POSIT.scala 112:64]
+  wire  _T_17 = exec_inst == 3'h5; // @[POSIT.scala 117:64]
+  reg  result_out_sign; // @[POSIT.scala 122:33]
   reg [31:0] _RAND_26;
-  reg [8:0] result_out_exponent; // @[POSIT.scala 121:33]
+  reg [8:0] result_out_exponent; // @[POSIT.scala 122:33]
   reg [31:0] _RAND_27;
-  reg [27:0] result_out_fraction; // @[POSIT.scala 121:33]
+  reg [27:0] result_out_fraction; // @[POSIT.scala 122:33]
   reg [31:0] _RAND_28;
-  reg  result_out_isZero; // @[POSIT.scala 121:33]
+  reg  result_out_isZero; // @[POSIT.scala 122:33]
   reg [31:0] _RAND_29;
-  reg  result_out_isNaR; // @[POSIT.scala 121:33]
+  reg  result_out_isNaR; // @[POSIT.scala 122:33]
   reg [31:0] _RAND_30;
-  reg  result_stickyBit; // @[POSIT.scala 122:39]
+  reg  result_stickyBit; // @[POSIT.scala 123:39]
   reg [31:0] _RAND_31;
-  reg [1:0] result_trailingBits; // @[POSIT.scala 123:42]
+  reg [1:0] result_trailingBits; // @[POSIT.scala 124:42]
   reg [31:0] _RAND_32;
-  reg  result_valid; // @[POSIT.scala 124:35]
+  reg  result_valid; // @[POSIT.scala 125:35]
   reg [31:0] _RAND_33;
-  reg  result_lt; // @[POSIT.scala 125:32]
+  reg  result_lt; // @[POSIT.scala 126:32]
   reg [31:0] _RAND_34;
-  reg  result_eq; // @[POSIT.scala 126:32]
+  reg  result_eq; // @[POSIT.scala 127:32]
   reg [31:0] _RAND_35;
-  reg  result_gt; // @[POSIT.scala 127:32]
+  reg  result_gt; // @[POSIT.scala 128:32]
   reg [31:0] _RAND_36;
-  wire  _T_20 = 3'h5 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_21_sign = _T_20 & positDivSqrtCore_io_out_sign; // @[Mux.scala 68:16]
-  wire  _T_21_isZero = _T_20 & positDivSqrtCore_io_out_isZero; // @[Mux.scala 68:16]
-  wire  _T_21_isNaR = _T_20 & positDivSqrtCore_io_out_isNaR; // @[Mux.scala 68:16]
-  wire  _T_22 = 3'h4 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_24 = 3'h3 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_26 = 3'h1 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_29 = _T_20 & positDivSqrtCore_io_stickyBit; // @[Mux.scala 68:16]
-  wire  _T_44 = exec_inst != 3'h5; // @[POSIT.scala 157:59]
-  wire  _T_45 = exec_valid & _T_44; // @[POSIT.scala 157:45]
-  wire  _T_46 = _T_45 | positDivSqrtCore_io_validOut_div; // @[POSIT.scala 157:85]
-  wire  _T_47 = _T_46 | positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 158:58]
-  wire  _T_48 = positGenerator_io_out != 32'h0; // @[common.scala 61:41]
-  wire  _T_49 = ~_T_48; // @[common.scala 61:33]
-  wire  _T_53 = positGenerator_io_out[30:0] != 31'h0; // @[common.scala 27:71]
-  wire  _T_54 = ~_T_53; // @[common.scala 27:53]
-  wire  _T_55 = positGenerator_io_out[31] & _T_54; // @[common.scala 27:51]
+  wire  _T_22 = 3'h5 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_23_sign = _T_22 & positDivSqrtCore_io_out_sign; // @[Mux.scala 68:16]
+  wire  _T_23_isZero = _T_22 & positDivSqrtCore_io_out_isZero; // @[Mux.scala 68:16]
+  wire  _T_23_isNaR = _T_22 & positDivSqrtCore_io_out_isNaR; // @[Mux.scala 68:16]
+  wire  _T_24 = 3'h4 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_26 = 3'h3 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_28 = 3'h1 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_31 = _T_22 & positDivSqrtCore_io_stickyBit; // @[Mux.scala 68:16]
+  wire  _T_46 = exec_inst != 3'h5; // @[POSIT.scala 158:59]
+  wire  _T_47 = exec_valid & _T_46; // @[POSIT.scala 158:45]
+  wire  _T_48 = exec_inst != 3'h3; // @[POSIT.scala 158:97]
+  wire  _T_49 = _T_47 & _T_48; // @[POSIT.scala 158:84]
+  wire  _T_50 = _T_49 | positDivSqrtCore_io_validOut_div; // @[POSIT.scala 158:119]
+  wire  _T_51 = _T_50 | positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 159:58]
+  wire  _T_52 = _T_51 | positFMACore_io_output_valid; // @[POSIT.scala 160:59]
+  wire  _T_53 = positGenerator_io_out != 32'h0; // @[common.scala 61:41]
+  wire  _T_54 = ~_T_53; // @[common.scala 61:33]
+  wire  _T_58 = positGenerator_io_out[30:0] != 31'h0; // @[common.scala 27:71]
+  wire  _T_59 = ~_T_58; // @[common.scala 27:53]
+  wire  _T_60 = positGenerator_io_out[31] & _T_59; // @[common.scala 27:51]
   PositAddCore positAddCore ( // @[POSIT.scala 43:34]
     .io_num1_sign(positAddCore_io_num1_sign),
     .io_num1_exponent(positAddCore_io_num1_exponent),
@@ -968,6 +1088,7 @@ module Posit(
     .io_gt(positCompare_io_gt)
   );
   PositFMACore positFMACore ( // @[POSIT.scala 45:34]
+    .clock(positFMACore_clock),
     .io_num1_sign(positFMACore_io_num1_sign),
     .io_num1_exponent(positFMACore_io_num1_exponent),
     .io_num1_fraction(positFMACore_io_num1_fraction),
@@ -985,13 +1106,15 @@ module Posit(
     .io_num3_isNaR(positFMACore_io_num3_isNaR),
     .io_sub(positFMACore_io_sub),
     .io_negate(positFMACore_io_negate),
+    .io_input_valid(positFMACore_io_input_valid),
     .io_trailingBits(positFMACore_io_trailingBits),
     .io_stickyBit(positFMACore_io_stickyBit),
     .io_out_sign(positFMACore_io_out_sign),
     .io_out_exponent(positFMACore_io_out_exponent),
     .io_out_fraction(positFMACore_io_out_fraction),
     .io_out_isZero(positFMACore_io_out_isZero),
-    .io_out_isNaR(positFMACore_io_out_isNaR)
+    .io_out_isNaR(positFMACore_io_out_isNaR),
+    .io_output_valid(positFMACore_io_output_valid)
   );
   PositDivSqrtCore positDivSqrtCore ( // @[POSIT.scala 46:38]
     .clock(positDivSqrtCore_clock),
@@ -1063,7 +1186,7 @@ module Posit(
     .io_out_isZero(num3Extractor_io_out_isZero),
     .io_out_isNaR(num3Extractor_io_out_isNaR)
   );
-  PositGenerator positGenerator ( // @[POSIT.scala 162:36]
+  PositGenerator positGenerator ( // @[POSIT.scala 163:36]
     .io_in_sign(positGenerator_io_in_sign),
     .io_in_exponent(positGenerator_io_in_exponent),
     .io_in_fraction(positGenerator_io_in_fraction),
@@ -1074,14 +1197,14 @@ module Posit(
     .io_out(positGenerator_io_out)
   );
   assign io_request_ready = io_result_ready & positDivSqrtCore_io_readyIn; // @[POSIT.scala 49:26]
-  assign io_result_valid = result_valid; // @[POSIT.scala 175:25]
-  assign io_result_bits_isZero = result_out_isZero | _T_49; // @[POSIT.scala 167:31]
-  assign io_result_bits_isNaR = result_out_isNaR | _T_55; // @[POSIT.scala 168:31]
-  assign io_result_bits_out = positGenerator_io_out; // @[POSIT.scala 169:31]
-  assign io_result_bits_lt = result_lt; // @[POSIT.scala 170:27]
-  assign io_result_bits_eq = result_eq; // @[POSIT.scala 171:27]
-  assign io_result_bits_gt = result_gt; // @[POSIT.scala 172:27]
-  assign io_result_bits_exceptions = positDivSqrtCore_io_exceptions; // @[POSIT.scala 173:35]
+  assign io_result_valid = result_valid; // @[POSIT.scala 176:25]
+  assign io_result_bits_isZero = result_out_isZero | _T_54; // @[POSIT.scala 168:31]
+  assign io_result_bits_isNaR = result_out_isNaR | _T_60; // @[POSIT.scala 169:31]
+  assign io_result_bits_out = positGenerator_io_out; // @[POSIT.scala 170:31]
+  assign io_result_bits_lt = result_lt; // @[POSIT.scala 171:27]
+  assign io_result_bits_eq = result_eq; // @[POSIT.scala 172:27]
+  assign io_result_bits_gt = result_gt; // @[POSIT.scala 173:27]
+  assign io_result_bits_exceptions = positDivSqrtCore_io_exceptions; // @[POSIT.scala 174:35]
   assign positAddCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 100:30]
   assign positAddCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 100:30]
   assign positAddCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 100:30]
@@ -1095,6 +1218,7 @@ module Posit(
   assign positAddCore_io_sub = exec_mode[0]; // @[POSIT.scala 102:29]
   assign positCompare_io_num1 = comp_num1; // @[POSIT.scala 104:30]
   assign positCompare_io_num2 = comp_num2; // @[POSIT.scala 105:30]
+  assign positFMACore_clock = clock;
   assign positFMACore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 107:30]
   assign positFMACore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 107:30]
   assign positFMACore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 107:30]
@@ -1112,40 +1236,41 @@ module Posit(
   assign positFMACore_io_num3_isNaR = exec_num3_isNaR; // @[POSIT.scala 109:30]
   assign positFMACore_io_sub = exec_mode[0]; // @[POSIT.scala 110:29]
   assign positFMACore_io_negate = exec_mode[1]; // @[POSIT.scala 111:32]
+  assign positFMACore_io_input_valid = exec_valid & _T_14; // @[POSIT.scala 112:37]
   assign positDivSqrtCore_clock = clock;
   assign positDivSqrtCore_reset = reset;
-  assign positDivSqrtCore_io_validIn = exec_valid & _T_15; // @[POSIT.scala 116:37]
-  assign positDivSqrtCore_io_sqrtOp = exec_mode[0]; // @[POSIT.scala 115:36]
-  assign positDivSqrtCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 113:34]
-  assign positDivSqrtCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 113:34]
-  assign positDivSqrtCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 113:34]
-  assign positDivSqrtCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 113:34]
-  assign positDivSqrtCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 113:34]
-  assign positDivSqrtCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 114:34]
-  assign positMulCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 118:30]
-  assign positMulCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 118:30]
-  assign positMulCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 118:30]
-  assign positMulCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 118:30]
-  assign positMulCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 118:30]
-  assign positMulCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 119:30]
+  assign positDivSqrtCore_io_validIn = exec_valid & _T_17; // @[POSIT.scala 117:37]
+  assign positDivSqrtCore_io_sqrtOp = exec_mode[0]; // @[POSIT.scala 116:36]
+  assign positDivSqrtCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 114:34]
+  assign positDivSqrtCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 114:34]
+  assign positDivSqrtCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 114:34]
+  assign positDivSqrtCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 114:34]
+  assign positDivSqrtCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 114:34]
+  assign positDivSqrtCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 115:34]
+  assign positDivSqrtCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 115:34]
+  assign positDivSqrtCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 115:34]
+  assign positDivSqrtCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 115:34]
+  assign positDivSqrtCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 115:34]
+  assign positMulCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 119:30]
+  assign positMulCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 119:30]
+  assign positMulCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 119:30]
+  assign positMulCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 119:30]
+  assign positMulCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 119:30]
+  assign positMulCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 120:30]
+  assign positMulCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 120:30]
+  assign positMulCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 120:30]
+  assign positMulCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 120:30]
+  assign positMulCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 120:30]
   assign num1Extractor_io_in = init_num1; // @[POSIT.scala 69:29]
   assign num2Extractor_io_in = init_num2; // @[POSIT.scala 70:29]
   assign num3Extractor_io_in = init_num3; // @[POSIT.scala 71:29]
-  assign positGenerator_io_in_sign = result_out_sign; // @[POSIT.scala 163:40]
-  assign positGenerator_io_in_exponent = result_out_exponent; // @[POSIT.scala 163:40]
-  assign positGenerator_io_in_fraction = result_out_fraction; // @[POSIT.scala 163:40]
-  assign positGenerator_io_in_isZero = result_out_isZero; // @[POSIT.scala 163:40]
-  assign positGenerator_io_in_isNaR = result_out_isNaR; // @[POSIT.scala 163:40]
-  assign positGenerator_io_trailingBits = result_trailingBits; // @[POSIT.scala 164:40]
-  assign positGenerator_io_stickyBit = result_stickyBit; // @[POSIT.scala 165:40]
+  assign positGenerator_io_in_sign = result_out_sign; // @[POSIT.scala 164:40]
+  assign positGenerator_io_in_exponent = result_out_exponent; // @[POSIT.scala 164:40]
+  assign positGenerator_io_in_fraction = result_out_fraction; // @[POSIT.scala 164:40]
+  assign positGenerator_io_in_isZero = result_out_isZero; // @[POSIT.scala 164:40]
+  assign positGenerator_io_in_isNaR = result_out_isNaR; // @[POSIT.scala 164:40]
+  assign positGenerator_io_trailingBits = result_trailingBits; // @[POSIT.scala 165:40]
+  assign positGenerator_io_stickyBit = result_stickyBit; // @[POSIT.scala 166:40]
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
 `define RANDOMIZE
 `endif
@@ -1462,26 +1587,26 @@ end // initial
     if (reset) begin
       result_out_sign <= 1'h0;
     end else if (_T) begin
-      if (_T_26) begin
+      if (_T_28) begin
         result_out_sign <= positAddCore_io_out_sign;
-      end else if (_T_24) begin
+      end else if (_T_26) begin
         result_out_sign <= positFMACore_io_out_sign;
-      end else if (_T_22) begin
+      end else if (_T_24) begin
         result_out_sign <= positMulCore_io_out_sign;
       end else begin
-        result_out_sign <= _T_21_sign;
+        result_out_sign <= _T_23_sign;
       end
     end
     if (reset) begin
       result_out_exponent <= 9'sh0;
     end else if (_T) begin
-      if (_T_26) begin
+      if (_T_28) begin
         result_out_exponent <= positAddCore_io_out_exponent;
-      end else if (_T_24) begin
+      end else if (_T_26) begin
         result_out_exponent <= positFMACore_io_out_exponent;
-      end else if (_T_22) begin
+      end else if (_T_24) begin
         result_out_exponent <= positMulCore_io_out_exponent;
-      end else if (_T_20) begin
+      end else if (_T_22) begin
         result_out_exponent <= positDivSqrtCore_io_out_exponent;
       end else begin
         result_out_exponent <= 9'sh0;
@@ -1490,13 +1615,13 @@ end // initial
     if (reset) begin
       result_out_fraction <= 28'h0;
     end else if (_T) begin
-      if (_T_26) begin
+      if (_T_28) begin
         result_out_fraction <= positAddCore_io_out_fraction;
-      end else if (_T_24) begin
+      end else if (_T_26) begin
         result_out_fraction <= positFMACore_io_out_fraction;
-      end else if (_T_22) begin
+      end else if (_T_24) begin
         result_out_fraction <= positMulCore_io_out_fraction;
-      end else if (_T_20) begin
+      end else if (_T_22) begin
         result_out_fraction <= positDivSqrtCore_io_out_fraction;
       end else begin
         result_out_fraction <= 28'h0;
@@ -1505,52 +1630,52 @@ end // initial
     if (reset) begin
       result_out_isZero <= 1'h0;
     end else if (_T) begin
-      if (_T_26) begin
+      if (_T_28) begin
         result_out_isZero <= positAddCore_io_out_isZero;
-      end else if (_T_24) begin
+      end else if (_T_26) begin
         result_out_isZero <= positFMACore_io_out_isZero;
-      end else if (_T_22) begin
+      end else if (_T_24) begin
         result_out_isZero <= positMulCore_io_out_isZero;
       end else begin
-        result_out_isZero <= _T_21_isZero;
+        result_out_isZero <= _T_23_isZero;
       end
     end
     if (reset) begin
       result_out_isNaR <= 1'h0;
     end else if (_T) begin
-      if (_T_26) begin
+      if (_T_28) begin
         result_out_isNaR <= positAddCore_io_out_isNaR;
-      end else if (_T_24) begin
+      end else if (_T_26) begin
         result_out_isNaR <= positFMACore_io_out_isNaR;
-      end else if (_T_22) begin
+      end else if (_T_24) begin
         result_out_isNaR <= positMulCore_io_out_isNaR;
       end else begin
-        result_out_isNaR <= _T_21_isNaR;
+        result_out_isNaR <= _T_23_isNaR;
       end
     end
     if (reset) begin
       result_stickyBit <= 1'h0;
     end else if (_T) begin
-      if (_T_26) begin
+      if (_T_28) begin
         result_stickyBit <= positAddCore_io_stickyBit;
-      end else if (_T_24) begin
+      end else if (_T_26) begin
         result_stickyBit <= positFMACore_io_stickyBit;
-      end else if (_T_22) begin
+      end else if (_T_24) begin
         result_stickyBit <= positMulCore_io_stickyBit;
       end else begin
-        result_stickyBit <= _T_29;
+        result_stickyBit <= _T_31;
       end
     end
     if (reset) begin
       result_trailingBits <= 2'h0;
     end else if (_T) begin
-      if (_T_26) begin
+      if (_T_28) begin
         result_trailingBits <= positAddCore_io_trailingBits;
-      end else if (_T_24) begin
+      end else if (_T_26) begin
         result_trailingBits <= positFMACore_io_trailingBits;
-      end else if (_T_22) begin
+      end else if (_T_24) begin
         result_trailingBits <= positMulCore_io_trailingBits;
-      end else if (_T_20) begin
+      end else if (_T_22) begin
         result_trailingBits <= positDivSqrtCore_io_trailingBits;
       end else begin
         result_trailingBits <= 2'h0;
@@ -1559,7 +1684,7 @@ end // initial
     if (reset) begin
       result_valid <= 1'h0;
     end else if (_T) begin
-      result_valid <= _T_47;
+      result_valid <= _T_52;
     end
     if (reset) begin
       result_lt <= 1'h0;
