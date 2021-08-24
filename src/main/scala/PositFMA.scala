@@ -11,10 +11,11 @@ class PositFMACore(val nbits: Int, val es: Int) extends Module with HasHardPosit
     val num3   = Input(new unpackedPosit(nbits, es))
     val sub    = Input(Bool())
     val negate = Input(Bool())
-
+    val input_valid  = Input(Bool())
     val trailingBits = Output(UInt(trailingBitCount.W))
     val stickyBit    = Output(Bool())
     val out          = Output(new unpackedPosit(nbits, es))
+    val output_valid  = Output(Bool())
   })
 
   val num1 = io.num1
