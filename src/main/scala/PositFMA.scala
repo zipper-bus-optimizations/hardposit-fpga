@@ -22,9 +22,6 @@ class PositFMACore(val nbits: Int, val es: Int) extends Module with HasHardPosit
   val num2 = io.num2
   val num3 = io.num3
 
-  val productSign = num1.sign ^ num2.sign ^ io.negate
-  val addendSign  = num3.sign ^ io.negate ^ io.sub
-
   val productExponent = num1.exponent +& num2.exponent
   val productFraction =
     WireInit(UInt(maxMultiplierFractionBits.W), num1.fraction * num2.fraction)
@@ -39,17 +36,23 @@ class PositFMACore(val nbits: Int, val es: Int) extends Module with HasHardPosit
   val addendFraction = Mux(addendIsZero, 0.U, Cat(num3.fraction, 0.U(maxFractionBits.W)))
   val addendExponent = num3.exponent
 
+  val productSign = RegNext(num1.sign ^ num2.sign ^ io.negate)
+  val addendSign  = RegNext(num3.sign ^ io.negate ^ io.sub)
+  val addendExponent_n = RegNext(addendExponent)
+  val normProductExponent_n = RegNext(normProductExponent)
+  val addendFraction_n = RegNext(addendFraction)
+  val normProductFraction_n = RegNext(normProductFraction)
   val isAddendGtProduct =
-    ~addendIsZero &
+    RegNext(~addendIsZero &
       ((addendExponent > normProductExponent) |
-        (addendExponent === normProductExponent && (addendFraction > normProductFraction)))
+        (addendExponent === normProductExponent && (addendFraction > normProductFraction))))
 
-  val gExp  = Mux(isAddendGtProduct, addendExponent, normProductExponent)
-  val gFrac = Mux(isAddendGtProduct, addendFraction, normProductFraction)
+  val gExp  = Mux(isAddendGtProduct, addendExponent_n, normProductExponent_n)
+  val gFrac = Mux(isAddendGtProduct, addendFraction_n, normProductFraction_n)
   val gSign = Mux(isAddendGtProduct, addendSign, productSign)
 
-  val lExp  = Mux(isAddendGtProduct, normProductExponent, addendExponent)
-  val lFrac = Mux(isAddendGtProduct, normProductFraction, addendFraction)
+  val lExp  = Mux(isAddendGtProduct, normProductExponent_n, addendExponent_n)
+  val lFrac = Mux(isAddendGtProduct, normProductFraction_n, addendFraction_n)
   val lSign = Mux(isAddendGtProduct, productSign, addendSign)
 
   val expDiff = (gExp - lExp).asUInt()
@@ -76,8 +79,12 @@ class PositFMACore(val nbits: Int, val es: Int) extends Module with HasHardPosit
   val normFmaFraction = (adjFmaFraction << normalizationFactor)(maxMultiplierFractionBits - 1, 0)
 
   val result = Wire(new unpackedPosit(nbits, es))
-  result.isNaR    := num1.isNaR | num2.isNaR | num3.isNaR
-  result.isZero   := !result.isNaR & ((num1.isZero | num2.isZero) & num3.isZero)
+
+  val result_isNaR = RegNext(num1.isNaR | num2.isNaR | num3.isNaR)
+  val result_isZero_second_half = RegNext((num1.isZero | num2.isZero) & num3.isZero)
+  val intermediate_valid = RegNext(io.input_valid)
+  result.isNaR    := result_isNaR
+  result.isZero   := !result.isNaR & (result_isZero_second_half)
   result.sign     := gSign
   result.exponent := normFmaExponent
   result.fraction := normFmaFraction(maxMultiplierFractionBits - 1, maxMultiplierFractionBits - maxFractionBitsWithHiddenBit).asUInt()
@@ -86,6 +93,7 @@ class PositFMACore(val nbits: Int, val es: Int) extends Module with HasHardPosit
   io.stickyBit    := prodStickyBit | lFracStickyBit | normFmaFraction(maxFractionBitsWithHiddenBit - trailingBitCount - 1, 0).orR()
 
   io.out := result
+  io.output_valid := intermediate_valid
 }
 
 class PositFMA(val nbits: Int, val es: Int) extends Module with HasHardPositParams {

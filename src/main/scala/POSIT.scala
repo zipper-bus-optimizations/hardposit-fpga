@@ -109,6 +109,7 @@ class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams 
 	positFMACore.io.num3 := exec_num3
 	positFMACore.io.sub := exec_mode(0)
 	positFMACore.io.negate := exec_mode(1)
+	positFMACore.io.input_valid := exec_valid && exec_inst === Instruction.fma
 
 	positDivSqrtCore.io.num1 := exec_num1
 	positDivSqrtCore.io.num2 := exec_num2
@@ -154,9 +155,9 @@ class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams 
 		result_lt := positCompare.io.lt
 		result_eq := positCompare.io.eq
 		result_gt := positCompare.io.gt
-		result_valid := (exec_valid && (exec_inst =/= Instruction.sqrtdiv)) | 
+		result_valid := (exec_valid && (exec_inst =/= Instruction.sqrtdiv) &&(exec_inst =/= Instruction.fma)) | 
 			positDivSqrtCore.io.validOut_div | 
-			positDivSqrtCore.io.validOut_sqrt
+			positDivSqrtCore.io.validOut_sqrt | positFMACore.io.output_valid
 	}
 
 	val positGenerator = Module(new PositGenerator(nbits, es))
