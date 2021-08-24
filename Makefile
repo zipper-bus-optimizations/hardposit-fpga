@@ -23,7 +23,7 @@ UNIVERSAL = universal/include/universal/posit
 
 VERILATOR = verilator $(VERILATOR_TRACE)
 
-VERILATOR_CFLAGS = -std=c++11 -Icsrc/
+VERILATOR_CFLAGS = -std=gnu++11 -Icsrc/
 
 tests = \
 FMAP16 \

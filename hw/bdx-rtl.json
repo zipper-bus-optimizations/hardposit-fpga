@@ -1,0 +1,20 @@
+{
+   "version": 1,
+   "afu-image": {
+      "power": 0,
+      "clock-frequency-high": "auto",
+      "clock-frequency-low": "auto",
+      "afu-top-interface":
+         {
+            "name": "ofs_plat_afu"
+         },
+      "accelerator-clusters":
+         [
+            {
+               "name": "bdx-rtl",
+               "total-contexts": 1,
+               "accelerator-type-uuid": "23f23a41-42b4-4acc-84cb-817bb75b35b1"
+            }
+         ]
+   }
+}

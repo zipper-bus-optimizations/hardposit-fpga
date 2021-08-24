@@ -1,0 +1,3 @@
+../bdx-rtl.json
+Posit.sv
+POSIT_Locality.v

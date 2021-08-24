@@ -10,6 +10,7 @@
 #include <string>
 #include <thread>
 #include <cstring>
+#include "afu_json_info.h"
 #include "hardposit.h"
 #include "config.h"
 using namespace opae::fpga::types;
@@ -26,7 +27,7 @@ Hardposit* result_track[NUM_ENTRIES];
 void init_accel(){
 	if(!accel){
 		properties::ptr_t filter = properties::get();
-		filter->guid.parse(NLB0_AFUID);
+		filter->guid.parse("AFU_ACCEL_UUID");
 		filter->type = FPGA_ACCELERATOR;
 
 		std::vector<token::ptr_t> tokens = token::enumerate({filter});
@@ -39,8 +40,8 @@ void init_accel(){
 		token::ptr_t tok = tokens[0];
 		req = shared_buffer::allocate(accel, NUM_ENTRIES*READ_GRANULATIRY);
 		result = shared_buffer::allocate(accel, NUM_ENTRIES*WRITE_GRANULATIRY);
-	  std::fill_n(req->c_type(), NUM_ENTRIES*READ_GRANULATIRY, 0);
-	  std::fill_n(result->c_type(), NUM_ENTRIES*WRITE_GRANULATIRY, 0);
+	  	std::fill_n(req->c_type(), NUM_ENTRIES*READ_GRANULATIRY, 0);
+	  	std::fill_n(result->c_type(), NUM_ENTRIES*WRITE_GRANULATIRY, 0);
 
 		// open accelerator and map MMIO
 		handle::ptr_t accel = handle::open(tok, FPGA_OPEN_SHARED);
@@ -88,9 +89,6 @@ Hardposit::Hardposit(uint32_t in_val){
 	this->counter = 0;
 }
 
-Hardposit::Hardposit(): Hardposit(0){
-}
-
 Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode){
 	Operand ops[3];
 	Hardposit ret;
@@ -130,7 +128,7 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 		}
 	}
 	ret.valid = false;
-	ret.ptr = result+result_q_pointer;
+	ret.ptr = (Result*)(result.get()+result_q_pointer*WRITE_GRANULATIRY);
 	ret.counter = counter;
 	ret.location = counter % FPGA_ENTRIES;
 	uint64_t write_req = 0;
@@ -168,7 +166,7 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 	}
 
 	ret.valid = false;
-	ret.ptr = result+result_q_pointer;
+	ret.ptr = (Result*)(result.get()+result_q_pointer*WRITE_GRANULATIRY);
 	uint64_t write_req = 0;
 	write_req += result_q_pointer;
 	mempcpy((uint8_t*)&write_req+1, ops, 2*sizeof(Operand));
@@ -195,38 +193,38 @@ Hardposit::~Hardposit(){
 
 
 Hardposit Hardposit::operator + (Hardposit const &obj){
-	return this->compute(obj, Hardposit(), addsub, false);
+	return this->compute(obj, Hardposit(), ADDSUB, false);
 }
 Hardposit Hardposit::operator - (Hardposit const &obj){
-	return this->compute(obj, Hardposit(), addsub, true);
+	return this->compute(obj, Hardposit(), ADDSUB, true);
 }
 Hardposit Hardposit::operator / (Hardposit const &obj){
-	return this->compute(obj, Hardposit(), sqrtdiv, false);
+	return this->compute(obj, Hardposit(), SQRTDIV, false);
 }
 Hardposit Hardposit::operator * (Hardposit const &obj){
-	return this->compute(obj, Hardposit(), mul, false);
+	return this->compute(obj, Hardposit(), MUL, false);
 }
 Hardposit_cmp Hardposit::operator < (Hardposit const &obj){
-	auto result = this->compute_cmp(obj, cmp, false);
-	result.type = lt;
+	Hardposit_cmp result = this->compute_cmp(obj, CMP, false);
+	result.type = LT;
 	return result;
 }
 Hardposit_cmp Hardposit::operator > (Hardposit const &obj){
-	auto result = this->compute_cmp(obj, cmp, false);
-	result.type = gt;
+	Hardposit_cmp result = this->compute_cmp(obj, CMP, false);
+	result.type = GT;
 	return result;
 }
 Hardposit_cmp Hardposit::operator == (Hardposit const &obj){
-	auto result = this->compute_cmp(obj, cmp, false);
-	result.type = eq;
+	Hardposit_cmp result = this->compute_cmp(obj, CMP, false);
+	result.type = EQ;
 	return result;
 }
 Hardposit Hardposit::sqrt(Hardposit const &obj){
-	return this->compute(obj, Hardposit(), sqrtdiv, true);
+	return this->compute(obj, Hardposit(), SQRTDIV, true);
 }
-Hardposit Hardposit::FMA(Hardposit const &obj1, Hardposit const &obj2){
+Hardposit Hardposit::FMA(Hardposit const &obj1, Hardposit const &obj2)
 {
-	return this->compute(obj1, obj2, fma, false);
+	return this->compute(obj1, obj2, Inst::FMA, false);
 }
 void Hardposit::operator = (Hardposit const &obj){
 	this->val = obj.val;
@@ -245,14 +243,14 @@ bool Hardposit_cmp::get_val(){
 		while(!this->ptr->flags){}
 		this->valid = true;
 		switch (this->type){
-			case lt:
-				this->val = this->ptr->flgas & 4;
+			case LT:
+				this->val = this->ptr->flags & 4;
 				break;
-			case eq:
-				this->val = this->ptr->flgas & 2;
+			case EQ:
+				this->val = this->ptr->flags & 2;
 				break;
-			case gt:
-				this->val = this->ptr->flgas & 1;
+			case GT:
+				this->val = this->ptr->flags & 1;
 			default:
 				break;
 		}
@@ -265,9 +263,7 @@ Hardposit_cmp::Hardposit_cmp(bool in_val){
 	this->valid = true;
 	this->ptr = nullptr;
 }
-Hardposit_cmp::Hardposit_cmp() : Hardposit_cmp(false){
 
-}
 void Hardposit_cmp::operator = (Hardposit_cmp const &obj){
 	this->val = obj.val;
 	this->valid = obj.valid;

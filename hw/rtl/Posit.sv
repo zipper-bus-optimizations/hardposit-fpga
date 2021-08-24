@@ -64,16 +64,16 @@ module ofs_plat_afu
         .to_fiu(plat_ifc.host_chan.ports[0]),
         .to_afu(host_ccip),
 
-        .afu_clk(plat_ifc.clocks.pClk.clk),
-        .afu_reset_n(plat_ifc.clocks.pClk.reset_n)
+        .afu_clk(plat_ifc.clocks.pClkDiv4.clk),
+        .afu_reset_n(plat_ifc.clocks.pClkDiv4.reset_n)
         );
 
 
     // Each interface names its associated clock and reset.
     logic clk;
-    assign clk =plat_ifc.clocks.pClk.clk;
+    assign clk = host_ccip.clk;
     logic reset_n;
-    assign reset_n =plat_ifc.clocks.pClk.reset_n;
+    assign reset_n = host_ccip.reset_n;
 
 
     // ====================================================================
@@ -128,8 +128,8 @@ module ofs_plat_afu
     //
 
     assign host_ccip.sTx.c2.mmioRdValid = 1'b0;
-    t_ccip_clAdd  req_base_address;
-    t_ccip_clAdd  resp_base_address;
+    t_ccip_clAddr  req_base_address;
+    t_ccip_clAddr  resp_base_address;
     logic[7:0] req_granularity;
     logic[5:0] resp_granularity;
 
@@ -228,7 +228,7 @@ module ofs_plat_afu
     .io_request_bits_inst(inst), 
     .io_request_bits_mode(mode), 
     .io_request_bits_wr_addr(wr_addr), 
-    .io_mem_write_ready(!host_ccip.sRx.c1.c1TxAlmFull), 
+    .io_mem_write_ready(!host_ccip.sRx.c1TxAlmFull), 
     .io_mem_write_valid(mem_write_req_valid), 
     .io_mem_write_bits_result_isZero(mem_write_bits_result_isZero), 
     .io_mem_write_bits_result_isNaR(mem_write_bits_result_isNaR), 
@@ -248,11 +248,11 @@ module ofs_plat_afu
     assign rd_mem_hdr_addr = req_base_address + ((req_granularity*mem_read_req_addr)>>6);
     always_ff @( posedge clk ) begin
       host_ccip.sTx.c0.hdr.mdata <= #1 {8'b0, mem_read_req_addr};
-      host_ccip.sTx.c0.hdr.address <= #1 mem_hdr_addr;
-      host_ccip.sTx.c0.hdr.req_type <= # eREQ_RDLINE_S;
-      host_ccip.sTx.c0.hdr.cl_len <= #1 2'b0;
-      host_ccip.sTx.c0.hdr.vc_sel <= #1 2'b0;
-      host_ccip.sTx.c0.valid <= #1 rd_mem_read_req_valid;
+      host_ccip.sTx.c0.hdr.address <= #1 rd_mem_hdr_addr;
+      host_ccip.sTx.c0.hdr.req_type <= #1 eREQ_RDLINE_S;
+      host_ccip.sTx.c0.hdr.cl_len <= #1 eCL_LEN_1;
+      host_ccip.sTx.c0.hdr.vc_sel <= #1 eVC_VA;
+      host_ccip.sTx.c0.valid <= #1 mem_read_req_valid;
     end
 
     logic[41:0] wr_mem_hdr_addr;
@@ -262,12 +262,12 @@ module ofs_plat_afu
     always_ff @( posedge clk ) begin
       host_ccip.sTx.c1.hdr.byte_len <= #1 resp_granularity;
       host_ccip.sTx.c1.hdr.byte_start <= #1 wr_byte_offset[5:0];
-      host_ccip.sTx.c1.hdr.vc_sel <= #1 2'b0;
+      host_ccip.sTx.c1.hdr.vc_sel <= #1 eVC_VA;
       host_ccip.sTx.c1.hdr.sop <= #1 'b1;
       host_ccip.sTx.c1.hdr.mode <= #1 eMOD_BYTE;
-      host_ccip.sTx.c1.hdr.cl_len <= #1 2'b0;
-      host_ccip.sTx.c1.hdr.req_type <= #1 eREQ_RDLINE_S;
-      host_ccip.sTx.c1.hdr.address <= #1 eREQ_WRLINE_I ;
+      host_ccip.sTx.c1.hdr.cl_len <= #1 eCL_LEN_1;
+      host_ccip.sTx.c1.hdr.req_type <= #1 eREQ_WRLINE_M ;
+      host_ccip.sTx.c1.hdr.address <= #1 wr_mem_hdr_addr;
       host_ccip.sTx.c1.hdr.mdata <= #1'b0;
       host_ccip.sTx.c1.data <= #1 {3'b0, mem_write_bits_result_isZero, mem_write_bits_result_isNaR,
                       mem_write_bits_result_lt, mem_write_bits_result_eq, 

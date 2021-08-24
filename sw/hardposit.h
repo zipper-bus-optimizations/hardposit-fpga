@@ -10,8 +10,9 @@
 
 using namespace opae::fpga::types;
 
-enum CmpType {none, lt, eq, gt };
-enum Inst{none, addsub, cmp, fma, mul, sqrtdiv};
+void init_accel();
+enum CmpType {NONE, LT, EQ, GT};
+enum Inst{NOOP, ADDSUB, CMP, FMA, MUL, SQRTDIV};
 struct Operand{
 	uint8_t addr_mode = 0;
 	uint8_t addr = 0;
@@ -32,14 +33,13 @@ class Hardposit_cmp{
 		void print_val();
 		bool get_val();
 		Hardposit_cmp(bool in_val);
-		Hardposit_cmp() : Hardposit_cmp(false);
+		Hardposit_cmp():Hardposit_cmp(false){}
 		void operator = (Hardposit_cmp const &obj);
 		~Hardposit_cmp();
 };
 
 class Hardposit {
-	public: 
-		static std::queue<uint16_t> hardposit_queue(258);
+	public:
 		uint32_t val;
 		Result* ptr;
 		bool valid;
@@ -49,7 +49,7 @@ class Hardposit {
 		void print_val();
 		uint32_t get_val();
 		Hardposit(uint32_t in_val);
-		Hardposit(): Hardposit(0);
+		Hardposit(): Hardposit(0){};
 		~Hardposit();
 		Hardposit compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode);
 		Hardposit_cmp compute_cmp(Hardposit const &obj, Inst inst, bool mode);
