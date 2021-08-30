@@ -1,4 +1,5 @@
 module PositAddCore(
+  input         clock,
   input         io_num1_sign,
   input  [8:0]  io_num1_exponent,
   input  [27:0] io_num1_fraction,
@@ -10,44 +11,53 @@ module PositAddCore(
   input         io_num2_isZero,
   input         io_num2_isNaR,
   input         io_sub,
+  input         io_input_valid,
   output [1:0]  io_trailingBits,
   output        io_stickyBit,
   output        io_out_sign,
   output [8:0]  io_out_exponent,
   output [27:0] io_out_fraction,
   output        io_out_isZero,
-  output        io_out_isNaR
+  output        io_out_isNaR,
+  output        io_output_valid
 );
-  wire  _T = $signed(io_num1_exponent) > $signed(io_num2_exponent); // @[PositAdd.scala 24:20]
-  wire  _T_1 = $signed(io_num1_exponent) == $signed(io_num2_exponent); // @[PositAdd.scala 25:21]
-  wire  _T_2 = io_num1_fraction > io_num2_fraction; // @[PositAdd.scala 26:22]
-  wire  _T_3 = _T_1 & _T_2; // @[PositAdd.scala 25:39]
-  wire  num1magGt = _T | _T_3; // @[PositAdd.scala 24:37]
-  wire  num2AdjSign = io_num2_sign ^ io_sub; // @[PositAdd.scala 27:31]
-  wire  largeSign = num1magGt ? io_num1_sign : num2AdjSign; // @[PositAdd.scala 29:22]
-  wire [8:0] largeExp = num1magGt ? $signed(io_num1_exponent) : $signed(io_num2_exponent); // @[PositAdd.scala 30:22]
-  wire [27:0] _T_4 = num1magGt ? io_num1_fraction : io_num2_fraction; // @[PositAdd.scala 32:12]
-  wire [30:0] largeFrac = {_T_4,3'h0}; // @[Cat.scala 30:58]
-  wire  smallSign = num1magGt ? num2AdjSign : io_num1_sign; // @[PositAdd.scala 34:22]
-  wire [8:0] smallExp = num1magGt ? $signed(io_num2_exponent) : $signed(io_num1_exponent); // @[PositAdd.scala 35:22]
-  wire [27:0] _T_5 = num1magGt ? io_num2_fraction : io_num1_fraction; // @[PositAdd.scala 37:12]
+  wire  _T = $signed(io_num1_exponent) > $signed(io_num2_exponent); // @[PositAdd.scala 25:20]
+  wire  _T_1 = $signed(io_num1_exponent) == $signed(io_num2_exponent); // @[PositAdd.scala 26:21]
+  wire  _T_2 = io_num1_fraction > io_num2_fraction; // @[PositAdd.scala 27:22]
+  wire  _T_3 = _T_1 & _T_2; // @[PositAdd.scala 26:39]
+  wire  num1magGt = _T | _T_3; // @[PositAdd.scala 25:37]
+  wire  num2AdjSign = io_num2_sign ^ io_sub; // @[PositAdd.scala 28:31]
+  wire  largeSign = num1magGt ? io_num1_sign : num2AdjSign; // @[PositAdd.scala 30:22]
+  wire [8:0] largeExp = num1magGt ? $signed(io_num1_exponent) : $signed(io_num2_exponent); // @[PositAdd.scala 31:22]
+  wire [27:0] _T_4 = num1magGt ? io_num1_fraction : io_num2_fraction; // @[PositAdd.scala 33:12]
+  wire  smallSign = num1magGt ? num2AdjSign : io_num1_sign; // @[PositAdd.scala 35:22]
+  wire [8:0] smallExp = num1magGt ? $signed(io_num2_exponent) : $signed(io_num1_exponent); // @[PositAdd.scala 36:22]
+  wire [27:0] _T_5 = num1magGt ? io_num2_fraction : io_num1_fraction; // @[PositAdd.scala 38:12]
   wire [30:0] smallFrac = {_T_5,3'h0}; // @[Cat.scala 30:58]
-  wire [8:0] expDiff = $signed(largeExp) - $signed(smallExp); // @[PositAdd.scala 39:45]
-  wire  _T_9 = expDiff < 9'h1f; // @[PositAdd.scala 41:17]
-  wire [30:0] _T_10 = smallFrac >> expDiff; // @[PositAdd.scala 41:59]
-  wire [30:0] shiftedSmallFrac = _T_9 ? _T_10 : 31'h0; // @[PositAdd.scala 41:8]
-  wire  _T_19 = largeSign ^ smallSign; // @[PositAdd.scala 46:32]
-  wire  isAddition = ~_T_19; // @[PositAdd.scala 46:20]
-  wire [30:0] _T_20 = ~shiftedSmallFrac; // @[PositAdd.scala 48:39]
-  wire [30:0] _T_22 = _T_20 + 31'h1; // @[PositAdd.scala 48:57]
-  wire [30:0] signedSmallerFrac = isAddition ? shiftedSmallFrac : _T_22; // @[PositAdd.scala 48:8]
-  wire [31:0] adderFrac = largeFrac + signedSmallerFrac; // @[PositAdd.scala 50:54]
-  wire  sumOverflow = isAddition & adderFrac[31]; // @[PositAdd.scala 52:32]
-  wire  _T_25 = isAddition & adderFrac[31]; // @[PositAdd.scala 54:50]
-  wire [8:0] _GEN_1 = {9{_T_25}}; // @[PositAdd.scala 54:30]
-  wire [8:0] adjAdderExp = $signed(largeExp) - $signed(_GEN_1); // @[PositAdd.scala 54:30]
-  wire [30:0] adjAdderFrac = sumOverflow ? adderFrac[31:1] : adderFrac[30:0]; // @[PositAdd.scala 56:8]
-  wire  sumStickyBit = sumOverflow & adderFrac[0]; // @[PositAdd.scala 57:34]
+  wire [8:0] expDiff = $signed(largeExp) - $signed(smallExp); // @[PositAdd.scala 40:45]
+  wire  _T_9 = expDiff < 9'h1f; // @[PositAdd.scala 42:17]
+  wire [30:0] _T_10 = smallFrac >> expDiff; // @[PositAdd.scala 42:59]
+  wire  _T_19 = largeSign ^ smallSign; // @[PositAdd.scala 48:32]
+  reg  isAddition_n; // @[PositAdd.scala 50:29]
+  reg [31:0] _RAND_0;
+  reg [30:0] shiftedSmallFrac_n; // @[PositAdd.scala 51:35]
+  reg [31:0] _RAND_1;
+  reg [30:0] largeFrac_n; // @[PositAdd.scala 52:28]
+  reg [31:0] _RAND_2;
+  reg [8:0] largeExp_n; // @[PositAdd.scala 53:27]
+  reg [31:0] _RAND_3;
+  reg  valid_n; // @[PositAdd.scala 54:24]
+  reg [31:0] _RAND_4;
+  wire [30:0] _T_20 = ~shiftedSmallFrac_n; // @[PositAdd.scala 57:43]
+  wire [30:0] _T_22 = _T_20 + 31'h1; // @[PositAdd.scala 57:63]
+  wire [30:0] signedSmallerFrac = isAddition_n ? shiftedSmallFrac_n : _T_22; // @[PositAdd.scala 57:8]
+  wire [31:0] adderFrac = largeFrac_n + signedSmallerFrac; // @[PositAdd.scala 59:56]
+  wire  sumOverflow = isAddition_n & adderFrac[31]; // @[PositAdd.scala 61:34]
+  wire  _T_25 = isAddition_n & adderFrac[31]; // @[PositAdd.scala 63:52]
+  wire [8:0] _GEN_1 = {9{_T_25}}; // @[PositAdd.scala 63:32]
+  wire [8:0] adjAdderExp = $signed(largeExp_n) - $signed(_GEN_1); // @[PositAdd.scala 63:32]
+  wire [30:0] adjAdderFrac = sumOverflow ? adderFrac[31:1] : adderFrac[30:0]; // @[PositAdd.scala 65:8]
+  wire  sumStickyBit = sumOverflow & adderFrac[0]; // @[PositAdd.scala 66:34]
   wire [4:0] _T_62 = adjAdderFrac[1] ? 5'h1d : 5'h1e; // @[Mux.scala 47:69]
   wire [4:0] _T_63 = adjAdderFrac[2] ? 5'h1c : _T_62; // @[Mux.scala 47:69]
   wire [4:0] _T_64 = adjAdderFrac[3] ? 5'h1b : _T_63; // @[Mux.scala 47:69]
@@ -78,19 +88,89 @@ module PositAddCore(
   wire [4:0] _T_89 = adjAdderFrac[28] ? 5'h2 : _T_88; // @[Mux.scala 47:69]
   wire [4:0] _T_90 = adjAdderFrac[29] ? 5'h1 : _T_89; // @[Mux.scala 47:69]
   wire [4:0] normalizationFactor = adjAdderFrac[30] ? 5'h0 : _T_90; // @[Mux.scala 47:69]
-  wire [4:0] _T_91 = adjAdderFrac[30] ? 5'h0 : _T_90; // @[PositAdd.scala 61:62]
-  wire [8:0] _GEN_2 = {{4{_T_91[4]}},_T_91}; // @[PositAdd.scala 61:34]
-  wire [61:0] _GEN_3 = {{31'd0}, adjAdderFrac}; // @[PositAdd.scala 62:35]
-  wire [61:0] normFraction = _GEN_3 << normalizationFactor; // @[PositAdd.scala 62:35]
-  wire  _T_95 = io_num1_isZero & io_num2_isZero; // @[PositAdd.scala 65:35]
-  wire  _T_96 = adderFrac == 32'h0; // @[PositAdd.scala 65:64]
-  assign io_trailingBits = normFraction[2:1]; // @[PositAdd.scala 70:19]
-  assign io_stickyBit = sumStickyBit | normFraction[0]; // @[PositAdd.scala 71:19]
-  assign io_out_sign = num1magGt ? io_num1_sign : num2AdjSign; // @[PositAdd.scala 73:10]
-  assign io_out_exponent = $signed(adjAdderExp) - $signed(_GEN_2); // @[PositAdd.scala 73:10]
-  assign io_out_fraction = normFraction[30:3]; // @[PositAdd.scala 73:10]
-  assign io_out_isZero = _T_95 | _T_96; // @[PositAdd.scala 73:10]
-  assign io_out_isNaR = io_num1_isNaR | io_num2_isNaR; // @[PositAdd.scala 73:10]
+  wire [4:0] _T_91 = adjAdderFrac[30] ? 5'h0 : _T_90; // @[PositAdd.scala 70:62]
+  wire [8:0] _GEN_2 = {{4{_T_91[4]}},_T_91}; // @[PositAdd.scala 70:34]
+  wire [61:0] _GEN_3 = {{31'd0}, adjAdderFrac}; // @[PositAdd.scala 71:35]
+  wire [61:0] normFraction = _GEN_3 << normalizationFactor; // @[PositAdd.scala 71:35]
+  wire  _T_95 = io_num1_isZero & io_num2_isZero; // @[PositAdd.scala 74:35]
+  wire  _T_96 = adderFrac == 32'h0; // @[PositAdd.scala 74:64]
+  assign io_trailingBits = normFraction[2:1]; // @[PositAdd.scala 79:19]
+  assign io_stickyBit = sumStickyBit | normFraction[0]; // @[PositAdd.scala 80:19]
+  assign io_out_sign = num1magGt ? io_num1_sign : num2AdjSign; // @[PositAdd.scala 82:10]
+  assign io_out_exponent = $signed(adjAdderExp) - $signed(_GEN_2); // @[PositAdd.scala 82:10]
+  assign io_out_fraction = normFraction[30:3]; // @[PositAdd.scala 82:10]
+  assign io_out_isZero = _T_95 | _T_96; // @[PositAdd.scala 82:10]
+  assign io_out_isNaR = io_num1_isNaR | io_num2_isNaR; // @[PositAdd.scala 82:10]
+  assign io_output_valid = valid_n; // @[PositAdd.scala 83:19]
+`ifdef RANDOMIZE_GARBAGE_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_INVALID_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_REG_INIT
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+`define RANDOMIZE
+`endif
+`ifndef RANDOM
+`define RANDOM $random
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+  integer initvar;
+`endif
+`ifndef SYNTHESIS
+initial begin
+  `ifdef RANDOMIZE
+    `ifdef INIT_RANDOM
+      `INIT_RANDOM
+    `endif
+    `ifndef VERILATOR
+      `ifdef RANDOMIZE_DELAY
+        #`RANDOMIZE_DELAY begin end
+      `else
+        #0.002 begin end
+      `endif
+    `endif
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_0 = {1{`RANDOM}};
+  isAddition_n = _RAND_0[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_1 = {1{`RANDOM}};
+  shiftedSmallFrac_n = _RAND_1[30:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_2 = {1{`RANDOM}};
+  largeFrac_n = _RAND_2[30:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_3 = {1{`RANDOM}};
+  largeExp_n = _RAND_3[8:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_4 = {1{`RANDOM}};
+  valid_n = _RAND_4[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `endif // RANDOMIZE
+end // initial
+`endif // SYNTHESIS
+  always @(posedge clock) begin
+    isAddition_n <= ~_T_19;
+    if (_T_9) begin
+      shiftedSmallFrac_n <= _T_10;
+    end else begin
+      shiftedSmallFrac_n <= 31'h0;
+    end
+    largeFrac_n <= {_T_4,3'h0};
+    if (num1magGt) begin
+      largeExp_n <= io_num1_exponent;
+    end else begin
+      largeExp_n <= io_num2_exponent;
+    end
+    valid_n <= io_input_valid;
+  end
 endmodule
 module PositCompare(
   input  [31:0] io_num1,
@@ -845,6 +925,7 @@ module Posit(
   output        io_result_bits_gt,
   output [4:0]  io_result_bits_exceptions
 );
+  wire  positAddCore_clock; // @[POSIT.scala 43:34]
   wire  positAddCore_io_num1_sign; // @[POSIT.scala 43:34]
   wire [8:0] positAddCore_io_num1_exponent; // @[POSIT.scala 43:34]
   wire [27:0] positAddCore_io_num1_fraction; // @[POSIT.scala 43:34]
@@ -856,6 +937,7 @@ module Posit(
   wire  positAddCore_io_num2_isZero; // @[POSIT.scala 43:34]
   wire  positAddCore_io_num2_isNaR; // @[POSIT.scala 43:34]
   wire  positAddCore_io_sub; // @[POSIT.scala 43:34]
+  wire  positAddCore_io_input_valid; // @[POSIT.scala 43:34]
   wire [1:0] positAddCore_io_trailingBits; // @[POSIT.scala 43:34]
   wire  positAddCore_io_stickyBit; // @[POSIT.scala 43:34]
   wire  positAddCore_io_out_sign; // @[POSIT.scala 43:34]
@@ -863,6 +945,7 @@ module Posit(
   wire [27:0] positAddCore_io_out_fraction; // @[POSIT.scala 43:34]
   wire  positAddCore_io_out_isZero; // @[POSIT.scala 43:34]
   wire  positAddCore_io_out_isNaR; // @[POSIT.scala 43:34]
+  wire  positAddCore_io_output_valid; // @[POSIT.scala 43:34]
   wire [31:0] positCompare_io_num1; // @[POSIT.scala 44:34]
   wire [31:0] positCompare_io_num2; // @[POSIT.scala 44:34]
   wire  positCompare_io_lt; // @[POSIT.scala 44:34]
@@ -937,130 +1020,136 @@ module Posit(
   wire [27:0] positMulCore_io_out_fraction; // @[POSIT.scala 47:34]
   wire  positMulCore_io_out_isZero; // @[POSIT.scala 47:34]
   wire  positMulCore_io_out_isNaR; // @[POSIT.scala 47:34]
-  wire [31:0] num1Extractor_io_in; // @[POSIT.scala 66:35]
-  wire  num1Extractor_io_out_sign; // @[POSIT.scala 66:35]
-  wire [8:0] num1Extractor_io_out_exponent; // @[POSIT.scala 66:35]
-  wire [27:0] num1Extractor_io_out_fraction; // @[POSIT.scala 66:35]
-  wire  num1Extractor_io_out_isZero; // @[POSIT.scala 66:35]
-  wire  num1Extractor_io_out_isNaR; // @[POSIT.scala 66:35]
-  wire [31:0] num2Extractor_io_in; // @[POSIT.scala 67:35]
-  wire  num2Extractor_io_out_sign; // @[POSIT.scala 67:35]
-  wire [8:0] num2Extractor_io_out_exponent; // @[POSIT.scala 67:35]
-  wire [27:0] num2Extractor_io_out_fraction; // @[POSIT.scala 67:35]
-  wire  num2Extractor_io_out_isZero; // @[POSIT.scala 67:35]
-  wire  num2Extractor_io_out_isNaR; // @[POSIT.scala 67:35]
-  wire [31:0] num3Extractor_io_in; // @[POSIT.scala 68:35]
-  wire  num3Extractor_io_out_sign; // @[POSIT.scala 68:35]
-  wire [8:0] num3Extractor_io_out_exponent; // @[POSIT.scala 68:35]
-  wire [27:0] num3Extractor_io_out_fraction; // @[POSIT.scala 68:35]
-  wire  num3Extractor_io_out_isZero; // @[POSIT.scala 68:35]
-  wire  num3Extractor_io_out_isNaR; // @[POSIT.scala 68:35]
-  wire  positGenerator_io_in_sign; // @[POSIT.scala 163:36]
-  wire [8:0] positGenerator_io_in_exponent; // @[POSIT.scala 163:36]
-  wire [27:0] positGenerator_io_in_fraction; // @[POSIT.scala 163:36]
-  wire  positGenerator_io_in_isZero; // @[POSIT.scala 163:36]
-  wire  positGenerator_io_in_isNaR; // @[POSIT.scala 163:36]
-  wire [1:0] positGenerator_io_trailingBits; // @[POSIT.scala 163:36]
-  wire  positGenerator_io_stickyBit; // @[POSIT.scala 163:36]
-  wire [31:0] positGenerator_io_out; // @[POSIT.scala 163:36]
-  wire  _T = io_result_ready & positDivSqrtCore_io_readyIn; // @[POSIT.scala 49:45]
-  reg [31:0] init_num1; // @[POSIT.scala 51:32]
+  wire [31:0] num1Extractor_io_in; // @[POSIT.scala 65:35]
+  wire  num1Extractor_io_out_sign; // @[POSIT.scala 65:35]
+  wire [8:0] num1Extractor_io_out_exponent; // @[POSIT.scala 65:35]
+  wire [27:0] num1Extractor_io_out_fraction; // @[POSIT.scala 65:35]
+  wire  num1Extractor_io_out_isZero; // @[POSIT.scala 65:35]
+  wire  num1Extractor_io_out_isNaR; // @[POSIT.scala 65:35]
+  wire [31:0] num2Extractor_io_in; // @[POSIT.scala 66:35]
+  wire  num2Extractor_io_out_sign; // @[POSIT.scala 66:35]
+  wire [8:0] num2Extractor_io_out_exponent; // @[POSIT.scala 66:35]
+  wire [27:0] num2Extractor_io_out_fraction; // @[POSIT.scala 66:35]
+  wire  num2Extractor_io_out_isZero; // @[POSIT.scala 66:35]
+  wire  num2Extractor_io_out_isNaR; // @[POSIT.scala 66:35]
+  wire [31:0] num3Extractor_io_in; // @[POSIT.scala 67:35]
+  wire  num3Extractor_io_out_sign; // @[POSIT.scala 67:35]
+  wire [8:0] num3Extractor_io_out_exponent; // @[POSIT.scala 67:35]
+  wire [27:0] num3Extractor_io_out_fraction; // @[POSIT.scala 67:35]
+  wire  num3Extractor_io_out_isZero; // @[POSIT.scala 67:35]
+  wire  num3Extractor_io_out_isNaR; // @[POSIT.scala 67:35]
+  wire  positGenerator_io_in_sign; // @[POSIT.scala 165:36]
+  wire [8:0] positGenerator_io_in_exponent; // @[POSIT.scala 165:36]
+  wire [27:0] positGenerator_io_in_fraction; // @[POSIT.scala 165:36]
+  wire  positGenerator_io_in_isZero; // @[POSIT.scala 165:36]
+  wire  positGenerator_io_in_isNaR; // @[POSIT.scala 165:36]
+  wire [1:0] positGenerator_io_trailingBits; // @[POSIT.scala 165:36]
+  wire  positGenerator_io_stickyBit; // @[POSIT.scala 165:36]
+  wire [31:0] positGenerator_io_out; // @[POSIT.scala 165:36]
+  reg [31:0] init_num1; // @[POSIT.scala 50:32]
   reg [31:0] _RAND_0;
-  reg [31:0] init_num2; // @[POSIT.scala 52:32]
+  reg [31:0] init_num2; // @[POSIT.scala 51:32]
   reg [31:0] _RAND_1;
-  reg [31:0] init_num3; // @[POSIT.scala 53:32]
+  reg [31:0] init_num3; // @[POSIT.scala 52:32]
   reg [31:0] _RAND_2;
-  reg [2:0] init_inst; // @[POSIT.scala 55:32]
+  reg [2:0] init_inst; // @[POSIT.scala 54:32]
   reg [31:0] _RAND_3;
-  reg [1:0] init_mode; // @[POSIT.scala 56:32]
+  reg [1:0] init_mode; // @[POSIT.scala 55:32]
   reg [31:0] _RAND_4;
-  reg  init_valid; // @[POSIT.scala 57:33]
+  reg  init_valid; // @[POSIT.scala 56:33]
   reg [31:0] _RAND_5;
-  reg  exec_num1_sign; // @[POSIT.scala 73:32]
+  wire  _T = io_result_ready & positDivSqrtCore_io_readyIn; // @[POSIT.scala 57:30]
+  reg  exec_num1_sign; // @[POSIT.scala 72:32]
   reg [31:0] _RAND_6;
-  reg [8:0] exec_num1_exponent; // @[POSIT.scala 73:32]
+  reg [8:0] exec_num1_exponent; // @[POSIT.scala 72:32]
   reg [31:0] _RAND_7;
-  reg [27:0] exec_num1_fraction; // @[POSIT.scala 73:32]
+  reg [27:0] exec_num1_fraction; // @[POSIT.scala 72:32]
   reg [31:0] _RAND_8;
-  reg  exec_num1_isZero; // @[POSIT.scala 73:32]
+  reg  exec_num1_isZero; // @[POSIT.scala 72:32]
   reg [31:0] _RAND_9;
-  reg  exec_num1_isNaR; // @[POSIT.scala 73:32]
+  reg  exec_num1_isNaR; // @[POSIT.scala 72:32]
   reg [31:0] _RAND_10;
-  reg  exec_num2_sign; // @[POSIT.scala 74:32]
+  reg  exec_num2_sign; // @[POSIT.scala 73:32]
   reg [31:0] _RAND_11;
-  reg [8:0] exec_num2_exponent; // @[POSIT.scala 74:32]
+  reg [8:0] exec_num2_exponent; // @[POSIT.scala 73:32]
   reg [31:0] _RAND_12;
-  reg [27:0] exec_num2_fraction; // @[POSIT.scala 74:32]
+  reg [27:0] exec_num2_fraction; // @[POSIT.scala 73:32]
   reg [31:0] _RAND_13;
-  reg  exec_num2_isZero; // @[POSIT.scala 74:32]
+  reg  exec_num2_isZero; // @[POSIT.scala 73:32]
   reg [31:0] _RAND_14;
-  reg  exec_num2_isNaR; // @[POSIT.scala 74:32]
+  reg  exec_num2_isNaR; // @[POSIT.scala 73:32]
   reg [31:0] _RAND_15;
-  reg  exec_num3_sign; // @[POSIT.scala 75:32]
+  reg  exec_num3_sign; // @[POSIT.scala 74:32]
   reg [31:0] _RAND_16;
-  reg [8:0] exec_num3_exponent; // @[POSIT.scala 75:32]
+  reg [8:0] exec_num3_exponent; // @[POSIT.scala 74:32]
   reg [31:0] _RAND_17;
-  reg [27:0] exec_num3_fraction; // @[POSIT.scala 75:32]
+  reg [27:0] exec_num3_fraction; // @[POSIT.scala 74:32]
   reg [31:0] _RAND_18;
-  reg  exec_num3_isZero; // @[POSIT.scala 75:32]
+  reg  exec_num3_isZero; // @[POSIT.scala 74:32]
   reg [31:0] _RAND_19;
-  reg  exec_num3_isNaR; // @[POSIT.scala 75:32]
+  reg  exec_num3_isNaR; // @[POSIT.scala 74:32]
   reg [31:0] _RAND_20;
-  reg [31:0] comp_num1; // @[POSIT.scala 76:32]
+  reg [31:0] comp_num1; // @[POSIT.scala 75:32]
   reg [31:0] _RAND_21;
-  reg [31:0] comp_num2; // @[POSIT.scala 77:32]
+  reg [31:0] comp_num2; // @[POSIT.scala 76:32]
   reg [31:0] _RAND_22;
-  reg [2:0] exec_inst; // @[POSIT.scala 79:32]
+  reg [2:0] exec_inst; // @[POSIT.scala 78:32]
   reg [31:0] _RAND_23;
-  reg [1:0] exec_mode; // @[POSIT.scala 80:32]
+  reg [1:0] exec_mode; // @[POSIT.scala 79:32]
   reg [31:0] _RAND_24;
-  reg  exec_valid; // @[POSIT.scala 81:33]
+  reg  exec_valid; // @[POSIT.scala 80:33]
   reg [31:0] _RAND_25;
-  wire  _T_14 = exec_inst == 3'h3; // @[POSIT.scala 112:64]
-  wire  _T_17 = exec_inst == 3'h5; // @[POSIT.scala 117:64]
-  reg  result_out_sign; // @[POSIT.scala 122:33]
+  reg  result_out_sign; // @[POSIT.scala 82:33]
   reg [31:0] _RAND_26;
-  reg [8:0] result_out_exponent; // @[POSIT.scala 122:33]
+  reg [8:0] result_out_exponent; // @[POSIT.scala 82:33]
   reg [31:0] _RAND_27;
-  reg [27:0] result_out_fraction; // @[POSIT.scala 122:33]
+  reg [27:0] result_out_fraction; // @[POSIT.scala 82:33]
   reg [31:0] _RAND_28;
-  reg  result_out_isZero; // @[POSIT.scala 122:33]
+  reg  result_out_isZero; // @[POSIT.scala 82:33]
   reg [31:0] _RAND_29;
-  reg  result_out_isNaR; // @[POSIT.scala 122:33]
+  reg  result_out_isNaR; // @[POSIT.scala 82:33]
   reg [31:0] _RAND_30;
-  reg  result_stickyBit; // @[POSIT.scala 123:39]
+  reg  result_stickyBit; // @[POSIT.scala 83:39]
   reg [31:0] _RAND_31;
-  reg [1:0] result_trailingBits; // @[POSIT.scala 124:42]
+  reg [1:0] result_trailingBits; // @[POSIT.scala 84:42]
   reg [31:0] _RAND_32;
-  reg  result_valid; // @[POSIT.scala 125:35]
+  reg  result_valid; // @[POSIT.scala 85:35]
   reg [31:0] _RAND_33;
-  reg  result_lt; // @[POSIT.scala 126:32]
+  reg  result_lt; // @[POSIT.scala 86:32]
   reg [31:0] _RAND_34;
-  reg  result_eq; // @[POSIT.scala 127:32]
+  reg  result_eq; // @[POSIT.scala 87:32]
   reg [31:0] _RAND_35;
-  reg  result_gt; // @[POSIT.scala 128:32]
+  reg  result_gt; // @[POSIT.scala 88:32]
   reg [31:0] _RAND_36;
-  wire  _T_22 = 3'h5 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_23_sign = _T_22 & positDivSqrtCore_io_out_sign; // @[Mux.scala 68:16]
-  wire  _T_23_isZero = _T_22 & positDivSqrtCore_io_out_isZero; // @[Mux.scala 68:16]
-  wire  _T_23_isNaR = _T_22 & positDivSqrtCore_io_out_isNaR; // @[Mux.scala 68:16]
-  wire  _T_24 = 3'h4 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_26 = 3'h3 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_28 = 3'h1 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_31 = _T_22 & positDivSqrtCore_io_stickyBit; // @[Mux.scala 68:16]
-  wire  _T_46 = exec_inst != 3'h5; // @[POSIT.scala 158:59]
-  wire  _T_47 = exec_valid & _T_46; // @[POSIT.scala 158:45]
-  wire  _T_48 = exec_inst != 3'h3; // @[POSIT.scala 158:97]
-  wire  _T_49 = _T_47 & _T_48; // @[POSIT.scala 158:84]
-  wire  _T_50 = _T_49 | positDivSqrtCore_io_validOut_div; // @[POSIT.scala 158:119]
-  wire  _T_51 = _T_50 | positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 159:58]
-  wire  _T_52 = _T_51 | positFMACore_io_output_valid; // @[POSIT.scala 160:59]
-  wire  _T_53 = positGenerator_io_out != 32'h0; // @[common.scala 61:41]
-  wire  _T_54 = ~_T_53; // @[common.scala 61:33]
-  wire  _T_58 = positGenerator_io_out[30:0] != 31'h0; // @[common.scala 27:71]
-  wire  _T_59 = ~_T_58; // @[common.scala 27:53]
-  wire  _T_60 = positGenerator_io_out[31] & _T_59; // @[common.scala 27:51]
+  wire  _T_11 = _T & result_valid; // @[POSIT.scala 96:61]
+  wire  _T_13 = exec_inst == 3'h1; // @[POSIT.scala 110:64]
+  wire  _T_19 = exec_inst == 3'h3; // @[POSIT.scala 120:64]
+  wire  _T_22 = exec_inst == 3'h5; // @[POSIT.scala 125:64]
+  wire  _T_25 = 3'h5 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_26_sign = _T_25 & positDivSqrtCore_io_out_sign; // @[Mux.scala 68:16]
+  wire  _T_26_isZero = _T_25 & positDivSqrtCore_io_out_isZero; // @[Mux.scala 68:16]
+  wire  _T_26_isNaR = _T_25 & positDivSqrtCore_io_out_isNaR; // @[Mux.scala 68:16]
+  wire  _T_27 = 3'h4 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_29 = 3'h3 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_31 = 3'h1 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_34 = _T_25 & positDivSqrtCore_io_stickyBit; // @[Mux.scala 68:16]
+  wire  _T_49 = exec_inst != 3'h5; // @[POSIT.scala 160:59]
+  wire  _T_50 = exec_valid & _T_49; // @[POSIT.scala 160:45]
+  wire  _T_51 = exec_inst != 3'h3; // @[POSIT.scala 160:97]
+  wire  _T_52 = _T_50 & _T_51; // @[POSIT.scala 160:84]
+  wire  _T_53 = exec_inst != 3'h1; // @[POSIT.scala 160:131]
+  wire  _T_54 = _T_52 & _T_53; // @[POSIT.scala 160:118]
+  wire  _T_55 = _T_54 | positDivSqrtCore_io_validOut_div; // @[POSIT.scala 160:156]
+  wire  _T_56 = _T_55 | positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 161:58]
+  wire  _T_57 = _T_56 | positFMACore_io_output_valid; // @[POSIT.scala 162:59]
+  wire  _T_58 = _T_57 | positAddCore_io_output_valid; // @[POSIT.scala 162:90]
+  wire  _T_59 = positGenerator_io_out != 32'h0; // @[common.scala 61:41]
+  wire  _T_60 = ~_T_59; // @[common.scala 61:33]
+  wire  _T_64 = positGenerator_io_out[30:0] != 31'h0; // @[common.scala 27:71]
+  wire  _T_65 = ~_T_64; // @[common.scala 27:53]
+  wire  _T_66 = positGenerator_io_out[31] & _T_65; // @[common.scala 27:51]
   PositAddCore positAddCore ( // @[POSIT.scala 43:34]
+    .clock(positAddCore_clock),
     .io_num1_sign(positAddCore_io_num1_sign),
     .io_num1_exponent(positAddCore_io_num1_exponent),
     .io_num1_fraction(positAddCore_io_num1_fraction),
@@ -1072,13 +1161,15 @@ module Posit(
     .io_num2_isZero(positAddCore_io_num2_isZero),
     .io_num2_isNaR(positAddCore_io_num2_isNaR),
     .io_sub(positAddCore_io_sub),
+    .io_input_valid(positAddCore_io_input_valid),
     .io_trailingBits(positAddCore_io_trailingBits),
     .io_stickyBit(positAddCore_io_stickyBit),
     .io_out_sign(positAddCore_io_out_sign),
     .io_out_exponent(positAddCore_io_out_exponent),
     .io_out_fraction(positAddCore_io_out_fraction),
     .io_out_isZero(positAddCore_io_out_isZero),
-    .io_out_isNaR(positAddCore_io_out_isNaR)
+    .io_out_isNaR(positAddCore_io_out_isNaR),
+    .io_output_valid(positAddCore_io_output_valid)
   );
   PositCompare positCompare ( // @[POSIT.scala 44:34]
     .io_num1(positCompare_io_num1),
@@ -1162,7 +1253,7 @@ module Posit(
     .io_out_isZero(positMulCore_io_out_isZero),
     .io_out_isNaR(positMulCore_io_out_isNaR)
   );
-  PositExtractor num1Extractor ( // @[POSIT.scala 66:35]
+  PositExtractor num1Extractor ( // @[POSIT.scala 65:35]
     .io_in(num1Extractor_io_in),
     .io_out_sign(num1Extractor_io_out_sign),
     .io_out_exponent(num1Extractor_io_out_exponent),
@@ -1170,7 +1261,7 @@ module Posit(
     .io_out_isZero(num1Extractor_io_out_isZero),
     .io_out_isNaR(num1Extractor_io_out_isNaR)
   );
-  PositExtractor num2Extractor ( // @[POSIT.scala 67:35]
+  PositExtractor num2Extractor ( // @[POSIT.scala 66:35]
     .io_in(num2Extractor_io_in),
     .io_out_sign(num2Extractor_io_out_sign),
     .io_out_exponent(num2Extractor_io_out_exponent),
@@ -1178,7 +1269,7 @@ module Posit(
     .io_out_isZero(num2Extractor_io_out_isZero),
     .io_out_isNaR(num2Extractor_io_out_isNaR)
   );
-  PositExtractor num3Extractor ( // @[POSIT.scala 68:35]
+  PositExtractor num3Extractor ( // @[POSIT.scala 67:35]
     .io_in(num3Extractor_io_in),
     .io_out_sign(num3Extractor_io_out_sign),
     .io_out_exponent(num3Extractor_io_out_exponent),
@@ -1186,7 +1277,7 @@ module Posit(
     .io_out_isZero(num3Extractor_io_out_isZero),
     .io_out_isNaR(num3Extractor_io_out_isNaR)
   );
-  PositGenerator positGenerator ( // @[POSIT.scala 163:36]
+  PositGenerator positGenerator ( // @[POSIT.scala 165:36]
     .io_in_sign(positGenerator_io_in_sign),
     .io_in_exponent(positGenerator_io_in_exponent),
     .io_in_fraction(positGenerator_io_in_fraction),
@@ -1196,81 +1287,83 @@ module Posit(
     .io_stickyBit(positGenerator_io_stickyBit),
     .io_out(positGenerator_io_out)
   );
-  assign io_request_ready = io_result_ready & positDivSqrtCore_io_readyIn; // @[POSIT.scala 49:26]
-  assign io_result_valid = result_valid; // @[POSIT.scala 176:25]
-  assign io_result_bits_isZero = result_out_isZero | _T_54; // @[POSIT.scala 168:31]
-  assign io_result_bits_isNaR = result_out_isNaR | _T_60; // @[POSIT.scala 169:31]
-  assign io_result_bits_out = positGenerator_io_out; // @[POSIT.scala 170:31]
-  assign io_result_bits_lt = result_lt; // @[POSIT.scala 171:27]
-  assign io_result_bits_eq = result_eq; // @[POSIT.scala 172:27]
-  assign io_result_bits_gt = result_gt; // @[POSIT.scala 173:27]
-  assign io_result_bits_exceptions = positDivSqrtCore_io_exceptions; // @[POSIT.scala 174:35]
-  assign positAddCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 100:30]
-  assign positAddCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 100:30]
-  assign positAddCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 100:30]
-  assign positAddCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 100:30]
-  assign positAddCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 100:30]
-  assign positAddCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 101:30]
-  assign positAddCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 101:30]
-  assign positAddCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 101:30]
-  assign positAddCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 101:30]
-  assign positAddCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 101:30]
-  assign positAddCore_io_sub = exec_mode[0]; // @[POSIT.scala 102:29]
-  assign positCompare_io_num1 = comp_num1; // @[POSIT.scala 104:30]
-  assign positCompare_io_num2 = comp_num2; // @[POSIT.scala 105:30]
+  assign io_request_ready = ~exec_valid; // @[POSIT.scala 89:26]
+  assign io_result_valid = result_valid; // @[POSIT.scala 178:25]
+  assign io_result_bits_isZero = result_out_isZero | _T_60; // @[POSIT.scala 170:31]
+  assign io_result_bits_isNaR = result_out_isNaR | _T_66; // @[POSIT.scala 171:31]
+  assign io_result_bits_out = positGenerator_io_out; // @[POSIT.scala 172:31]
+  assign io_result_bits_lt = result_lt; // @[POSIT.scala 173:27]
+  assign io_result_bits_eq = result_eq; // @[POSIT.scala 174:27]
+  assign io_result_bits_gt = result_gt; // @[POSIT.scala 175:27]
+  assign io_result_bits_exceptions = positDivSqrtCore_io_exceptions; // @[POSIT.scala 176:35]
+  assign positAddCore_clock = clock;
+  assign positAddCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 107:30]
+  assign positAddCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 107:30]
+  assign positAddCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 107:30]
+  assign positAddCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 107:30]
+  assign positAddCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 107:30]
+  assign positAddCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 108:30]
+  assign positAddCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 108:30]
+  assign positAddCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 108:30]
+  assign positAddCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 108:30]
+  assign positAddCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 108:30]
+  assign positAddCore_io_sub = exec_mode[0]; // @[POSIT.scala 109:29]
+  assign positAddCore_io_input_valid = exec_valid & _T_13; // @[POSIT.scala 110:37]
+  assign positCompare_io_num1 = comp_num1; // @[POSIT.scala 112:30]
+  assign positCompare_io_num2 = comp_num2; // @[POSIT.scala 113:30]
   assign positFMACore_clock = clock;
-  assign positFMACore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 107:30]
-  assign positFMACore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 107:30]
-  assign positFMACore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 107:30]
-  assign positFMACore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 107:30]
-  assign positFMACore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 107:30]
-  assign positFMACore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 108:30]
-  assign positFMACore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 108:30]
-  assign positFMACore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 108:30]
-  assign positFMACore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 108:30]
-  assign positFMACore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 108:30]
-  assign positFMACore_io_num3_sign = exec_num3_sign; // @[POSIT.scala 109:30]
-  assign positFMACore_io_num3_exponent = exec_num3_exponent; // @[POSIT.scala 109:30]
-  assign positFMACore_io_num3_fraction = exec_num3_fraction; // @[POSIT.scala 109:30]
-  assign positFMACore_io_num3_isZero = exec_num3_isZero; // @[POSIT.scala 109:30]
-  assign positFMACore_io_num3_isNaR = exec_num3_isNaR; // @[POSIT.scala 109:30]
-  assign positFMACore_io_sub = exec_mode[0]; // @[POSIT.scala 110:29]
-  assign positFMACore_io_negate = exec_mode[1]; // @[POSIT.scala 111:32]
-  assign positFMACore_io_input_valid = exec_valid & _T_14; // @[POSIT.scala 112:37]
+  assign positFMACore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 115:30]
+  assign positFMACore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 115:30]
+  assign positFMACore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 115:30]
+  assign positFMACore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 115:30]
+  assign positFMACore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 115:30]
+  assign positFMACore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 116:30]
+  assign positFMACore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 116:30]
+  assign positFMACore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 116:30]
+  assign positFMACore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 116:30]
+  assign positFMACore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 116:30]
+  assign positFMACore_io_num3_sign = exec_num3_sign; // @[POSIT.scala 117:30]
+  assign positFMACore_io_num3_exponent = exec_num3_exponent; // @[POSIT.scala 117:30]
+  assign positFMACore_io_num3_fraction = exec_num3_fraction; // @[POSIT.scala 117:30]
+  assign positFMACore_io_num3_isZero = exec_num3_isZero; // @[POSIT.scala 117:30]
+  assign positFMACore_io_num3_isNaR = exec_num3_isNaR; // @[POSIT.scala 117:30]
+  assign positFMACore_io_sub = exec_mode[0]; // @[POSIT.scala 118:29]
+  assign positFMACore_io_negate = exec_mode[1]; // @[POSIT.scala 119:32]
+  assign positFMACore_io_input_valid = exec_valid & _T_19; // @[POSIT.scala 120:37]
   assign positDivSqrtCore_clock = clock;
   assign positDivSqrtCore_reset = reset;
-  assign positDivSqrtCore_io_validIn = exec_valid & _T_17; // @[POSIT.scala 117:37]
-  assign positDivSqrtCore_io_sqrtOp = exec_mode[0]; // @[POSIT.scala 116:36]
-  assign positDivSqrtCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 114:34]
-  assign positDivSqrtCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 115:34]
-  assign positDivSqrtCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 115:34]
-  assign positDivSqrtCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 115:34]
-  assign positDivSqrtCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 115:34]
-  assign positDivSqrtCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 115:34]
-  assign positMulCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 119:30]
-  assign positMulCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 120:30]
-  assign positMulCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 120:30]
-  assign positMulCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 120:30]
-  assign positMulCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 120:30]
-  assign positMulCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 120:30]
-  assign num1Extractor_io_in = init_num1; // @[POSIT.scala 69:29]
-  assign num2Extractor_io_in = init_num2; // @[POSIT.scala 70:29]
-  assign num3Extractor_io_in = init_num3; // @[POSIT.scala 71:29]
-  assign positGenerator_io_in_sign = result_out_sign; // @[POSIT.scala 164:40]
-  assign positGenerator_io_in_exponent = result_out_exponent; // @[POSIT.scala 164:40]
-  assign positGenerator_io_in_fraction = result_out_fraction; // @[POSIT.scala 164:40]
-  assign positGenerator_io_in_isZero = result_out_isZero; // @[POSIT.scala 164:40]
-  assign positGenerator_io_in_isNaR = result_out_isNaR; // @[POSIT.scala 164:40]
-  assign positGenerator_io_trailingBits = result_trailingBits; // @[POSIT.scala 165:40]
-  assign positGenerator_io_stickyBit = result_stickyBit; // @[POSIT.scala 166:40]
+  assign positDivSqrtCore_io_validIn = exec_valid & _T_22; // @[POSIT.scala 125:37]
+  assign positDivSqrtCore_io_sqrtOp = exec_mode[0]; // @[POSIT.scala 124:36]
+  assign positDivSqrtCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 122:34]
+  assign positDivSqrtCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 122:34]
+  assign positDivSqrtCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 122:34]
+  assign positDivSqrtCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 122:34]
+  assign positDivSqrtCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 122:34]
+  assign positDivSqrtCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 123:34]
+  assign positDivSqrtCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 123:34]
+  assign positDivSqrtCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 123:34]
+  assign positDivSqrtCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 123:34]
+  assign positDivSqrtCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 123:34]
+  assign positMulCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 127:30]
+  assign positMulCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 127:30]
+  assign positMulCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 127:30]
+  assign positMulCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 127:30]
+  assign positMulCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 127:30]
+  assign positMulCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 128:30]
+  assign positMulCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 128:30]
+  assign positMulCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 128:30]
+  assign positMulCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 128:30]
+  assign positMulCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 128:30]
+  assign num1Extractor_io_in = init_num1; // @[POSIT.scala 68:29]
+  assign num2Extractor_io_in = init_num2; // @[POSIT.scala 69:29]
+  assign num3Extractor_io_in = init_num3; // @[POSIT.scala 70:29]
+  assign positGenerator_io_in_sign = result_out_sign; // @[POSIT.scala 166:40]
+  assign positGenerator_io_in_exponent = result_out_exponent; // @[POSIT.scala 166:40]
+  assign positGenerator_io_in_fraction = result_out_fraction; // @[POSIT.scala 166:40]
+  assign positGenerator_io_in_isZero = result_out_isZero; // @[POSIT.scala 166:40]
+  assign positGenerator_io_in_isNaR = result_out_isNaR; // @[POSIT.scala 166:40]
+  assign positGenerator_io_trailingBits = result_trailingBits; // @[POSIT.scala 167:40]
+  assign positGenerator_io_stickyBit = result_stickyBit; // @[POSIT.scala 168:40]
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
 `define RANDOMIZE
 `endif
@@ -1486,127 +1579,127 @@ end // initial
     end
     if (reset) begin
       exec_num1_sign <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num1_sign <= num1Extractor_io_out_sign;
     end
     if (reset) begin
       exec_num1_exponent <= 9'sh0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num1_exponent <= num1Extractor_io_out_exponent;
     end
     if (reset) begin
       exec_num1_fraction <= 28'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num1_fraction <= num1Extractor_io_out_fraction;
     end
     if (reset) begin
       exec_num1_isZero <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num1_isZero <= num1Extractor_io_out_isZero;
     end
     if (reset) begin
       exec_num1_isNaR <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num1_isNaR <= num1Extractor_io_out_isNaR;
     end
     if (reset) begin
       exec_num2_sign <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num2_sign <= num2Extractor_io_out_sign;
     end
     if (reset) begin
       exec_num2_exponent <= 9'sh0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num2_exponent <= num2Extractor_io_out_exponent;
     end
     if (reset) begin
       exec_num2_fraction <= 28'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num2_fraction <= num2Extractor_io_out_fraction;
     end
     if (reset) begin
       exec_num2_isZero <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num2_isZero <= num2Extractor_io_out_isZero;
     end
     if (reset) begin
       exec_num2_isNaR <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num2_isNaR <= num2Extractor_io_out_isNaR;
     end
     if (reset) begin
       exec_num3_sign <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num3_sign <= num3Extractor_io_out_sign;
     end
     if (reset) begin
       exec_num3_exponent <= 9'sh0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num3_exponent <= num3Extractor_io_out_exponent;
     end
     if (reset) begin
       exec_num3_fraction <= 28'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num3_fraction <= num3Extractor_io_out_fraction;
     end
     if (reset) begin
       exec_num3_isZero <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num3_isZero <= num3Extractor_io_out_isZero;
     end
     if (reset) begin
       exec_num3_isNaR <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_num3_isNaR <= num3Extractor_io_out_isNaR;
     end
     if (reset) begin
       comp_num1 <= 32'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       comp_num1 <= init_num1;
     end
     if (reset) begin
       comp_num2 <= 32'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       comp_num2 <= init_num2;
     end
     if (reset) begin
       exec_inst <= 3'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_inst <= init_inst;
     end
     if (reset) begin
       exec_mode <= 2'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_mode <= init_mode;
     end
     if (reset) begin
       exec_valid <= 1'h0;
-    end else if (_T) begin
+    end else if (_T_11) begin
       exec_valid <= init_valid;
     end
     if (reset) begin
       result_out_sign <= 1'h0;
     end else if (_T) begin
-      if (_T_28) begin
+      if (_T_31) begin
         result_out_sign <= positAddCore_io_out_sign;
-      end else if (_T_26) begin
+      end else if (_T_29) begin
         result_out_sign <= positFMACore_io_out_sign;
-      end else if (_T_24) begin
+      end else if (_T_27) begin
         result_out_sign <= positMulCore_io_out_sign;
       end else begin
-        result_out_sign <= _T_23_sign;
+        result_out_sign <= _T_26_sign;
       end
     end
     if (reset) begin
       result_out_exponent <= 9'sh0;
     end else if (_T) begin
-      if (_T_28) begin
+      if (_T_31) begin
         result_out_exponent <= positAddCore_io_out_exponent;
-      end else if (_T_26) begin
+      end else if (_T_29) begin
         result_out_exponent <= positFMACore_io_out_exponent;
-      end else if (_T_24) begin
+      end else if (_T_27) begin
         result_out_exponent <= positMulCore_io_out_exponent;
-      end else if (_T_22) begin
+      end else if (_T_25) begin
         result_out_exponent <= positDivSqrtCore_io_out_exponent;
       end else begin
         result_out_exponent <= 9'sh0;
@@ -1615,13 +1708,13 @@ end // initial
     if (reset) begin
       result_out_fraction <= 28'h0;
     end else if (_T) begin
-      if (_T_28) begin
+      if (_T_31) begin
         result_out_fraction <= positAddCore_io_out_fraction;
-      end else if (_T_26) begin
+      end else if (_T_29) begin
         result_out_fraction <= positFMACore_io_out_fraction;
-      end else if (_T_24) begin
+      end else if (_T_27) begin
         result_out_fraction <= positMulCore_io_out_fraction;
-      end else if (_T_22) begin
+      end else if (_T_25) begin
         result_out_fraction <= positDivSqrtCore_io_out_fraction;
       end else begin
         result_out_fraction <= 28'h0;
@@ -1630,52 +1723,52 @@ end // initial
     if (reset) begin
       result_out_isZero <= 1'h0;
     end else if (_T) begin
-      if (_T_28) begin
+      if (_T_31) begin
         result_out_isZero <= positAddCore_io_out_isZero;
-      end else if (_T_26) begin
+      end else if (_T_29) begin
         result_out_isZero <= positFMACore_io_out_isZero;
-      end else if (_T_24) begin
+      end else if (_T_27) begin
         result_out_isZero <= positMulCore_io_out_isZero;
       end else begin
-        result_out_isZero <= _T_23_isZero;
+        result_out_isZero <= _T_26_isZero;
       end
     end
     if (reset) begin
       result_out_isNaR <= 1'h0;
     end else if (_T) begin
-      if (_T_28) begin
+      if (_T_31) begin
         result_out_isNaR <= positAddCore_io_out_isNaR;
-      end else if (_T_26) begin
+      end else if (_T_29) begin
         result_out_isNaR <= positFMACore_io_out_isNaR;
-      end else if (_T_24) begin
+      end else if (_T_27) begin
         result_out_isNaR <= positMulCore_io_out_isNaR;
       end else begin
-        result_out_isNaR <= _T_23_isNaR;
+        result_out_isNaR <= _T_26_isNaR;
       end
     end
     if (reset) begin
       result_stickyBit <= 1'h0;
     end else if (_T) begin
-      if (_T_28) begin
+      if (_T_31) begin
         result_stickyBit <= positAddCore_io_stickyBit;
-      end else if (_T_26) begin
+      end else if (_T_29) begin
         result_stickyBit <= positFMACore_io_stickyBit;
-      end else if (_T_24) begin
+      end else if (_T_27) begin
         result_stickyBit <= positMulCore_io_stickyBit;
       end else begin
-        result_stickyBit <= _T_31;
+        result_stickyBit <= _T_34;
       end
     end
     if (reset) begin
       result_trailingBits <= 2'h0;
     end else if (_T) begin
-      if (_T_28) begin
+      if (_T_31) begin
         result_trailingBits <= positAddCore_io_trailingBits;
-      end else if (_T_26) begin
+      end else if (_T_29) begin
         result_trailingBits <= positFMACore_io_trailingBits;
-      end else if (_T_24) begin
+      end else if (_T_27) begin
         result_trailingBits <= positMulCore_io_trailingBits;
-      end else if (_T_22) begin
+      end else if (_T_25) begin
         result_trailingBits <= positDivSqrtCore_io_trailingBits;
       end else begin
         result_trailingBits <= 2'h0;
@@ -1684,7 +1777,7 @@ end // initial
     if (reset) begin
       result_valid <= 1'h0;
     end else if (_T) begin
-      result_valid <= _T_52;
+      result_valid <= _T_58;
     end
     if (reset) begin
       result_lt <= 1'h0;

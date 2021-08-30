@@ -9,10 +9,11 @@ class PositAddCore(val nbits: Int, val es: Int) extends Module with HasHardPosit
     val num1   = Input(new unpackedPosit(nbits, es))
     val num2   = Input(new unpackedPosit(nbits, es))
     val sub    = Input(Bool())
-
+    val input_valid = Input(Bool())
     val trailingBits = Output(UInt(trailingBitCount.W))
     val stickyBit = Output(Bool())
     val out    = Output(new unpackedPosit(nbits, es))
+    val output_valid = Output(Bool())
   })
 
   val num1 = io.num1
@@ -43,16 +44,23 @@ class PositAddCore(val nbits: Int, val es: Int) extends Module with HasHardPosit
     Mux(expDiff > (maxAdderFractionBits - maxFractionBitsWithHiddenBit - 1).U,
     (smallFrac & ((1.U << (expDiff - (maxAdderFractionBits - maxFractionBitsWithHiddenBit - 1).U)) - 1.U)).orR(), false.B)
 
-  
+
   val isAddition = !(largeSign ^ smallSign)
+
+  val isAddition_n = RegNext(isAddition)
+  val shiftedSmallFrac_n = RegNext(shiftedSmallFrac)
+  val largeFrac_n = RegNext(largeFrac)
+  val largeExp_n = RegNext(largeExp)
+  val valid_n = RegNext(io.input_valid)
+
   val signedSmallerFrac =
-    Mux(isAddition, shiftedSmallFrac, ~shiftedSmallFrac + 1.U)
+    Mux(isAddition_n, shiftedSmallFrac_n, ~shiftedSmallFrac_n + 1.U)
   val adderFrac =
-    WireInit(UInt(maxAdderFractionBits.W), largeFrac +& signedSmallerFrac)
+    WireInit(UInt(maxAdderFractionBits.W), largeFrac_n +& signedSmallerFrac)
 
-  val sumOverflow = isAddition & adderFrac(maxAdderFractionBits - 1)
+  val sumOverflow = isAddition_n & adderFrac(maxAdderFractionBits - 1)
 
-  val adjAdderExp = largeExp - sumOverflow.asSInt()
+  val adjAdderExp = largeExp_n - sumOverflow.asSInt()
   val adjAdderFrac =
     Mux(sumOverflow, adderFrac(maxAdderFractionBits - 1, 1), adderFrac(maxAdderFractionBits - 2, 0))
   val sumStickyBit = sumOverflow & adderFrac(0)
@@ -72,6 +80,7 @@ class PositAddCore(val nbits: Int, val es: Int) extends Module with HasHardPosit
   io.stickyBit    := sumStickyBit | normFraction(stickyBitCount - 1, 0).orR()
 
   io.out := result
+  io.output_valid := valid_n
 }
 
 class PositAdd(val nbits: Int, val es: Int) extends Module with HasHardPositParams {

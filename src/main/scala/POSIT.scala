@@ -46,7 +46,6 @@ class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams 
 	val positDivSqrtCore = Module(new PositDivSqrtCore(nbits, es))
 	val positMulCore = Module(new PositMulCore(nbits, es))
 
-	io.request.ready := io.result.ready && positDivSqrtCore.io.readyIn
 
 	val init_num1 = RegInit(UInt(nbits.W), 0.U)
 	val init_num2 = RegInit(UInt(nbits.W), 0.U)
@@ -80,13 +79,21 @@ class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams 
 	val exec_mode = RegInit(UInt(2.W), 0.U)
 	val exec_valid = RegInit(Bool(), false.B)
 	val default_unpacked = Wire(new unpackedPosit(nbits, es))
+	val result_out = RegInit(new unpackedPosit(nbits, es), 0.U.asTypeOf(new unpackedPosit(nbits,es)))
+	val result_stickyBit = RegInit(Bool(), 0.U)
+	val result_trailingBits = RegInit(UInt(trailingBitCount.W), 0.U)
+	val result_valid = RegInit(Bool(), false.B)
+	val result_lt = RegInit(Bool(), false.B)
+	val result_eq = RegInit(Bool(), false.B)
+	val result_gt = RegInit(Bool(), false.B)
+	io.request.ready := ~exec_valid
 	default_unpacked .sign := false.B
 	default_unpacked.exponent := 0.S
 	default_unpacked.fraction := 0.U
 	default_unpacked.isZero := false.B
 	default_unpacked.isNaR := false.B
 
-	when(io.result.ready && positDivSqrtCore.io.readyIn){
+	when(io.result.ready && positDivSqrtCore.io.readyIn && result_valid){
 		comp_num1 := init_num1
 		comp_num2 := init_num2
 		exec_num1 := num1Extractor.io.out
@@ -100,6 +107,7 @@ class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams 
 	positAddCore.io.num1 := exec_num1
 	positAddCore.io.num2 := exec_num2
 	positAddCore.io.sub := exec_mode(0)
+	positAddCore.io.input_valid := exec_valid && exec_inst === Instruction.addsub
 
 	positCompare.io.num1 := comp_num1.asSInt
 	positCompare.io.num2 := comp_num2.asSInt
@@ -119,13 +127,7 @@ class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams 
 	positMulCore.io.num1 := exec_num1
 	positMulCore.io.num2 := exec_num2
 
-	val result_out = RegInit(new unpackedPosit(nbits, es), 0.U.asTypeOf(new unpackedPosit(nbits,es)))
-	val result_stickyBit = RegInit(Bool(), 0.U)
-	val result_trailingBits = RegInit(UInt(trailingBitCount.W), 0.U)
-	val result_valid = RegInit(Bool(), false.B)
-	val result_lt = RegInit(Bool(), false.B)
-	val result_eq = RegInit(Bool(), false.B)
-	val result_gt = RegInit(Bool(), false.B)
+
 
 
 	when(io.result.ready && positDivSqrtCore.io.readyIn){
@@ -155,9 +157,9 @@ class Posit(val nbits: Int, val es: Int) extends Module with HasHardPositParams 
 		result_lt := positCompare.io.lt
 		result_eq := positCompare.io.eq
 		result_gt := positCompare.io.gt
-		result_valid := (exec_valid && (exec_inst =/= Instruction.sqrtdiv) &&(exec_inst =/= Instruction.fma)) | 
+		result_valid := (exec_valid && (exec_inst =/= Instruction.sqrtdiv) &&(exec_inst =/= Instruction.fma) &&(exec_inst =/= Instruction.addsub)) | 
 			positDivSqrtCore.io.validOut_div | 
-			positDivSqrtCore.io.validOut_sqrt | positFMACore.io.output_valid
+			positDivSqrtCore.io.validOut_sqrt | positFMACore.io.output_valid |positAddCore.io.output_valid
 	}
 
 	val positGenerator = Module(new PositGenerator(nbits, es))
