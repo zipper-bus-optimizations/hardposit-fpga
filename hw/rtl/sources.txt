@@ -1,3 +1,4 @@
 ../bdx-rtl.json
 Posit.sv
 POSIT_Locality.v
+../par/ccip_async.sdc

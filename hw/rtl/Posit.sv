@@ -58,7 +58,8 @@ module ofs_plat_afu
     // and the native protocol of the host channel.
     ofs_plat_host_chan_as_ccip
         #(
-        .ADD_CLOCK_CROSSING(1)
+        .ADD_CLOCK_CROSSING(1),
+        .ADD_TIMING_REG_STAGES(3)
         ) primary_ccip
        (
         .to_fiu(plat_ifc.host_chan.ports[0]),

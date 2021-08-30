@@ -43,6 +43,7 @@ class PositAddCore(val nbits: Int, val es: Int) extends Module with HasHardPosit
     Mux(expDiff > (maxAdderFractionBits - maxFractionBitsWithHiddenBit - 1).U,
     (smallFrac & ((1.U << (expDiff - (maxAdderFractionBits - maxFractionBitsWithHiddenBit - 1).U)) - 1.U)).orR(), false.B)
 
+  
   val isAddition = !(largeSign ^ smallSign)
   val signedSmallerFrac =
     Mux(isAddition, shiftedSmallFrac, ~shiftedSmallFrac + 1.U)
