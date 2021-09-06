@@ -10,8 +10,11 @@ int main(){
     posit32 c = posit32(4.0);
 
     std::cout << (a*b).value  << std::endl;
+    std::cout <<"a*b"<<std::endl;
     init_accel();
     Hardposit a_hard(a.value);
     Hardposit b_hard(b.value);
-    (a_hard*b_hard).print_val();
+    Hardposit res = (a_hard*b_hard);
+    std::cout<<res.ptr<<std::endl;
+    res.print_val();
 }

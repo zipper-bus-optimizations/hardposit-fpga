@@ -6,7 +6,7 @@
 #define __AFU_JSON_INFO__
 
 #define AFU_ACCEL_NAME "bdx-rtl"
-#define AFU_ACCEL_UUID 128'h23f23a41_42b4_4acc_84cb_817bb75b35b1
+#define AFU_ACCEL_UUID "23f23a41-42b4-4acc-84cb-817bb75b35b1"
 #define AFU_IMAGE_POWER 0
 #define AFU_TOP_IFC "ofs_plat_afu"
 

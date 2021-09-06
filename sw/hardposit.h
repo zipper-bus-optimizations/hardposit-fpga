@@ -20,7 +20,7 @@ struct Operand{
 struct Result{
 		/* 3-bit pad, 1-bit isZero, 1-bit isNaR,
     1-bit lt, 1-bit eq, 1-bit gt*/
-	bool flags = 0;
+	uint8_t flags = 0;
 	uint32_t reuslt = 0;
 };
 

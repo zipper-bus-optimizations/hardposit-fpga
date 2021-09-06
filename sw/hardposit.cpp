@@ -27,7 +27,7 @@ Hardposit* result_track[NUM_ENTRIES];
 void init_accel(){
 	if(!accel){
 		properties::ptr_t filter = properties::get();
-		filter->guid.parse("AFU_ACCEL_UUID");
+		filter->guid.parse(AFU_ACCEL_UUID);
 		filter->type = FPGA_ACCELERATOR;
 
 		std::vector<token::ptr_t> tokens = token::enumerate({filter});
@@ -38,28 +38,25 @@ void init_accel(){
 			return -1;
 		}
 		token::ptr_t tok = tokens[0];
+		accel = handle::open(tok, FPGA_OPEN_SHARED);
 		req = shared_buffer::allocate(accel, NUM_ENTRIES*READ_GRANULATIRY);
 		result = shared_buffer::allocate(accel, NUM_ENTRIES*WRITE_GRANULATIRY);
 	  	std::fill_n(req->c_type(), NUM_ENTRIES*READ_GRANULATIRY, 0);
 	  	std::fill_n(result->c_type(), NUM_ENTRIES*WRITE_GRANULATIRY, 0);
 
 		// open accelerator and map MMIO
-		handle::ptr_t accel = handle::open(tok, FPGA_OPEN_SHARED);
 		accel->reset();
 
 		uint64_t read_setup = 0;
 		read_setup += ((req->io_address())>>6);
-		read_setup += (1 << 63);
 		read_setup += (READ_GRANULATIRY << 42);
 
 		uint64_t write_setup = 0;
 		write_setup += ((result->io_address())>>6);
-		write_setup += (1 << 63);
-		write_setup += (1 << 62);
 		write_setup += (WRITE_GRANULATIRY << 42);
 		
 		accel->write_csr64(0, read_setup);
-		accel->write_csr64(0, write_setup);
+		accel->write_csr64(8, write_setup);
 	}
 }
 
@@ -75,7 +72,7 @@ uint32_t Hardposit::get_val(){
 	if(!this->valid){
 		while(!this->ptr->flags){}
 		this->valid = true;
-		std::memcpy(&this->val, this->ptr->reuslt, sizeof(uint32_t));
+		std::memcpy(&this->val, &this->ptr->reuslt, sizeof(uint32_t));
 		this->ptr->flags = 0;
 	}
 	return this->val;
@@ -90,16 +87,20 @@ Hardposit::Hardposit(uint32_t in_val){
 }
 
 Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode){
+
 	Operand ops[3];
 	Hardposit ret;
 	if(this->ptr && (counter-this->counter) <= 8){
 		ops[0].addr = this->location;
 		ops[0].addr_mode= 1;
 	}else{
+
 		ops[0].addr = req_q_pointer;
 		ops[0].addr_mode= 2;
-		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, this->get_val(), sizeof(uint32_t));
+		uint32_t res = this->get_val();
+		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
 		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+
 	}
 
 	if(obj1.ptr && (counter-obj1.counter) <= 8){
@@ -108,18 +109,25 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	}else{
 		ops[1].addr = req_q_pointer;
 		ops[1].addr_mode= 2;
-		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, obj1.get_val(), sizeof(uint32_t));
+		uint32_t res = obj1.get_val();
+		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
 		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	}
 
-	if(obj2.ptr && (counter-obj2.counter) <= 8){
-		ops[2].addr = obj2.location;
-		ops[2].addr_mode= 1;
+	}
+	if(inst == Inst::FMA){
+		if(obj2.ptr && (counter-obj2.counter) <= 8){
+			ops[2].addr = obj2.location;
+			ops[2].addr_mode= 1;
+		}else{
+			ops[2].addr = req_q_pointer;
+			ops[2].addr_mode= 2;
+			uint32_t res = obj2.get_val();
+			mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
+			req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+			req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		}
 	}else{
-		ops[2].addr = req_q_pointer;
-		ops[2].addr_mode= 2;
-		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, obj2.get_val(), sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		ops[2].addr_mode= 0;
 	}
 	Hardposit* res = *(result_track+result_q_pointer);
 	if( res!= nullptr){
@@ -127,18 +135,24 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 			res->get_val();
 		}
 	}
+
 	ret.valid = false;
-	ret.ptr = (Result*)(result.get()+result_q_pointer*WRITE_GRANULATIRY);
+
+	ret.ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULATIRY);
 	ret.counter = counter;
 	ret.location = counter % FPGA_ENTRIES;
 	uint64_t write_req = 0;
 	write_req += result_q_pointer;
+
 	mempcpy((uint8_t*)&write_req+1, ops, 3*sizeof(Operand));
+
 	uint8_t insmod =  inst + mode << 3;
 	write_req += insmod << 56;
 	result_q_pointer  = (result_q_pointer+1) % NUM_ENTRIES;
 	counter ++;
-	accel->write_csr64(0, write_req);
+	std::cout<<"valid"<<ret.valid<<std::endl;
+	std::cout<<"flags"<<ret.ptr->flags<<std::endl;
+	accel->write_csr64(16, write_req);
 	return ret;
 }
 
@@ -151,8 +165,9 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 	}else{
 		ops[0].addr = req_q_pointer;
 		ops[0].addr_mode= 2;
-		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, this->get_val(), sizeof(uint32_t));
+		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), this->get_val(), sizeof(uint32_t));
 		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+
 	}
 
 	if(obj.ptr && (counter-obj.counter) <= 8){
@@ -163,8 +178,8 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 		ops[1].addr_mode= 2;
 		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, obj.get_val(), sizeof(uint32_t));
 		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	}
 
+	}
 	ret.valid = false;
 	ret.ptr = (Result*)(result.get()+result_q_pointer*WRITE_GRANULATIRY);
 	uint64_t write_req = 0;
@@ -174,7 +189,7 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 	write_req += insmod << 56;
 	result_q_pointer  = (result_q_pointer+1) % NUM_ENTRIES;
 	counter ++;
-	accel->write_csr64(0, write_req);
+	accel->write_csr64(16, write_req);
 	return ret;
 }
 
@@ -203,6 +218,7 @@ Hardposit Hardposit::operator / (Hardposit const &obj){
 }
 Hardposit Hardposit::operator * (Hardposit const &obj){
 	return this->compute(obj, Hardposit(), MUL, false);
+
 }
 Hardposit_cmp Hardposit::operator < (Hardposit const &obj){
 	Hardposit_cmp result = this->compute_cmp(obj, CMP, false);

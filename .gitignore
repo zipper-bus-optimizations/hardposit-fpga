@@ -14,6 +14,8 @@ test-*/
 test_generator/build
 PositTestGenerator
 hw/build_fpga/
+hw/build_sim/
+sw/build_sim/
 */bin/*.A
 */bin/*.B
 *.o
