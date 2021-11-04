@@ -3,7 +3,7 @@
 ##
 
 COPT     ?= -g -O2
-CPPFLAGS ?= -std=gnu++11
+CPPFLAGS ?= -std=gnu++11 -g
 CXX      ?= g++
 LDFLAGS  ?=
 
@@ -13,11 +13,11 @@ endif
 
 ifneq (,$(ndebug))
 else
-CPPFLAGS += -DENABLE_DEBUG=1
+CPPFLAGS += -DENABLE_DEBUG=1 -fPIC
 endif
 ifneq (,$(nassert))
 else
-CPPFLAGS += -DENABLE_ASSERT=1
+CPPFLAGS += -DENABLE_ASSERT=1 -fPIC
 endif
 
 # stack execution protection

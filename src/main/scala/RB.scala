@@ -19,7 +19,7 @@ class RBEntry extends RequestOperandEntry{
 	val valid = Bool()
 	val dispatched = Bool()
 	val written = Bool()
-	val wr_addr = UInt(48.W)
+	val wr_addr = UInt(8.W)
 	val request = new RBRequest
 	val result = new PositResult(Params.Nbits, Params.ES)
 }

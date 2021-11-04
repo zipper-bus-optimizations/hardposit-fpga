@@ -9,8 +9,10 @@ class PositCompare(nbits: Int, es: Int) extends Module {
     val lt = Output(Bool())
     val eq = Output(Bool())
     val gt = Output(Bool())
+    val validIn = Input(Bool())
+    val validOut = Output(Bool())
   })
-
+  io.validOut := io.validIn
   io.lt := (io.num1 < io.num2)
   io.eq := (io.num1 === io.num2)
   io.gt := (!io.lt && !io.eq)

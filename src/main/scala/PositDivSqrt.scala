@@ -54,7 +54,7 @@ class PositDivSqrtCore(val nbits: Int, val es: Int) extends Module with HasHardP
   val started_normally = starting && !specialCase
 
   val radicand = Mux(io.sqrtOp && num1.exponent(0).asBool(), num1.fraction << 1, num1.fraction)
-
+  val debug = true
   when(!idle | io.validIn) {
     cycleCount := Mux(starting && specialCase, 2.U, 0.U) |
                   Mux(started_normally, maxDividerFractionBits.U, 0.U) |

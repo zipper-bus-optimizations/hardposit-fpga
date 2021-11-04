@@ -93,7 +93,7 @@ module ofs_plat_afu
         // bit vector of indices used by the AFU.
         .HOST_CHAN_IN_USE_MASK(1)
         )
-        tie_off(plat_ifc);
+        tie_off(plat_ifc);  
 
 
     // The AFU ID is a unique ID for a given program.  Here we generated
@@ -101,7 +101,7 @@ module ofs_plat_afu
     // ASE and synthesis setup scripts automatically invoke afu_json_mgr
     // to extract the UUID into afu_json_info.vh.
     logic [127:0] afu_id = `AFU_ACCEL_UUID;
-
+    logic [512:0] result_buffer;
     //
     // A valid AFU must implement a device feature list, starting at MMIO
     // address 0.  Every entry in the feature list begins with 5 64-bit
@@ -143,18 +143,19 @@ module ofs_plat_afu
         resp_granularity <=  'b0;
       end
       else if(is_csr_write)begin
+        $fwrite(32'h80000002,"mmio addr:%x", mmio_req_hdr.address);
         case (mmio_req_hdr.address)
           0: 
             begin
-              $display("Writing to read granulatiry");
+              $fwrite(32'h80000002,"Writing to read granulatiry");
               req_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
               req_granularity <=  mmio_write_data[ CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH];
             end
 
           2: begin
-              $display("Writing to write granulatiry");
+              $fwrite(32'h80000002,"Writing to write granulatiry");
             resp_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
-            resp_granularity <=  mmio_write_data[ CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH]; 
+            resp_granularity <=  mmio_write_data[CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH]; 
           end
 
         endcase
@@ -208,13 +209,13 @@ module ofs_plat_afu
     assign req_valid = is_csr_write && (mmio_req_hdr.address == 4);
     assign mode = mmio_write_data[60:59];
     assign inst = mmio_write_data[58:56];
-    assign operands_mode[0] = mmio_write_data[55:48];
-    assign operands_value[0] = mmio_write_data[47:40];
-    assign operands_mode[1] = mmio_write_data[39:32];
-    assign operands_value[1] = mmio_write_data[31:24];
-    assign operands_mode[2] = mmio_write_data[23:16];
-    assign operands_value[2] = mmio_write_data[16:8];
-    assign wr_addr = resp_base_address + resp_granularity*mmio_write_data[7:0];
+    assign operands_value[2] = mmio_write_data[55:48];
+    assign operands_mode[2] = mmio_write_data[47:40];
+    assign operands_value[1] = mmio_write_data[39:32];
+    assign operands_mode[1] = mmio_write_data[31:24];
+    assign operands_value[0] = mmio_write_data[23:16];
+    assign operands_mode[0] = mmio_write_data[16:8];
+    assign wr_addr = mmio_write_data[7:0];
 
     // for mem read
     logic mem_read_req_valid;
@@ -261,11 +262,11 @@ module ofs_plat_afu
     .reset(!reset_n), 
     .io_request_ready(req_ready), 
     .io_request_valid(req_valid), 
-    .io_request_bits_operands_0_value(operands_value[0]), 
+    .io_request_bits_operands_0_value({24'b0,operands_value[0]}), 
     .io_request_bits_operands_0_mode(operands_mode[0]), 
-    .io_request_bits_operands_1_value(operands_value[1]), 
+    .io_request_bits_operands_1_value({24'b0,operands_value[1]}), 
     .io_request_bits_operands_1_mode(operands_mode[1]), 
-    .io_request_bits_operands_2_value(operands_value[2]), 
+    .io_request_bits_operands_2_value({24'b0,operands_value[2]}), 
     .io_request_bits_operands_2_mode(operands_mode[2]), 
     .io_request_bits_inst(inst), 
     .io_request_bits_mode(mode), 
@@ -289,6 +290,21 @@ module ofs_plat_afu
     logic[41:0] rd_mem_hdr_addr;
     assign rd_mem_hdr_addr = req_base_address + ((req_granularity*mem_read_req_addr)>>6);
 
+    // always_ff @(negedge clk) begin
+    //   if(req_valid) begin
+    //     $fwrite(32'h80000002,"req_valid = true\n");
+    //     $fwrite(32'h80000002,"data: %b\n",mmio_write_data);
+    //     $fwrite(32'h80000002,"operand0 val: %b\n", operands_value[0]);
+    //     $fwrite(32'h80000002,"operand0 mode: %b\n", operands_mode[0]);
+    //     $fwrite(32'h80000002,"operand1 val: %b\n", operands_value[1]);
+    //     $fwrite(32'h80000002,"operand1 mode: %b\n", operands_mode[1]);
+    //     $fwrite(32'h80000002,"operand2 val: %b\n", operands_value[2]);
+    //     $fwrite(32'h80000002,"operand2 mode: %b\n", operands_mode[2]);
+    //     $fwrite(32'h80000002,"inst: %b\n", inst);
+    //     $fwrite(32'h80000002,"mode: %b\n", mode);
+    //     $fwrite(32'h80000002,"wr_addr: %b\n", wr_addr);
+    //   end
+    // end
     always_ff @( posedge clk ) begin
       if(!reset_n) begin
         host_ccip.sTx.c0.hdr <=  CCIP_C0TX_HDR_WIDTH'(0);
@@ -301,16 +317,23 @@ module ofs_plat_afu
         host_ccip.sTx.c0.hdr.cl_len <=  eCL_LEN_1;
         host_ccip.sTx.c0.hdr.vc_sel <=  eVC_VA;
         host_ccip.sTx.c0.valid <= mem_read_req_valid;
-        if(mem_write_req_valid) begin
-          $display("c1 read--- address:%b",rd_mem_hdr_addr);
-        end
+        // if(mem_read_req_valid) begin
+        //   $fwrite(32'h80000002,"c1 read--- address:%x\n",rd_mem_hdr_addr);
+        //   $fwrite(32'h80000002,"req_granularity: %x\n",req_granularity);
+        //   $fwrite(32'h80000002,"mem_read_req_addr: %x\n",mem_read_req_addr);
+        //   $fwrite(32'h80000002,"offset: %x\n",((req_granularity*mem_read_req_addr)>>6));
+        // end 
+        // if(mem_read_resp_valid) begin
+        //   $fwrite(32'h80000002,"resp data: %b\n",host_ccip.sRx.c0.data);
+        // end
       end
     end
 
     logic[41:0] wr_mem_hdr_addr;
     logic[11:0] wr_byte_offset;
-    assign wr_byte_offset = resp_granularity*mem_write_bits_wr_addr;
-    assign wr_mem_hdr_addr = resp_base_address + (wr_byte_offset>>6);
+
+    assign wr_byte_offset = mem_write_bits_wr_addr;
+    assign wr_mem_hdr_addr = resp_base_address + wr_byte_offset;
     always_ff @( posedge clk ) begin
       if(!reset_n) begin
         host_ccip.sTx.c1.hdr <=  'b0;
@@ -318,13 +341,18 @@ module ofs_plat_afu
         host_ccip.sTx.c1.data <=  t_ccip_clData'(0);
       end
       else begin
-        host_ccip.sTx.c1.hdr.byte_len <=  resp_granularity;
-        host_ccip.sTx.c1.hdr.byte_start <=  wr_byte_offset[5:0];
+        // if(mem_write_req_valid) begin
+        // $fwrite(32'h80000002,"resp_granularity: %x\n",resp_granularity);
+        // $fwrite(32'h80000002,"wr_byte_offset : %x\n",wr_byte_offset);
+        // $fwrite(32'h80000002,"resp_base_address: %x\n",resp_base_address);
+        // end
+        host_ccip.sTx.c1.hdr.byte_len <=  0;
+        host_ccip.sTx.c1.hdr.byte_start <=  0;
+        host_ccip.sTx.c1.hdr.mode <=  eMOD_CL;
         host_ccip.sTx.c1.hdr.vc_sel <=  eVC_VA;
         host_ccip.sTx.c1.hdr.sop <=  'b1;
-        host_ccip.sTx.c1.hdr.mode <=  eMOD_BYTE;
         host_ccip.sTx.c1.hdr.cl_len <=  eCL_LEN_1;
-        host_ccip.sTx.c1.hdr.req_type <=  eREQ_WRLINE_M ;
+        host_ccip.sTx.c1.hdr.req_type <=  eREQ_WRPUSH_I;
         host_ccip.sTx.c1.hdr.address <=  wr_mem_hdr_addr;
         host_ccip.sTx.c1.hdr.mdata <= 'b0;
         host_ccip.sTx.c1.data <=  {3'b0, mem_write_bits_result_isZero, mem_write_bits_result_isNaR,
@@ -332,7 +360,10 @@ module ofs_plat_afu
                         mem_write_bits_result_gt, mem_write_bits_result_out};
         host_ccip.sTx.c1.valid <=  mem_write_req_valid;
         if(mem_write_req_valid) begin
-          $display("c1 write--- address:%b",wr_mem_hdr_addr);
+          $fwrite(32'h80000002,"c1 write--- address:%x\b",wr_mem_hdr_addr);
+        //   $fwrite(32'h80000002,"c1 write--- payload:%x",{3'b0, mem_write_bits_result_isZero, mem_write_bits_result_isNaR,
+        //                 mem_write_bits_result_lt, mem_write_bits_result_eq, 
+        //                 mem_write_bits_result_gt, mem_write_bits_result_out});
         end
       end
     end

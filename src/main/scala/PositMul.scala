@@ -11,8 +11,11 @@ class PositMulCore(val nbits: Int, val es: Int) extends Module with HasHardPosit
     val trailingBits = Output(UInt(trailingBitCount.W))
     val stickyBit = Output(Bool())
     val out    = Output(new unpackedPosit(nbits, es))
+    val validIn = Input(Bool())
+    val validOut = Output(Bool())
   })
 
+  io.validOut := io.validIn
   val num1 = io.num1
   val num2 = io.num2
 

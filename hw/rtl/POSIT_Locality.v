@@ -177,13 +177,16 @@ module PositCompare(
   input  [31:0] io_num2,
   output        io_lt,
   output        io_eq,
-  output        io_gt
+  output        io_gt,
+  input         io_validIn,
+  output        io_validOut
 );
-  wire  _T_2 = ~io_lt; // @[PositCompare.scala 16:13]
-  wire  _T_3 = ~io_eq; // @[PositCompare.scala 16:23]
-  assign io_lt = $signed(io_num1) < $signed(io_num2); // @[PositCompare.scala 14:9]
-  assign io_eq = $signed(io_num1) == $signed(io_num2); // @[PositCompare.scala 15:9]
-  assign io_gt = _T_2 & _T_3; // @[PositCompare.scala 16:9]
+  wire  _T_2 = ~io_lt; // @[PositCompare.scala 18:13]
+  wire  _T_3 = ~io_eq; // @[PositCompare.scala 18:23]
+  assign io_lt = $signed(io_num1) < $signed(io_num2); // @[PositCompare.scala 16:9]
+  assign io_eq = $signed(io_num1) == $signed(io_num2); // @[PositCompare.scala 17:9]
+  assign io_gt = _T_2 & _T_3; // @[PositCompare.scala 18:9]
+  assign io_validOut = io_validIn; // @[PositCompare.scala 15:15]
 endmodule
 module PositFMACore(
   input         clock,
@@ -456,7 +459,6 @@ module PositDivSqrtCore(
   input         clock,
   input         reset,
   input         io_validIn,
-  output        io_readyIn,
   input         io_sqrtOp,
   input         io_num1_sign,
   input  [8:0]  io_num1_exponent,
@@ -593,7 +595,6 @@ module PositDivSqrtCore(
   wire  validOut = cycleCount == 6'h1; // @[PositDivSqrt.scala 118:29]
   wire  _T_99 = frac_out[1:0] != 2'h0; // @[PositDivSqrt.scala 125:59]
   wire  _T_100 = remHi != 32'h0; // @[PositDivSqrt.scala 125:73]
-  assign io_readyIn = cycleCount <= 6'h1; // @[PositDivSqrt.scala 64:14]
   assign io_validOut_div = validOut & _T_54; // @[PositDivSqrt.scala 120:20]
   assign io_validOut_sqrt = validOut & sqrtOp_stored; // @[PositDivSqrt.scala 121:20]
   assign io_exceptions = exec_out; // @[PositDivSqrt.scala 122:20]
@@ -761,23 +762,26 @@ module PositMulCore(
   output [8:0]  io_out_exponent,
   output [27:0] io_out_fraction,
   output        io_out_isZero,
-  output        io_out_isNaR
+  output        io_out_isNaR,
+  input         io_validIn,
+  output        io_validOut
 );
-  wire [8:0] prodExp = $signed(io_num1_exponent) + $signed(io_num2_exponent); // @[PositMul.scala 19:31]
-  wire [55:0] prodFrac = io_num1_fraction * io_num2_fraction; // @[PositMul.scala 21:63]
-  wire  prodOverflow = prodFrac[55]; // @[PositMul.scala 22:30]
-  wire  _T_3 = ~prodOverflow; // @[PositMul.scala 24:39]
-  wire [56:0] _GEN_0 = {{1'd0}, prodFrac}; // @[PositMul.scala 24:35]
-  wire [56:0] normProductFrac = _GEN_0 << _T_3; // @[PositMul.scala 24:35]
-  wire [1:0] _T_4 = prodOverflow ? $signed(2'sh1) : $signed(2'sh0); // @[PositMul.scala 25:38]
-  wire [8:0] _GEN_1 = {{7{_T_4[1]}},_T_4}; // @[PositMul.scala 25:33]
-  assign io_trailingBits = normProductFrac[27:26]; // @[PositMul.scala 34:19]
-  assign io_stickyBit = normProductFrac[25:0] != 26'h0; // @[PositMul.scala 35:19]
-  assign io_out_sign = io_num1_sign ^ io_num2_sign; // @[PositMul.scala 37:10]
-  assign io_out_exponent = $signed(prodExp) + $signed(_GEN_1); // @[PositMul.scala 37:10]
-  assign io_out_fraction = normProductFrac[55:28]; // @[PositMul.scala 37:10]
-  assign io_out_isZero = io_num1_isZero | io_num2_isZero; // @[PositMul.scala 37:10]
-  assign io_out_isNaR = io_num1_isNaR | io_num2_isNaR; // @[PositMul.scala 37:10]
+  wire [8:0] prodExp = $signed(io_num1_exponent) + $signed(io_num2_exponent); // @[PositMul.scala 22:31]
+  wire [55:0] prodFrac = io_num1_fraction * io_num2_fraction; // @[PositMul.scala 24:63]
+  wire  prodOverflow = prodFrac[55]; // @[PositMul.scala 25:30]
+  wire  _T_3 = ~prodOverflow; // @[PositMul.scala 27:39]
+  wire [56:0] _GEN_0 = {{1'd0}, prodFrac}; // @[PositMul.scala 27:35]
+  wire [56:0] normProductFrac = _GEN_0 << _T_3; // @[PositMul.scala 27:35]
+  wire [1:0] _T_4 = prodOverflow ? $signed(2'sh1) : $signed(2'sh0); // @[PositMul.scala 28:38]
+  wire [8:0] _GEN_1 = {{7{_T_4[1]}},_T_4}; // @[PositMul.scala 28:33]
+  assign io_trailingBits = normProductFrac[27:26]; // @[PositMul.scala 37:19]
+  assign io_stickyBit = normProductFrac[25:0] != 26'h0; // @[PositMul.scala 38:19]
+  assign io_out_sign = io_num1_sign ^ io_num2_sign; // @[PositMul.scala 40:10]
+  assign io_out_exponent = $signed(prodExp) + $signed(_GEN_1); // @[PositMul.scala 40:10]
+  assign io_out_fraction = normProductFrac[55:28]; // @[PositMul.scala 40:10]
+  assign io_out_isZero = io_num1_isZero | io_num2_isZero; // @[PositMul.scala 40:10]
+  assign io_out_isNaR = io_num1_isNaR | io_num2_isNaR; // @[PositMul.scala 40:10]
+  assign io_validOut = io_validIn; // @[PositMul.scala 18:15]
 endmodule
 module PositExtractor(
   input  [31:0] io_in,
@@ -923,232 +927,291 @@ module Posit(
   output        io_result_bits_lt,
   output        io_result_bits_eq,
   output        io_result_bits_gt,
-  output [4:0]  io_result_bits_exceptions
+  output [4:0]  io_result_bits_exceptions,
+  input  [2:0]  io_in_idx,
+  output [2:0]  io_out_idx
 );
-  wire  positAddCore_clock; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_num1_sign; // @[POSIT.scala 43:34]
-  wire [8:0] positAddCore_io_num1_exponent; // @[POSIT.scala 43:34]
-  wire [27:0] positAddCore_io_num1_fraction; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_num1_isZero; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_num1_isNaR; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_num2_sign; // @[POSIT.scala 43:34]
-  wire [8:0] positAddCore_io_num2_exponent; // @[POSIT.scala 43:34]
-  wire [27:0] positAddCore_io_num2_fraction; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_num2_isZero; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_num2_isNaR; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_sub; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_input_valid; // @[POSIT.scala 43:34]
-  wire [1:0] positAddCore_io_trailingBits; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_stickyBit; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_out_sign; // @[POSIT.scala 43:34]
-  wire [8:0] positAddCore_io_out_exponent; // @[POSIT.scala 43:34]
-  wire [27:0] positAddCore_io_out_fraction; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_out_isZero; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_out_isNaR; // @[POSIT.scala 43:34]
-  wire  positAddCore_io_output_valid; // @[POSIT.scala 43:34]
-  wire [31:0] positCompare_io_num1; // @[POSIT.scala 44:34]
-  wire [31:0] positCompare_io_num2; // @[POSIT.scala 44:34]
-  wire  positCompare_io_lt; // @[POSIT.scala 44:34]
-  wire  positCompare_io_eq; // @[POSIT.scala 44:34]
-  wire  positCompare_io_gt; // @[POSIT.scala 44:34]
-  wire  positFMACore_clock; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num1_sign; // @[POSIT.scala 45:34]
-  wire [8:0] positFMACore_io_num1_exponent; // @[POSIT.scala 45:34]
-  wire [27:0] positFMACore_io_num1_fraction; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num1_isZero; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num1_isNaR; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num2_sign; // @[POSIT.scala 45:34]
-  wire [8:0] positFMACore_io_num2_exponent; // @[POSIT.scala 45:34]
-  wire [27:0] positFMACore_io_num2_fraction; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num2_isZero; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num2_isNaR; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num3_sign; // @[POSIT.scala 45:34]
-  wire [8:0] positFMACore_io_num3_exponent; // @[POSIT.scala 45:34]
-  wire [27:0] positFMACore_io_num3_fraction; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num3_isZero; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_num3_isNaR; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_sub; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_negate; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_input_valid; // @[POSIT.scala 45:34]
-  wire [1:0] positFMACore_io_trailingBits; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_stickyBit; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_out_sign; // @[POSIT.scala 45:34]
-  wire [8:0] positFMACore_io_out_exponent; // @[POSIT.scala 45:34]
-  wire [27:0] positFMACore_io_out_fraction; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_out_isZero; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_out_isNaR; // @[POSIT.scala 45:34]
-  wire  positFMACore_io_output_valid; // @[POSIT.scala 45:34]
-  wire  positDivSqrtCore_clock; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_reset; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_validIn; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_readyIn; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_sqrtOp; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_num1_sign; // @[POSIT.scala 46:38]
-  wire [8:0] positDivSqrtCore_io_num1_exponent; // @[POSIT.scala 46:38]
-  wire [27:0] positDivSqrtCore_io_num1_fraction; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_num1_isZero; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_num1_isNaR; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_num2_sign; // @[POSIT.scala 46:38]
-  wire [8:0] positDivSqrtCore_io_num2_exponent; // @[POSIT.scala 46:38]
-  wire [27:0] positDivSqrtCore_io_num2_fraction; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_num2_isZero; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_num2_isNaR; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_validOut_div; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 46:38]
-  wire [4:0] positDivSqrtCore_io_exceptions; // @[POSIT.scala 46:38]
-  wire [1:0] positDivSqrtCore_io_trailingBits; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_stickyBit; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_out_sign; // @[POSIT.scala 46:38]
-  wire [8:0] positDivSqrtCore_io_out_exponent; // @[POSIT.scala 46:38]
-  wire [27:0] positDivSqrtCore_io_out_fraction; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_out_isZero; // @[POSIT.scala 46:38]
-  wire  positDivSqrtCore_io_out_isNaR; // @[POSIT.scala 46:38]
-  wire  positMulCore_io_num1_sign; // @[POSIT.scala 47:34]
-  wire [8:0] positMulCore_io_num1_exponent; // @[POSIT.scala 47:34]
-  wire [27:0] positMulCore_io_num1_fraction; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_num1_isZero; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_num1_isNaR; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_num2_sign; // @[POSIT.scala 47:34]
-  wire [8:0] positMulCore_io_num2_exponent; // @[POSIT.scala 47:34]
-  wire [27:0] positMulCore_io_num2_fraction; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_num2_isZero; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_num2_isNaR; // @[POSIT.scala 47:34]
-  wire [1:0] positMulCore_io_trailingBits; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_stickyBit; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_out_sign; // @[POSIT.scala 47:34]
-  wire [8:0] positMulCore_io_out_exponent; // @[POSIT.scala 47:34]
-  wire [27:0] positMulCore_io_out_fraction; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_out_isZero; // @[POSIT.scala 47:34]
-  wire  positMulCore_io_out_isNaR; // @[POSIT.scala 47:34]
-  wire [31:0] num1Extractor_io_in; // @[POSIT.scala 65:35]
-  wire  num1Extractor_io_out_sign; // @[POSIT.scala 65:35]
-  wire [8:0] num1Extractor_io_out_exponent; // @[POSIT.scala 65:35]
-  wire [27:0] num1Extractor_io_out_fraction; // @[POSIT.scala 65:35]
-  wire  num1Extractor_io_out_isZero; // @[POSIT.scala 65:35]
-  wire  num1Extractor_io_out_isNaR; // @[POSIT.scala 65:35]
-  wire [31:0] num2Extractor_io_in; // @[POSIT.scala 66:35]
-  wire  num2Extractor_io_out_sign; // @[POSIT.scala 66:35]
-  wire [8:0] num2Extractor_io_out_exponent; // @[POSIT.scala 66:35]
-  wire [27:0] num2Extractor_io_out_fraction; // @[POSIT.scala 66:35]
-  wire  num2Extractor_io_out_isZero; // @[POSIT.scala 66:35]
-  wire  num2Extractor_io_out_isNaR; // @[POSIT.scala 66:35]
-  wire [31:0] num3Extractor_io_in; // @[POSIT.scala 67:35]
-  wire  num3Extractor_io_out_sign; // @[POSIT.scala 67:35]
-  wire [8:0] num3Extractor_io_out_exponent; // @[POSIT.scala 67:35]
-  wire [27:0] num3Extractor_io_out_fraction; // @[POSIT.scala 67:35]
-  wire  num3Extractor_io_out_isZero; // @[POSIT.scala 67:35]
-  wire  num3Extractor_io_out_isNaR; // @[POSIT.scala 67:35]
-  wire  positGenerator_io_in_sign; // @[POSIT.scala 165:36]
-  wire [8:0] positGenerator_io_in_exponent; // @[POSIT.scala 165:36]
-  wire [27:0] positGenerator_io_in_fraction; // @[POSIT.scala 165:36]
-  wire  positGenerator_io_in_isZero; // @[POSIT.scala 165:36]
-  wire  positGenerator_io_in_isNaR; // @[POSIT.scala 165:36]
-  wire [1:0] positGenerator_io_trailingBits; // @[POSIT.scala 165:36]
-  wire  positGenerator_io_stickyBit; // @[POSIT.scala 165:36]
-  wire [31:0] positGenerator_io_out; // @[POSIT.scala 165:36]
-  reg [31:0] init_num1; // @[POSIT.scala 50:32]
+  wire  positAddCore_clock; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_num1_sign; // @[POSIT.scala 44:34]
+  wire [8:0] positAddCore_io_num1_exponent; // @[POSIT.scala 44:34]
+  wire [27:0] positAddCore_io_num1_fraction; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_num1_isZero; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_num1_isNaR; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_num2_sign; // @[POSIT.scala 44:34]
+  wire [8:0] positAddCore_io_num2_exponent; // @[POSIT.scala 44:34]
+  wire [27:0] positAddCore_io_num2_fraction; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_num2_isZero; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_num2_isNaR; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_sub; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_input_valid; // @[POSIT.scala 44:34]
+  wire [1:0] positAddCore_io_trailingBits; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_stickyBit; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_out_sign; // @[POSIT.scala 44:34]
+  wire [8:0] positAddCore_io_out_exponent; // @[POSIT.scala 44:34]
+  wire [27:0] positAddCore_io_out_fraction; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_out_isZero; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_out_isNaR; // @[POSIT.scala 44:34]
+  wire  positAddCore_io_output_valid; // @[POSIT.scala 44:34]
+  wire [31:0] positCompare_io_num1; // @[POSIT.scala 45:34]
+  wire [31:0] positCompare_io_num2; // @[POSIT.scala 45:34]
+  wire  positCompare_io_lt; // @[POSIT.scala 45:34]
+  wire  positCompare_io_eq; // @[POSIT.scala 45:34]
+  wire  positCompare_io_gt; // @[POSIT.scala 45:34]
+  wire  positCompare_io_validIn; // @[POSIT.scala 45:34]
+  wire  positCompare_io_validOut; // @[POSIT.scala 45:34]
+  wire  positFMACore_clock; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num1_sign; // @[POSIT.scala 46:34]
+  wire [8:0] positFMACore_io_num1_exponent; // @[POSIT.scala 46:34]
+  wire [27:0] positFMACore_io_num1_fraction; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num1_isZero; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num1_isNaR; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num2_sign; // @[POSIT.scala 46:34]
+  wire [8:0] positFMACore_io_num2_exponent; // @[POSIT.scala 46:34]
+  wire [27:0] positFMACore_io_num2_fraction; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num2_isZero; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num2_isNaR; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num3_sign; // @[POSIT.scala 46:34]
+  wire [8:0] positFMACore_io_num3_exponent; // @[POSIT.scala 46:34]
+  wire [27:0] positFMACore_io_num3_fraction; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num3_isZero; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_num3_isNaR; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_sub; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_negate; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_input_valid; // @[POSIT.scala 46:34]
+  wire [1:0] positFMACore_io_trailingBits; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_stickyBit; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_out_sign; // @[POSIT.scala 46:34]
+  wire [8:0] positFMACore_io_out_exponent; // @[POSIT.scala 46:34]
+  wire [27:0] positFMACore_io_out_fraction; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_out_isZero; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_out_isNaR; // @[POSIT.scala 46:34]
+  wire  positFMACore_io_output_valid; // @[POSIT.scala 46:34]
+  wire  positDivSqrtCore_clock; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_reset; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_validIn; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_sqrtOp; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_num1_sign; // @[POSIT.scala 47:38]
+  wire [8:0] positDivSqrtCore_io_num1_exponent; // @[POSIT.scala 47:38]
+  wire [27:0] positDivSqrtCore_io_num1_fraction; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_num1_isZero; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_num1_isNaR; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_num2_sign; // @[POSIT.scala 47:38]
+  wire [8:0] positDivSqrtCore_io_num2_exponent; // @[POSIT.scala 47:38]
+  wire [27:0] positDivSqrtCore_io_num2_fraction; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_num2_isZero; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_num2_isNaR; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_validOut_div; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 47:38]
+  wire [4:0] positDivSqrtCore_io_exceptions; // @[POSIT.scala 47:38]
+  wire [1:0] positDivSqrtCore_io_trailingBits; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_stickyBit; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_out_sign; // @[POSIT.scala 47:38]
+  wire [8:0] positDivSqrtCore_io_out_exponent; // @[POSIT.scala 47:38]
+  wire [27:0] positDivSqrtCore_io_out_fraction; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_out_isZero; // @[POSIT.scala 47:38]
+  wire  positDivSqrtCore_io_out_isNaR; // @[POSIT.scala 47:38]
+  wire  positMulCore_io_num1_sign; // @[POSIT.scala 48:34]
+  wire [8:0] positMulCore_io_num1_exponent; // @[POSIT.scala 48:34]
+  wire [27:0] positMulCore_io_num1_fraction; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_num1_isZero; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_num1_isNaR; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_num2_sign; // @[POSIT.scala 48:34]
+  wire [8:0] positMulCore_io_num2_exponent; // @[POSIT.scala 48:34]
+  wire [27:0] positMulCore_io_num2_fraction; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_num2_isZero; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_num2_isNaR; // @[POSIT.scala 48:34]
+  wire [1:0] positMulCore_io_trailingBits; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_stickyBit; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_out_sign; // @[POSIT.scala 48:34]
+  wire [8:0] positMulCore_io_out_exponent; // @[POSIT.scala 48:34]
+  wire [27:0] positMulCore_io_out_fraction; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_out_isZero; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_out_isNaR; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_validIn; // @[POSIT.scala 48:34]
+  wire  positMulCore_io_validOut; // @[POSIT.scala 48:34]
+  wire [31:0] num1Extractor_io_in; // @[POSIT.scala 74:35]
+  wire  num1Extractor_io_out_sign; // @[POSIT.scala 74:35]
+  wire [8:0] num1Extractor_io_out_exponent; // @[POSIT.scala 74:35]
+  wire [27:0] num1Extractor_io_out_fraction; // @[POSIT.scala 74:35]
+  wire  num1Extractor_io_out_isZero; // @[POSIT.scala 74:35]
+  wire  num1Extractor_io_out_isNaR; // @[POSIT.scala 74:35]
+  wire [31:0] num2Extractor_io_in; // @[POSIT.scala 75:35]
+  wire  num2Extractor_io_out_sign; // @[POSIT.scala 75:35]
+  wire [8:0] num2Extractor_io_out_exponent; // @[POSIT.scala 75:35]
+  wire [27:0] num2Extractor_io_out_fraction; // @[POSIT.scala 75:35]
+  wire  num2Extractor_io_out_isZero; // @[POSIT.scala 75:35]
+  wire  num2Extractor_io_out_isNaR; // @[POSIT.scala 75:35]
+  wire [31:0] num3Extractor_io_in; // @[POSIT.scala 76:35]
+  wire  num3Extractor_io_out_sign; // @[POSIT.scala 76:35]
+  wire [8:0] num3Extractor_io_out_exponent; // @[POSIT.scala 76:35]
+  wire [27:0] num3Extractor_io_out_fraction; // @[POSIT.scala 76:35]
+  wire  num3Extractor_io_out_isZero; // @[POSIT.scala 76:35]
+  wire  num3Extractor_io_out_isNaR; // @[POSIT.scala 76:35]
+  wire  positGenerator_io_in_sign; // @[POSIT.scala 197:36]
+  wire [8:0] positGenerator_io_in_exponent; // @[POSIT.scala 197:36]
+  wire [27:0] positGenerator_io_in_fraction; // @[POSIT.scala 197:36]
+  wire  positGenerator_io_in_isZero; // @[POSIT.scala 197:36]
+  wire  positGenerator_io_in_isNaR; // @[POSIT.scala 197:36]
+  wire [1:0] positGenerator_io_trailingBits; // @[POSIT.scala 197:36]
+  wire  positGenerator_io_stickyBit; // @[POSIT.scala 197:36]
+  wire [31:0] positGenerator_io_out; // @[POSIT.scala 197:36]
+  wire  PositGenerator_io_in_sign; // @[POSIT.scala 203:50]
+  wire [8:0] PositGenerator_io_in_exponent; // @[POSIT.scala 203:50]
+  wire [27:0] PositGenerator_io_in_fraction; // @[POSIT.scala 203:50]
+  wire  PositGenerator_io_in_isZero; // @[POSIT.scala 203:50]
+  wire  PositGenerator_io_in_isNaR; // @[POSIT.scala 203:50]
+  wire [1:0] PositGenerator_io_trailingBits; // @[POSIT.scala 203:50]
+  wire  PositGenerator_io_stickyBit; // @[POSIT.scala 203:50]
+  wire [31:0] PositGenerator_io_out; // @[POSIT.scala 203:50]
+  wire  PositGenerator_1_io_in_sign; // @[POSIT.scala 204:47]
+  wire [8:0] PositGenerator_1_io_in_exponent; // @[POSIT.scala 204:47]
+  wire [27:0] PositGenerator_1_io_in_fraction; // @[POSIT.scala 204:47]
+  wire  PositGenerator_1_io_in_isZero; // @[POSIT.scala 204:47]
+  wire  PositGenerator_1_io_in_isNaR; // @[POSIT.scala 204:47]
+  wire [1:0] PositGenerator_1_io_trailingBits; // @[POSIT.scala 204:47]
+  wire  PositGenerator_1_io_stickyBit; // @[POSIT.scala 204:47]
+  wire [31:0] PositGenerator_1_io_out; // @[POSIT.scala 204:47]
+  wire  PositGenerator_2_io_in_sign; // @[POSIT.scala 205:47]
+  wire [8:0] PositGenerator_2_io_in_exponent; // @[POSIT.scala 205:47]
+  wire [27:0] PositGenerator_2_io_in_fraction; // @[POSIT.scala 205:47]
+  wire  PositGenerator_2_io_in_isZero; // @[POSIT.scala 205:47]
+  wire  PositGenerator_2_io_in_isNaR; // @[POSIT.scala 205:47]
+  wire [1:0] PositGenerator_2_io_trailingBits; // @[POSIT.scala 205:47]
+  wire  PositGenerator_2_io_stickyBit; // @[POSIT.scala 205:47]
+  wire [31:0] PositGenerator_2_io_out; // @[POSIT.scala 205:47]
+  wire  PositGenerator_3_io_in_sign; // @[POSIT.scala 206:51]
+  wire [8:0] PositGenerator_3_io_in_exponent; // @[POSIT.scala 206:51]
+  wire [27:0] PositGenerator_3_io_in_fraction; // @[POSIT.scala 206:51]
+  wire  PositGenerator_3_io_in_isZero; // @[POSIT.scala 206:51]
+  wire  PositGenerator_3_io_in_isNaR; // @[POSIT.scala 206:51]
+  wire [1:0] PositGenerator_3_io_trailingBits; // @[POSIT.scala 206:51]
+  wire  PositGenerator_3_io_stickyBit; // @[POSIT.scala 206:51]
+  wire [31:0] PositGenerator_3_io_out; // @[POSIT.scala 206:51]
+  reg [31:0] init_num1; // @[POSIT.scala 51:32]
   reg [31:0] _RAND_0;
-  reg [31:0] init_num2; // @[POSIT.scala 51:32]
+  reg [31:0] init_num2; // @[POSIT.scala 52:32]
   reg [31:0] _RAND_1;
-  reg [31:0] init_num3; // @[POSIT.scala 52:32]
+  reg [31:0] init_num3; // @[POSIT.scala 53:32]
   reg [31:0] _RAND_2;
-  reg [2:0] init_inst; // @[POSIT.scala 54:32]
+  reg [2:0] init_inst; // @[POSIT.scala 55:32]
   reg [31:0] _RAND_3;
-  reg [1:0] init_mode; // @[POSIT.scala 55:32]
+  reg [1:0] init_mode; // @[POSIT.scala 56:32]
   reg [31:0] _RAND_4;
-  reg  init_valid; // @[POSIT.scala 56:33]
+  reg  init_valid; // @[POSIT.scala 57:33]
   reg [31:0] _RAND_5;
-  wire  _T = io_result_ready & positDivSqrtCore_io_readyIn; // @[POSIT.scala 57:30]
-  reg  exec_num1_sign; // @[POSIT.scala 72:32]
+  reg [2:0] init_idx; // @[POSIT.scala 58:31]
   reg [31:0] _RAND_6;
-  reg [8:0] exec_num1_exponent; // @[POSIT.scala 72:32]
+  reg  result_valid; // @[POSIT.scala 60:35]
   reg [31:0] _RAND_7;
-  reg [27:0] exec_num1_fraction; // @[POSIT.scala 72:32]
+  reg  exec_valid; // @[POSIT.scala 61:33]
   reg [31:0] _RAND_8;
-  reg  exec_num1_isZero; // @[POSIT.scala 72:32]
+  wire  _T = io_request_valid & io_request_ready; // @[POSIT.scala 63:31]
+  wire  _T_1 = ~result_valid; // @[POSIT.scala 71:21]
+  wire  _T_2 = ~exec_valid; // @[POSIT.scala 71:39]
+  wire  _T_3 = _T_1 & _T_2; // @[POSIT.scala 71:36]
+  wire  _T_4 = _T_3 & init_valid; // @[POSIT.scala 71:51]
+  reg  exec_num1_sign; // @[POSIT.scala 81:32]
   reg [31:0] _RAND_9;
-  reg  exec_num1_isNaR; // @[POSIT.scala 72:32]
+  reg [8:0] exec_num1_exponent; // @[POSIT.scala 81:32]
   reg [31:0] _RAND_10;
-  reg  exec_num2_sign; // @[POSIT.scala 73:32]
+  reg [27:0] exec_num1_fraction; // @[POSIT.scala 81:32]
   reg [31:0] _RAND_11;
-  reg [8:0] exec_num2_exponent; // @[POSIT.scala 73:32]
+  reg  exec_num1_isZero; // @[POSIT.scala 81:32]
   reg [31:0] _RAND_12;
-  reg [27:0] exec_num2_fraction; // @[POSIT.scala 73:32]
+  reg  exec_num1_isNaR; // @[POSIT.scala 81:32]
   reg [31:0] _RAND_13;
-  reg  exec_num2_isZero; // @[POSIT.scala 73:32]
+  reg  exec_num2_sign; // @[POSIT.scala 82:32]
   reg [31:0] _RAND_14;
-  reg  exec_num2_isNaR; // @[POSIT.scala 73:32]
+  reg [8:0] exec_num2_exponent; // @[POSIT.scala 82:32]
   reg [31:0] _RAND_15;
-  reg  exec_num3_sign; // @[POSIT.scala 74:32]
+  reg [27:0] exec_num2_fraction; // @[POSIT.scala 82:32]
   reg [31:0] _RAND_16;
-  reg [8:0] exec_num3_exponent; // @[POSIT.scala 74:32]
+  reg  exec_num2_isZero; // @[POSIT.scala 82:32]
   reg [31:0] _RAND_17;
-  reg [27:0] exec_num3_fraction; // @[POSIT.scala 74:32]
+  reg  exec_num2_isNaR; // @[POSIT.scala 82:32]
   reg [31:0] _RAND_18;
-  reg  exec_num3_isZero; // @[POSIT.scala 74:32]
+  reg  exec_num3_sign; // @[POSIT.scala 83:32]
   reg [31:0] _RAND_19;
-  reg  exec_num3_isNaR; // @[POSIT.scala 74:32]
+  reg [8:0] exec_num3_exponent; // @[POSIT.scala 83:32]
   reg [31:0] _RAND_20;
-  reg [31:0] comp_num1; // @[POSIT.scala 75:32]
+  reg [27:0] exec_num3_fraction; // @[POSIT.scala 83:32]
   reg [31:0] _RAND_21;
-  reg [31:0] comp_num2; // @[POSIT.scala 76:32]
+  reg  exec_num3_isZero; // @[POSIT.scala 83:32]
   reg [31:0] _RAND_22;
-  reg [2:0] exec_inst; // @[POSIT.scala 78:32]
+  reg  exec_num3_isNaR; // @[POSIT.scala 83:32]
   reg [31:0] _RAND_23;
-  reg [1:0] exec_mode; // @[POSIT.scala 79:32]
+  reg [31:0] comp_num1; // @[POSIT.scala 84:32]
   reg [31:0] _RAND_24;
-  reg  exec_valid; // @[POSIT.scala 80:33]
+  reg [31:0] comp_num2; // @[POSIT.scala 85:32]
   reg [31:0] _RAND_25;
-  reg  result_out_sign; // @[POSIT.scala 82:33]
+  reg [2:0] exec_inst; // @[POSIT.scala 87:32]
   reg [31:0] _RAND_26;
-  reg [8:0] result_out_exponent; // @[POSIT.scala 82:33]
+  reg [1:0] exec_mode; // @[POSIT.scala 88:32]
   reg [31:0] _RAND_27;
-  reg [27:0] result_out_fraction; // @[POSIT.scala 82:33]
+  reg [2:0] exec_idx; // @[POSIT.scala 89:31]
   reg [31:0] _RAND_28;
-  reg  result_out_isZero; // @[POSIT.scala 82:33]
+  reg  dispatched; // @[POSIT.scala 90:33]
   reg [31:0] _RAND_29;
-  reg  result_out_isNaR; // @[POSIT.scala 82:33]
+  reg  result_out_sign; // @[POSIT.scala 94:33]
   reg [31:0] _RAND_30;
-  reg  result_stickyBit; // @[POSIT.scala 83:39]
+  reg [8:0] result_out_exponent; // @[POSIT.scala 94:33]
   reg [31:0] _RAND_31;
-  reg [1:0] result_trailingBits; // @[POSIT.scala 84:42]
+  reg [27:0] result_out_fraction; // @[POSIT.scala 94:33]
   reg [31:0] _RAND_32;
-  reg  result_valid; // @[POSIT.scala 85:35]
+  reg  result_out_isZero; // @[POSIT.scala 94:33]
   reg [31:0] _RAND_33;
-  reg  result_lt; // @[POSIT.scala 86:32]
+  reg  result_out_isNaR; // @[POSIT.scala 94:33]
   reg [31:0] _RAND_34;
-  reg  result_eq; // @[POSIT.scala 87:32]
+  reg  result_stickyBit; // @[POSIT.scala 95:39]
   reg [31:0] _RAND_35;
-  reg  result_gt; // @[POSIT.scala 88:32]
+  reg [1:0] result_trailingBits; // @[POSIT.scala 96:42]
   reg [31:0] _RAND_36;
-  wire  _T_11 = _T & result_valid; // @[POSIT.scala 96:61]
-  wire  _T_13 = exec_inst == 3'h1; // @[POSIT.scala 110:64]
-  wire  _T_19 = exec_inst == 3'h3; // @[POSIT.scala 120:64]
-  wire  _T_22 = exec_inst == 3'h5; // @[POSIT.scala 125:64]
-  wire  _T_25 = 3'h5 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_26_sign = _T_25 & positDivSqrtCore_io_out_sign; // @[Mux.scala 68:16]
-  wire  _T_26_isZero = _T_25 & positDivSqrtCore_io_out_isZero; // @[Mux.scala 68:16]
-  wire  _T_26_isNaR = _T_25 & positDivSqrtCore_io_out_isNaR; // @[Mux.scala 68:16]
-  wire  _T_27 = 3'h4 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_29 = 3'h3 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_31 = 3'h1 == exec_inst; // @[Mux.scala 68:19]
-  wire  _T_34 = _T_25 & positDivSqrtCore_io_stickyBit; // @[Mux.scala 68:16]
-  wire  _T_49 = exec_inst != 3'h5; // @[POSIT.scala 160:59]
-  wire  _T_50 = exec_valid & _T_49; // @[POSIT.scala 160:45]
-  wire  _T_51 = exec_inst != 3'h3; // @[POSIT.scala 160:97]
-  wire  _T_52 = _T_50 & _T_51; // @[POSIT.scala 160:84]
-  wire  _T_53 = exec_inst != 3'h1; // @[POSIT.scala 160:131]
-  wire  _T_54 = _T_52 & _T_53; // @[POSIT.scala 160:118]
-  wire  _T_55 = _T_54 | positDivSqrtCore_io_validOut_div; // @[POSIT.scala 160:156]
-  wire  _T_56 = _T_55 | positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 161:58]
-  wire  _T_57 = _T_56 | positFMACore_io_output_valid; // @[POSIT.scala 162:59]
-  wire  _T_58 = _T_57 | positAddCore_io_output_valid; // @[POSIT.scala 162:90]
-  wire  _T_59 = positGenerator_io_out != 32'h0; // @[common.scala 61:41]
-  wire  _T_60 = ~_T_59; // @[common.scala 61:33]
-  wire  _T_64 = positGenerator_io_out[30:0] != 31'h0; // @[common.scala 27:71]
-  wire  _T_65 = ~_T_64; // @[common.scala 27:53]
-  wire  _T_66 = positGenerator_io_out[31] & _T_65; // @[common.scala 27:51]
-  PositAddCore positAddCore ( // @[POSIT.scala 43:34]
+  reg  result_lt; // @[POSIT.scala 97:32]
+  reg [31:0] _RAND_37;
+  reg  result_eq; // @[POSIT.scala 98:32]
+  reg [31:0] _RAND_38;
+  reg  result_gt; // @[POSIT.scala 99:32]
+  reg [31:0] _RAND_39;
+  reg [2:0] result_idx; // @[POSIT.scala 100:33]
+  reg [31:0] _RAND_40;
+  wire  _T_44 = positCompare_io_validOut | positMulCore_io_validOut; // @[POSIT.scala 158:54]
+  wire  _T_45 = _T_44 | positDivSqrtCore_io_validOut_div; // @[POSIT.scala 158:80]
+  wire  _T_46 = _T_45 | positDivSqrtCore_io_validOut_sqrt; // @[POSIT.scala 159:58]
+  wire  _T_47 = _T_46 | positFMACore_io_output_valid; // @[POSIT.scala 160:59]
+  wire  new_result_valid = _T_47 | positAddCore_io_output_valid; // @[POSIT.scala 160:90]
+  wire  _GEN_30 = exec_valid | dispatched; // @[POSIT.scala 126:31]
+  wire  _T_19 = exec_inst == 3'h1; // @[POSIT.scala 133:64]
+  wire  _T_20 = exec_valid & _T_19; // @[POSIT.scala 133:51]
+  wire  _T_21 = ~dispatched; // @[POSIT.scala 133:91]
+  wire  _T_25 = exec_inst == 3'h2; // @[POSIT.scala 137:60]
+  wire  _T_26 = exec_valid & _T_25; // @[POSIT.scala 137:47]
+  wire  _T_31 = exec_inst == 3'h3; // @[POSIT.scala 144:64]
+  wire  _T_32 = exec_valid & _T_31; // @[POSIT.scala 144:51]
+  wire  _T_36 = exec_inst == 3'h5; // @[POSIT.scala 150:64]
+  wire  _T_37 = exec_valid & _T_36; // @[POSIT.scala 150:51]
+  wire  _T_40 = exec_inst == 3'h4; // @[POSIT.scala 155:60]
+  wire  _T_41 = exec_valid & _T_40; // @[POSIT.scala 155:47]
+  wire  _T_49 = 3'h5 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_50_sign = _T_49 & positDivSqrtCore_io_out_sign; // @[Mux.scala 68:16]
+  wire  _T_50_isZero = _T_49 & positDivSqrtCore_io_out_isZero; // @[Mux.scala 68:16]
+  wire  _T_50_isNaR = _T_49 & positDivSqrtCore_io_out_isNaR; // @[Mux.scala 68:16]
+  wire  _T_51 = 3'h4 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_53 = 3'h3 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_55 = 3'h1 == exec_inst; // @[Mux.scala 68:19]
+  wire  _T_58 = _T_49 & positDivSqrtCore_io_stickyBit; // @[Mux.scala 68:16]
+  wire  _T_75 = ~reset; // @[POSIT.scala 233:31]
+  wire  _T_110 = positGenerator_io_out != 32'h0; // @[common.scala 61:41]
+  wire  _T_111 = ~_T_110; // @[common.scala 61:33]
+  wire  _T_115 = positGenerator_io_out[30:0] != 31'h0; // @[common.scala 27:71]
+  wire  _T_116 = ~_T_115; // @[common.scala 27:53]
+  wire  _T_117 = positGenerator_io_out[31] & _T_116; // @[common.scala 27:51]
+  wire  _GEN_44 = ~_T; // @[POSIT.scala 239:31]
+  wire  _GEN_45 = _GEN_44 & _T_4; // @[POSIT.scala 239:31]
+  wire  _GEN_46 = ~_T_4; // @[POSIT.scala 250:31]
+  wire  _GEN_47 = _GEN_46 & new_result_valid; // @[POSIT.scala 250:31]
+  wire  _GEN_48 = ~new_result_valid; // @[POSIT.scala 256:31]
+  wire  _GEN_49 = _GEN_48 & exec_valid; // @[POSIT.scala 256:31]
+  PositAddCore positAddCore ( // @[POSIT.scala 44:34]
     .clock(positAddCore_clock),
     .io_num1_sign(positAddCore_io_num1_sign),
     .io_num1_exponent(positAddCore_io_num1_exponent),
@@ -1171,14 +1234,16 @@ module Posit(
     .io_out_isNaR(positAddCore_io_out_isNaR),
     .io_output_valid(positAddCore_io_output_valid)
   );
-  PositCompare positCompare ( // @[POSIT.scala 44:34]
+  PositCompare positCompare ( // @[POSIT.scala 45:34]
     .io_num1(positCompare_io_num1),
     .io_num2(positCompare_io_num2),
     .io_lt(positCompare_io_lt),
     .io_eq(positCompare_io_eq),
-    .io_gt(positCompare_io_gt)
+    .io_gt(positCompare_io_gt),
+    .io_validIn(positCompare_io_validIn),
+    .io_validOut(positCompare_io_validOut)
   );
-  PositFMACore positFMACore ( // @[POSIT.scala 45:34]
+  PositFMACore positFMACore ( // @[POSIT.scala 46:34]
     .clock(positFMACore_clock),
     .io_num1_sign(positFMACore_io_num1_sign),
     .io_num1_exponent(positFMACore_io_num1_exponent),
@@ -1207,11 +1272,10 @@ module Posit(
     .io_out_isNaR(positFMACore_io_out_isNaR),
     .io_output_valid(positFMACore_io_output_valid)
   );
-  PositDivSqrtCore positDivSqrtCore ( // @[POSIT.scala 46:38]
+  PositDivSqrtCore positDivSqrtCore ( // @[POSIT.scala 47:38]
     .clock(positDivSqrtCore_clock),
     .reset(positDivSqrtCore_reset),
     .io_validIn(positDivSqrtCore_io_validIn),
-    .io_readyIn(positDivSqrtCore_io_readyIn),
     .io_sqrtOp(positDivSqrtCore_io_sqrtOp),
     .io_num1_sign(positDivSqrtCore_io_num1_sign),
     .io_num1_exponent(positDivSqrtCore_io_num1_exponent),
@@ -1234,7 +1298,7 @@ module Posit(
     .io_out_isZero(positDivSqrtCore_io_out_isZero),
     .io_out_isNaR(positDivSqrtCore_io_out_isNaR)
   );
-  PositMulCore positMulCore ( // @[POSIT.scala 47:34]
+  PositMulCore positMulCore ( // @[POSIT.scala 48:34]
     .io_num1_sign(positMulCore_io_num1_sign),
     .io_num1_exponent(positMulCore_io_num1_exponent),
     .io_num1_fraction(positMulCore_io_num1_fraction),
@@ -1251,9 +1315,11 @@ module Posit(
     .io_out_exponent(positMulCore_io_out_exponent),
     .io_out_fraction(positMulCore_io_out_fraction),
     .io_out_isZero(positMulCore_io_out_isZero),
-    .io_out_isNaR(positMulCore_io_out_isNaR)
+    .io_out_isNaR(positMulCore_io_out_isNaR),
+    .io_validIn(positMulCore_io_validIn),
+    .io_validOut(positMulCore_io_validOut)
   );
-  PositExtractor num1Extractor ( // @[POSIT.scala 65:35]
+  PositExtractor num1Extractor ( // @[POSIT.scala 74:35]
     .io_in(num1Extractor_io_in),
     .io_out_sign(num1Extractor_io_out_sign),
     .io_out_exponent(num1Extractor_io_out_exponent),
@@ -1261,7 +1327,7 @@ module Posit(
     .io_out_isZero(num1Extractor_io_out_isZero),
     .io_out_isNaR(num1Extractor_io_out_isNaR)
   );
-  PositExtractor num2Extractor ( // @[POSIT.scala 66:35]
+  PositExtractor num2Extractor ( // @[POSIT.scala 75:35]
     .io_in(num2Extractor_io_in),
     .io_out_sign(num2Extractor_io_out_sign),
     .io_out_exponent(num2Extractor_io_out_exponent),
@@ -1269,7 +1335,7 @@ module Posit(
     .io_out_isZero(num2Extractor_io_out_isZero),
     .io_out_isNaR(num2Extractor_io_out_isNaR)
   );
-  PositExtractor num3Extractor ( // @[POSIT.scala 67:35]
+  PositExtractor num3Extractor ( // @[POSIT.scala 76:35]
     .io_in(num3Extractor_io_in),
     .io_out_sign(num3Extractor_io_out_sign),
     .io_out_exponent(num3Extractor_io_out_exponent),
@@ -1277,7 +1343,7 @@ module Posit(
     .io_out_isZero(num3Extractor_io_out_isZero),
     .io_out_isNaR(num3Extractor_io_out_isNaR)
   );
-  PositGenerator positGenerator ( // @[POSIT.scala 165:36]
+  PositGenerator positGenerator ( // @[POSIT.scala 197:36]
     .io_in_sign(positGenerator_io_in_sign),
     .io_in_exponent(positGenerator_io_in_exponent),
     .io_in_fraction(positGenerator_io_in_fraction),
@@ -1287,83 +1353,154 @@ module Posit(
     .io_stickyBit(positGenerator_io_stickyBit),
     .io_out(positGenerator_io_out)
   );
-  assign io_request_ready = ~exec_valid; // @[POSIT.scala 89:26]
-  assign io_result_valid = result_valid; // @[POSIT.scala 178:25]
-  assign io_result_bits_isZero = result_out_isZero | _T_60; // @[POSIT.scala 170:31]
-  assign io_result_bits_isNaR = result_out_isNaR | _T_66; // @[POSIT.scala 171:31]
-  assign io_result_bits_out = positGenerator_io_out; // @[POSIT.scala 172:31]
-  assign io_result_bits_lt = result_lt; // @[POSIT.scala 173:27]
-  assign io_result_bits_eq = result_eq; // @[POSIT.scala 174:27]
-  assign io_result_bits_gt = result_gt; // @[POSIT.scala 175:27]
-  assign io_result_bits_exceptions = positDivSqrtCore_io_exceptions; // @[POSIT.scala 176:35]
+  PositGenerator PositGenerator ( // @[POSIT.scala 203:50]
+    .io_in_sign(PositGenerator_io_in_sign),
+    .io_in_exponent(PositGenerator_io_in_exponent),
+    .io_in_fraction(PositGenerator_io_in_fraction),
+    .io_in_isZero(PositGenerator_io_in_isZero),
+    .io_in_isNaR(PositGenerator_io_in_isNaR),
+    .io_trailingBits(PositGenerator_io_trailingBits),
+    .io_stickyBit(PositGenerator_io_stickyBit),
+    .io_out(PositGenerator_io_out)
+  );
+  PositGenerator PositGenerator_1 ( // @[POSIT.scala 204:47]
+    .io_in_sign(PositGenerator_1_io_in_sign),
+    .io_in_exponent(PositGenerator_1_io_in_exponent),
+    .io_in_fraction(PositGenerator_1_io_in_fraction),
+    .io_in_isZero(PositGenerator_1_io_in_isZero),
+    .io_in_isNaR(PositGenerator_1_io_in_isNaR),
+    .io_trailingBits(PositGenerator_1_io_trailingBits),
+    .io_stickyBit(PositGenerator_1_io_stickyBit),
+    .io_out(PositGenerator_1_io_out)
+  );
+  PositGenerator PositGenerator_2 ( // @[POSIT.scala 205:47]
+    .io_in_sign(PositGenerator_2_io_in_sign),
+    .io_in_exponent(PositGenerator_2_io_in_exponent),
+    .io_in_fraction(PositGenerator_2_io_in_fraction),
+    .io_in_isZero(PositGenerator_2_io_in_isZero),
+    .io_in_isNaR(PositGenerator_2_io_in_isNaR),
+    .io_trailingBits(PositGenerator_2_io_trailingBits),
+    .io_stickyBit(PositGenerator_2_io_stickyBit),
+    .io_out(PositGenerator_2_io_out)
+  );
+  PositGenerator PositGenerator_3 ( // @[POSIT.scala 206:51]
+    .io_in_sign(PositGenerator_3_io_in_sign),
+    .io_in_exponent(PositGenerator_3_io_in_exponent),
+    .io_in_fraction(PositGenerator_3_io_in_fraction),
+    .io_in_isZero(PositGenerator_3_io_in_isZero),
+    .io_in_isNaR(PositGenerator_3_io_in_isNaR),
+    .io_trailingBits(PositGenerator_3_io_trailingBits),
+    .io_stickyBit(PositGenerator_3_io_stickyBit),
+    .io_out(PositGenerator_3_io_out)
+  );
+  assign io_request_ready = ~init_valid; // @[POSIT.scala 102:26]
+  assign io_result_valid = result_valid; // @[POSIT.scala 274:25]
+  assign io_result_bits_isZero = result_out_isZero | _T_111; // @[POSIT.scala 265:31]
+  assign io_result_bits_isNaR = result_out_isNaR | _T_117; // @[POSIT.scala 266:31]
+  assign io_result_bits_out = positGenerator_io_out; // @[POSIT.scala 267:31]
+  assign io_result_bits_lt = result_lt; // @[POSIT.scala 268:27]
+  assign io_result_bits_eq = result_eq; // @[POSIT.scala 269:27]
+  assign io_result_bits_gt = result_gt; // @[POSIT.scala 270:27]
+  assign io_result_bits_exceptions = positDivSqrtCore_io_exceptions; // @[POSIT.scala 271:35]
+  assign io_out_idx = result_idx; // @[POSIT.scala 272:20]
   assign positAddCore_clock = clock;
-  assign positAddCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 107:30]
-  assign positAddCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 107:30]
-  assign positAddCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 107:30]
-  assign positAddCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 107:30]
-  assign positAddCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 107:30]
-  assign positAddCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 108:30]
-  assign positAddCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 108:30]
-  assign positAddCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 108:30]
-  assign positAddCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 108:30]
-  assign positAddCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 108:30]
-  assign positAddCore_io_sub = exec_mode[0]; // @[POSIT.scala 109:29]
-  assign positAddCore_io_input_valid = exec_valid & _T_13; // @[POSIT.scala 110:37]
-  assign positCompare_io_num1 = comp_num1; // @[POSIT.scala 112:30]
-  assign positCompare_io_num2 = comp_num2; // @[POSIT.scala 113:30]
+  assign positAddCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 130:30]
+  assign positAddCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 130:30]
+  assign positAddCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 130:30]
+  assign positAddCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 130:30]
+  assign positAddCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 130:30]
+  assign positAddCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 131:30]
+  assign positAddCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 131:30]
+  assign positAddCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 131:30]
+  assign positAddCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 131:30]
+  assign positAddCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 131:30]
+  assign positAddCore_io_sub = exec_mode[0]; // @[POSIT.scala 132:29]
+  assign positAddCore_io_input_valid = _T_20 & _T_21; // @[POSIT.scala 133:37]
+  assign positCompare_io_num1 = comp_num1; // @[POSIT.scala 135:30]
+  assign positCompare_io_num2 = comp_num2; // @[POSIT.scala 136:30]
+  assign positCompare_io_validIn = _T_26 & _T_21; // @[POSIT.scala 137:33]
   assign positFMACore_clock = clock;
-  assign positFMACore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 115:30]
-  assign positFMACore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 115:30]
-  assign positFMACore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 115:30]
-  assign positFMACore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 115:30]
-  assign positFMACore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 115:30]
-  assign positFMACore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 116:30]
-  assign positFMACore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 116:30]
-  assign positFMACore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 116:30]
-  assign positFMACore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 116:30]
-  assign positFMACore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 116:30]
-  assign positFMACore_io_num3_sign = exec_num3_sign; // @[POSIT.scala 117:30]
-  assign positFMACore_io_num3_exponent = exec_num3_exponent; // @[POSIT.scala 117:30]
-  assign positFMACore_io_num3_fraction = exec_num3_fraction; // @[POSIT.scala 117:30]
-  assign positFMACore_io_num3_isZero = exec_num3_isZero; // @[POSIT.scala 117:30]
-  assign positFMACore_io_num3_isNaR = exec_num3_isNaR; // @[POSIT.scala 117:30]
-  assign positFMACore_io_sub = exec_mode[0]; // @[POSIT.scala 118:29]
-  assign positFMACore_io_negate = exec_mode[1]; // @[POSIT.scala 119:32]
-  assign positFMACore_io_input_valid = exec_valid & _T_19; // @[POSIT.scala 120:37]
+  assign positFMACore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 139:30]
+  assign positFMACore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 139:30]
+  assign positFMACore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 139:30]
+  assign positFMACore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 139:30]
+  assign positFMACore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 139:30]
+  assign positFMACore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 140:30]
+  assign positFMACore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 140:30]
+  assign positFMACore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 140:30]
+  assign positFMACore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 140:30]
+  assign positFMACore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 140:30]
+  assign positFMACore_io_num3_sign = exec_num3_sign; // @[POSIT.scala 141:30]
+  assign positFMACore_io_num3_exponent = exec_num3_exponent; // @[POSIT.scala 141:30]
+  assign positFMACore_io_num3_fraction = exec_num3_fraction; // @[POSIT.scala 141:30]
+  assign positFMACore_io_num3_isZero = exec_num3_isZero; // @[POSIT.scala 141:30]
+  assign positFMACore_io_num3_isNaR = exec_num3_isNaR; // @[POSIT.scala 141:30]
+  assign positFMACore_io_sub = exec_mode[0]; // @[POSIT.scala 142:29]
+  assign positFMACore_io_negate = exec_mode[1]; // @[POSIT.scala 143:32]
+  assign positFMACore_io_input_valid = _T_32 & _T_21; // @[POSIT.scala 144:37]
   assign positDivSqrtCore_clock = clock;
   assign positDivSqrtCore_reset = reset;
-  assign positDivSqrtCore_io_validIn = exec_valid & _T_22; // @[POSIT.scala 125:37]
-  assign positDivSqrtCore_io_sqrtOp = exec_mode[0]; // @[POSIT.scala 124:36]
-  assign positDivSqrtCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 122:34]
-  assign positDivSqrtCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 122:34]
-  assign positDivSqrtCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 122:34]
-  assign positDivSqrtCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 122:34]
-  assign positDivSqrtCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 122:34]
-  assign positDivSqrtCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 123:34]
-  assign positDivSqrtCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 123:34]
-  assign positDivSqrtCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 123:34]
-  assign positDivSqrtCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 123:34]
-  assign positDivSqrtCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 123:34]
-  assign positMulCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 127:30]
-  assign positMulCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 127:30]
-  assign positMulCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 127:30]
-  assign positMulCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 127:30]
-  assign positMulCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 127:30]
-  assign positMulCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 128:30]
-  assign positMulCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 128:30]
-  assign positMulCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 128:30]
-  assign positMulCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 128:30]
-  assign positMulCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 128:30]
-  assign num1Extractor_io_in = init_num1; // @[POSIT.scala 68:29]
-  assign num2Extractor_io_in = init_num2; // @[POSIT.scala 69:29]
-  assign num3Extractor_io_in = init_num3; // @[POSIT.scala 70:29]
-  assign positGenerator_io_in_sign = result_out_sign; // @[POSIT.scala 166:40]
-  assign positGenerator_io_in_exponent = result_out_exponent; // @[POSIT.scala 166:40]
-  assign positGenerator_io_in_fraction = result_out_fraction; // @[POSIT.scala 166:40]
-  assign positGenerator_io_in_isZero = result_out_isZero; // @[POSIT.scala 166:40]
-  assign positGenerator_io_in_isNaR = result_out_isNaR; // @[POSIT.scala 166:40]
-  assign positGenerator_io_trailingBits = result_trailingBits; // @[POSIT.scala 167:40]
-  assign positGenerator_io_stickyBit = result_stickyBit; // @[POSIT.scala 168:40]
+  assign positDivSqrtCore_io_validIn = _T_37 & _T_21; // @[POSIT.scala 150:37]
+  assign positDivSqrtCore_io_sqrtOp = exec_mode[0]; // @[POSIT.scala 149:36]
+  assign positDivSqrtCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 147:34]
+  assign positDivSqrtCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 147:34]
+  assign positDivSqrtCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 147:34]
+  assign positDivSqrtCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 147:34]
+  assign positDivSqrtCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 147:34]
+  assign positDivSqrtCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 148:34]
+  assign positDivSqrtCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 148:34]
+  assign positDivSqrtCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 148:34]
+  assign positDivSqrtCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 148:34]
+  assign positDivSqrtCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 148:34]
+  assign positMulCore_io_num1_sign = exec_num1_sign; // @[POSIT.scala 153:30]
+  assign positMulCore_io_num1_exponent = exec_num1_exponent; // @[POSIT.scala 153:30]
+  assign positMulCore_io_num1_fraction = exec_num1_fraction; // @[POSIT.scala 153:30]
+  assign positMulCore_io_num1_isZero = exec_num1_isZero; // @[POSIT.scala 153:30]
+  assign positMulCore_io_num1_isNaR = exec_num1_isNaR; // @[POSIT.scala 153:30]
+  assign positMulCore_io_num2_sign = exec_num2_sign; // @[POSIT.scala 154:30]
+  assign positMulCore_io_num2_exponent = exec_num2_exponent; // @[POSIT.scala 154:30]
+  assign positMulCore_io_num2_fraction = exec_num2_fraction; // @[POSIT.scala 154:30]
+  assign positMulCore_io_num2_isZero = exec_num2_isZero; // @[POSIT.scala 154:30]
+  assign positMulCore_io_num2_isNaR = exec_num2_isNaR; // @[POSIT.scala 154:30]
+  assign positMulCore_io_validIn = _T_41 & _T_21; // @[POSIT.scala 155:33]
+  assign num1Extractor_io_in = init_num1; // @[POSIT.scala 77:29]
+  assign num2Extractor_io_in = init_num2; // @[POSIT.scala 78:29]
+  assign num3Extractor_io_in = init_num3; // @[POSIT.scala 79:29]
+  assign positGenerator_io_in_sign = result_out_sign; // @[POSIT.scala 198:40]
+  assign positGenerator_io_in_exponent = result_out_exponent; // @[POSIT.scala 198:40]
+  assign positGenerator_io_in_fraction = result_out_fraction; // @[POSIT.scala 198:40]
+  assign positGenerator_io_in_isZero = result_out_isZero; // @[POSIT.scala 198:40]
+  assign positGenerator_io_in_isNaR = result_out_isNaR; // @[POSIT.scala 198:40]
+  assign positGenerator_io_trailingBits = result_trailingBits; // @[POSIT.scala 199:40]
+  assign positGenerator_io_stickyBit = result_stickyBit; // @[POSIT.scala 200:40]
+  assign PositGenerator_io_in_sign = positAddCore_io_out_sign; // @[POSIT.scala 208:54]
+  assign PositGenerator_io_in_exponent = positAddCore_io_out_exponent; // @[POSIT.scala 208:54]
+  assign PositGenerator_io_in_fraction = positAddCore_io_out_fraction; // @[POSIT.scala 208:54]
+  assign PositGenerator_io_in_isZero = positAddCore_io_out_isZero; // @[POSIT.scala 208:54]
+  assign PositGenerator_io_in_isNaR = positAddCore_io_out_isNaR; // @[POSIT.scala 208:54]
+  assign PositGenerator_io_trailingBits = positAddCore_io_trailingBits; // @[POSIT.scala 209:54]
+  assign PositGenerator_io_stickyBit = positAddCore_io_stickyBit; // @[POSIT.scala 210:54]
+  assign PositGenerator_1_io_in_sign = positFMACore_io_out_sign; // @[POSIT.scala 212:51]
+  assign PositGenerator_1_io_in_exponent = positFMACore_io_out_exponent; // @[POSIT.scala 212:51]
+  assign PositGenerator_1_io_in_fraction = positFMACore_io_out_fraction; // @[POSIT.scala 212:51]
+  assign PositGenerator_1_io_in_isZero = positFMACore_io_out_isZero; // @[POSIT.scala 212:51]
+  assign PositGenerator_1_io_in_isNaR = positFMACore_io_out_isNaR; // @[POSIT.scala 212:51]
+  assign PositGenerator_1_io_trailingBits = positFMACore_io_trailingBits; // @[POSIT.scala 213:51]
+  assign PositGenerator_1_io_stickyBit = positFMACore_io_stickyBit; // @[POSIT.scala 214:51]
+  assign PositGenerator_2_io_in_sign = positMulCore_io_out_sign; // @[POSIT.scala 216:51]
+  assign PositGenerator_2_io_in_exponent = positMulCore_io_out_exponent; // @[POSIT.scala 216:51]
+  assign PositGenerator_2_io_in_fraction = positMulCore_io_out_fraction; // @[POSIT.scala 216:51]
+  assign PositGenerator_2_io_in_isZero = positMulCore_io_out_isZero; // @[POSIT.scala 216:51]
+  assign PositGenerator_2_io_in_isNaR = positMulCore_io_out_isNaR; // @[POSIT.scala 216:51]
+  assign PositGenerator_2_io_trailingBits = positMulCore_io_trailingBits; // @[POSIT.scala 217:51]
+  assign PositGenerator_2_io_stickyBit = positMulCore_io_stickyBit; // @[POSIT.scala 218:51]
+  assign PositGenerator_3_io_in_sign = positDivSqrtCore_io_out_sign; // @[POSIT.scala 220:55]
+  assign PositGenerator_3_io_in_exponent = positDivSqrtCore_io_out_exponent; // @[POSIT.scala 220:55]
+  assign PositGenerator_3_io_in_fraction = positDivSqrtCore_io_out_fraction; // @[POSIT.scala 220:55]
+  assign PositGenerator_3_io_in_isZero = positDivSqrtCore_io_out_isZero; // @[POSIT.scala 220:55]
+  assign PositGenerator_3_io_in_isNaR = positDivSqrtCore_io_out_isNaR; // @[POSIT.scala 220:55]
+  assign PositGenerator_3_io_trailingBits = positDivSqrtCore_io_trailingBits; // @[POSIT.scala 221:55]
+  assign PositGenerator_3_io_stickyBit = positDivSqrtCore_io_stickyBit; // @[POSIT.scala 222:55]
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
 `define RANDOMIZE
 `endif
@@ -1421,127 +1558,143 @@ initial begin
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_6 = {1{`RANDOM}};
-  exec_num1_sign = _RAND_6[0:0];
+  init_idx = _RAND_6[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_7 = {1{`RANDOM}};
-  exec_num1_exponent = _RAND_7[8:0];
+  result_valid = _RAND_7[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_8 = {1{`RANDOM}};
-  exec_num1_fraction = _RAND_8[27:0];
+  exec_valid = _RAND_8[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_9 = {1{`RANDOM}};
-  exec_num1_isZero = _RAND_9[0:0];
+  exec_num1_sign = _RAND_9[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_10 = {1{`RANDOM}};
-  exec_num1_isNaR = _RAND_10[0:0];
+  exec_num1_exponent = _RAND_10[8:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_11 = {1{`RANDOM}};
-  exec_num2_sign = _RAND_11[0:0];
+  exec_num1_fraction = _RAND_11[27:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_12 = {1{`RANDOM}};
-  exec_num2_exponent = _RAND_12[8:0];
+  exec_num1_isZero = _RAND_12[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_13 = {1{`RANDOM}};
-  exec_num2_fraction = _RAND_13[27:0];
+  exec_num1_isNaR = _RAND_13[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_14 = {1{`RANDOM}};
-  exec_num2_isZero = _RAND_14[0:0];
+  exec_num2_sign = _RAND_14[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_15 = {1{`RANDOM}};
-  exec_num2_isNaR = _RAND_15[0:0];
+  exec_num2_exponent = _RAND_15[8:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_16 = {1{`RANDOM}};
-  exec_num3_sign = _RAND_16[0:0];
+  exec_num2_fraction = _RAND_16[27:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_17 = {1{`RANDOM}};
-  exec_num3_exponent = _RAND_17[8:0];
+  exec_num2_isZero = _RAND_17[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_18 = {1{`RANDOM}};
-  exec_num3_fraction = _RAND_18[27:0];
+  exec_num2_isNaR = _RAND_18[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_19 = {1{`RANDOM}};
-  exec_num3_isZero = _RAND_19[0:0];
+  exec_num3_sign = _RAND_19[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_20 = {1{`RANDOM}};
-  exec_num3_isNaR = _RAND_20[0:0];
+  exec_num3_exponent = _RAND_20[8:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_21 = {1{`RANDOM}};
-  comp_num1 = _RAND_21[31:0];
+  exec_num3_fraction = _RAND_21[27:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_22 = {1{`RANDOM}};
-  comp_num2 = _RAND_22[31:0];
+  exec_num3_isZero = _RAND_22[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_23 = {1{`RANDOM}};
-  exec_inst = _RAND_23[2:0];
+  exec_num3_isNaR = _RAND_23[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_24 = {1{`RANDOM}};
-  exec_mode = _RAND_24[1:0];
+  comp_num1 = _RAND_24[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_25 = {1{`RANDOM}};
-  exec_valid = _RAND_25[0:0];
+  comp_num2 = _RAND_25[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_26 = {1{`RANDOM}};
-  result_out_sign = _RAND_26[0:0];
+  exec_inst = _RAND_26[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_27 = {1{`RANDOM}};
-  result_out_exponent = _RAND_27[8:0];
+  exec_mode = _RAND_27[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_28 = {1{`RANDOM}};
-  result_out_fraction = _RAND_28[27:0];
+  exec_idx = _RAND_28[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_29 = {1{`RANDOM}};
-  result_out_isZero = _RAND_29[0:0];
+  dispatched = _RAND_29[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_30 = {1{`RANDOM}};
-  result_out_isNaR = _RAND_30[0:0];
+  result_out_sign = _RAND_30[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_31 = {1{`RANDOM}};
-  result_stickyBit = _RAND_31[0:0];
+  result_out_exponent = _RAND_31[8:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_32 = {1{`RANDOM}};
-  result_trailingBits = _RAND_32[1:0];
+  result_out_fraction = _RAND_32[27:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_33 = {1{`RANDOM}};
-  result_valid = _RAND_33[0:0];
+  result_out_isZero = _RAND_33[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_34 = {1{`RANDOM}};
-  result_lt = _RAND_34[0:0];
+  result_out_isNaR = _RAND_34[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_35 = {1{`RANDOM}};
-  result_eq = _RAND_35[0:0];
+  result_stickyBit = _RAND_35[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_36 = {1{`RANDOM}};
-  result_gt = _RAND_36[0:0];
+  result_trailingBits = _RAND_36[1:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_37 = {1{`RANDOM}};
+  result_lt = _RAND_37[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_38 = {1{`RANDOM}};
+  result_eq = _RAND_38[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_39 = {1{`RANDOM}};
+  result_gt = _RAND_39[0:0];
+  `endif // RANDOMIZE_REG_INIT
+  `ifdef RANDOMIZE_REG_INIT
+  _RAND_40 = {1{`RANDOM}};
+  result_idx = _RAND_40[2:0];
   `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
@@ -1576,130 +1729,156 @@ end // initial
       init_valid <= 1'h0;
     end else if (_T) begin
       init_valid <= io_request_valid;
+    end else if (_T_4) begin
+      init_valid <= 1'h0;
+    end
+    if (reset) begin
+      init_idx <= 3'h0;
+    end else if (_T) begin
+      init_idx <= io_in_idx;
+    end
+    if (reset) begin
+      result_valid <= 1'h0;
+    end else if (io_result_ready) begin
+      result_valid <= new_result_valid;
+    end
+    if (reset) begin
+      exec_valid <= 1'h0;
+    end else if (_T_4) begin
+      exec_valid <= init_valid;
+    end else if (new_result_valid) begin
+      exec_valid <= 1'h0;
     end
     if (reset) begin
       exec_num1_sign <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num1_sign <= num1Extractor_io_out_sign;
     end
     if (reset) begin
       exec_num1_exponent <= 9'sh0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num1_exponent <= num1Extractor_io_out_exponent;
     end
     if (reset) begin
       exec_num1_fraction <= 28'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num1_fraction <= num1Extractor_io_out_fraction;
     end
     if (reset) begin
       exec_num1_isZero <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num1_isZero <= num1Extractor_io_out_isZero;
     end
     if (reset) begin
       exec_num1_isNaR <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num1_isNaR <= num1Extractor_io_out_isNaR;
     end
     if (reset) begin
       exec_num2_sign <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num2_sign <= num2Extractor_io_out_sign;
     end
     if (reset) begin
       exec_num2_exponent <= 9'sh0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num2_exponent <= num2Extractor_io_out_exponent;
     end
     if (reset) begin
       exec_num2_fraction <= 28'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num2_fraction <= num2Extractor_io_out_fraction;
     end
     if (reset) begin
       exec_num2_isZero <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num2_isZero <= num2Extractor_io_out_isZero;
     end
     if (reset) begin
       exec_num2_isNaR <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num2_isNaR <= num2Extractor_io_out_isNaR;
     end
     if (reset) begin
       exec_num3_sign <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num3_sign <= num3Extractor_io_out_sign;
     end
     if (reset) begin
       exec_num3_exponent <= 9'sh0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num3_exponent <= num3Extractor_io_out_exponent;
     end
     if (reset) begin
       exec_num3_fraction <= 28'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num3_fraction <= num3Extractor_io_out_fraction;
     end
     if (reset) begin
       exec_num3_isZero <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num3_isZero <= num3Extractor_io_out_isZero;
     end
     if (reset) begin
       exec_num3_isNaR <= 1'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_num3_isNaR <= num3Extractor_io_out_isNaR;
     end
     if (reset) begin
       comp_num1 <= 32'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       comp_num1 <= init_num1;
     end
     if (reset) begin
       comp_num2 <= 32'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       comp_num2 <= init_num2;
     end
     if (reset) begin
       exec_inst <= 3'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_inst <= init_inst;
     end
     if (reset) begin
       exec_mode <= 2'h0;
-    end else if (_T_11) begin
+    end else if (_T_4) begin
       exec_mode <= init_mode;
     end
     if (reset) begin
-      exec_valid <= 1'h0;
-    end else if (_T_11) begin
-      exec_valid <= init_valid;
+      exec_idx <= 3'h0;
+    end else if (_T_4) begin
+      exec_idx <= init_idx;
+    end
+    if (reset) begin
+      dispatched <= 1'h0;
+    end else if (new_result_valid) begin
+      dispatched <= 1'h0;
+    end else begin
+      dispatched <= _GEN_30;
     end
     if (reset) begin
       result_out_sign <= 1'h0;
-    end else if (_T) begin
-      if (_T_31) begin
+    end else if (io_result_ready) begin
+      if (_T_55) begin
         result_out_sign <= positAddCore_io_out_sign;
-      end else if (_T_29) begin
+      end else if (_T_53) begin
         result_out_sign <= positFMACore_io_out_sign;
-      end else if (_T_27) begin
+      end else if (_T_51) begin
         result_out_sign <= positMulCore_io_out_sign;
       end else begin
-        result_out_sign <= _T_26_sign;
+        result_out_sign <= _T_50_sign;
       end
     end
     if (reset) begin
       result_out_exponent <= 9'sh0;
-    end else if (_T) begin
-      if (_T_31) begin
+    end else if (io_result_ready) begin
+      if (_T_55) begin
         result_out_exponent <= positAddCore_io_out_exponent;
-      end else if (_T_29) begin
+      end else if (_T_53) begin
         result_out_exponent <= positFMACore_io_out_exponent;
-      end else if (_T_27) begin
+      end else if (_T_51) begin
         result_out_exponent <= positMulCore_io_out_exponent;
-      end else if (_T_25) begin
+      end else if (_T_49) begin
         result_out_exponent <= positDivSqrtCore_io_out_exponent;
       end else begin
         result_out_exponent <= 9'sh0;
@@ -1707,14 +1886,14 @@ end // initial
     end
     if (reset) begin
       result_out_fraction <= 28'h0;
-    end else if (_T) begin
-      if (_T_31) begin
+    end else if (io_result_ready) begin
+      if (_T_55) begin
         result_out_fraction <= positAddCore_io_out_fraction;
-      end else if (_T_29) begin
+      end else if (_T_53) begin
         result_out_fraction <= positFMACore_io_out_fraction;
-      end else if (_T_27) begin
+      end else if (_T_51) begin
         result_out_fraction <= positMulCore_io_out_fraction;
-      end else if (_T_25) begin
+      end else if (_T_49) begin
         result_out_fraction <= positDivSqrtCore_io_out_fraction;
       end else begin
         result_out_fraction <= 28'h0;
@@ -1722,205 +1901,232 @@ end // initial
     end
     if (reset) begin
       result_out_isZero <= 1'h0;
-    end else if (_T) begin
-      if (_T_31) begin
+    end else if (io_result_ready) begin
+      if (_T_55) begin
         result_out_isZero <= positAddCore_io_out_isZero;
-      end else if (_T_29) begin
+      end else if (_T_53) begin
         result_out_isZero <= positFMACore_io_out_isZero;
-      end else if (_T_27) begin
+      end else if (_T_51) begin
         result_out_isZero <= positMulCore_io_out_isZero;
       end else begin
-        result_out_isZero <= _T_26_isZero;
+        result_out_isZero <= _T_50_isZero;
       end
     end
     if (reset) begin
       result_out_isNaR <= 1'h0;
-    end else if (_T) begin
-      if (_T_31) begin
+    end else if (io_result_ready) begin
+      if (_T_55) begin
         result_out_isNaR <= positAddCore_io_out_isNaR;
-      end else if (_T_29) begin
+      end else if (_T_53) begin
         result_out_isNaR <= positFMACore_io_out_isNaR;
-      end else if (_T_27) begin
+      end else if (_T_51) begin
         result_out_isNaR <= positMulCore_io_out_isNaR;
       end else begin
-        result_out_isNaR <= _T_26_isNaR;
+        result_out_isNaR <= _T_50_isNaR;
       end
     end
     if (reset) begin
       result_stickyBit <= 1'h0;
-    end else if (_T) begin
-      if (_T_31) begin
+    end else if (io_result_ready) begin
+      if (_T_55) begin
         result_stickyBit <= positAddCore_io_stickyBit;
-      end else if (_T_29) begin
+      end else if (_T_53) begin
         result_stickyBit <= positFMACore_io_stickyBit;
-      end else if (_T_27) begin
+      end else if (_T_51) begin
         result_stickyBit <= positMulCore_io_stickyBit;
       end else begin
-        result_stickyBit <= _T_34;
+        result_stickyBit <= _T_58;
       end
     end
     if (reset) begin
       result_trailingBits <= 2'h0;
-    end else if (_T) begin
-      if (_T_31) begin
+    end else if (io_result_ready) begin
+      if (_T_55) begin
         result_trailingBits <= positAddCore_io_trailingBits;
-      end else if (_T_29) begin
+      end else if (_T_53) begin
         result_trailingBits <= positFMACore_io_trailingBits;
-      end else if (_T_27) begin
+      end else if (_T_51) begin
         result_trailingBits <= positMulCore_io_trailingBits;
-      end else if (_T_25) begin
+      end else if (_T_49) begin
         result_trailingBits <= positDivSqrtCore_io_trailingBits;
       end else begin
         result_trailingBits <= 2'h0;
       end
     end
     if (reset) begin
-      result_valid <= 1'h0;
-    end else if (_T) begin
-      result_valid <= _T_58;
-    end
-    if (reset) begin
       result_lt <= 1'h0;
-    end else if (_T) begin
+    end else if (io_result_ready) begin
       result_lt <= positCompare_io_lt;
     end
     if (reset) begin
       result_eq <= 1'h0;
-    end else if (_T) begin
+    end else if (io_result_ready) begin
       result_eq <= positCompare_io_eq;
     end
     if (reset) begin
       result_gt <= 1'h0;
-    end else if (_T) begin
+    end else if (io_result_ready) begin
       result_gt <= positCompare_io_gt;
     end
-  end
-endmodule
-module Queue(
-  input        clock,
-  input        reset,
-  output       io_enq_ready,
-  input        io_enq_valid,
-  input  [2:0] io_enq_bits,
-  input        io_deq_ready,
-  output       io_deq_valid,
-  output [2:0] io_deq_bits
-);
-  reg [2:0] _T [0:7]; // @[Decoupled.scala 218:24]
-  reg [31:0] _RAND_0;
-  wire [2:0] _T__T_18_data; // @[Decoupled.scala 218:24]
-  wire [2:0] _T__T_18_addr; // @[Decoupled.scala 218:24]
-  wire [2:0] _T__T_10_data; // @[Decoupled.scala 218:24]
-  wire [2:0] _T__T_10_addr; // @[Decoupled.scala 218:24]
-  wire  _T__T_10_mask; // @[Decoupled.scala 218:24]
-  wire  _T__T_10_en; // @[Decoupled.scala 218:24]
-  reg [2:0] value; // @[Counter.scala 29:33]
-  reg [31:0] _RAND_1;
-  reg [2:0] value_1; // @[Counter.scala 29:33]
-  reg [31:0] _RAND_2;
-  reg  _T_1; // @[Decoupled.scala 221:35]
-  reg [31:0] _RAND_3;
-  wire  _T_2 = value == value_1; // @[Decoupled.scala 223:41]
-  wire  _T_3 = ~_T_1; // @[Decoupled.scala 224:36]
-  wire  _T_4 = _T_2 & _T_3; // @[Decoupled.scala 224:33]
-  wire  _T_5 = _T_2 & _T_1; // @[Decoupled.scala 225:32]
-  wire  _T_6 = io_enq_ready & io_enq_valid; // @[Decoupled.scala 40:37]
-  wire  _T_8 = io_deq_ready & io_deq_valid; // @[Decoupled.scala 40:37]
-  wire [2:0] _T_12 = value + 3'h1; // @[Counter.scala 39:22]
-  wire  _GEN_9 = io_deq_ready ? 1'h0 : _T_6; // @[Decoupled.scala 249:27]
-  wire  _GEN_12 = _T_4 ? _GEN_9 : _T_6; // @[Decoupled.scala 246:18]
-  wire [2:0] _T_14 = value_1 + 3'h1; // @[Counter.scala 39:22]
-  wire  _GEN_11 = _T_4 ? 1'h0 : _T_8; // @[Decoupled.scala 246:18]
-  wire  _T_15 = _GEN_12 != _GEN_11; // @[Decoupled.scala 236:16]
-  wire  _T_16 = ~_T_4; // @[Decoupled.scala 240:19]
-  wire  _T_17 = ~_T_5; // @[Decoupled.scala 241:19]
-  assign _T__T_18_addr = value_1;
-  assign _T__T_18_data = _T[_T__T_18_addr]; // @[Decoupled.scala 218:24]
-  assign _T__T_10_data = io_enq_bits;
-  assign _T__T_10_addr = value;
-  assign _T__T_10_mask = 1'h1;
-  assign _T__T_10_en = _T_4 ? _GEN_9 : _T_6;
-  assign io_enq_ready = io_deq_ready | _T_17; // @[Decoupled.scala 241:16 Decoupled.scala 254:40]
-  assign io_deq_valid = io_enq_valid | _T_16; // @[Decoupled.scala 240:16 Decoupled.scala 245:40]
-  assign io_deq_bits = _T_4 ? io_enq_bits : _T__T_18_data; // @[Decoupled.scala 242:15 Decoupled.scala 247:19]
-`ifdef RANDOMIZE_GARBAGE_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_INVALID_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_REG_INIT
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-`define RANDOMIZE
-`endif
-`ifndef RANDOM
-`define RANDOM $random
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-  integer initvar;
-`endif
-`ifndef SYNTHESIS
-initial begin
-  `ifdef RANDOMIZE
-    `ifdef INIT_RANDOM
-      `INIT_RANDOM
+    if (reset) begin
+      result_idx <= 3'h0;
+    end else if (io_result_ready) begin
+      result_idx <= exec_idx;
+    end
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
     `endif
-    `ifndef VERILATOR
-      `ifdef RANDOMIZE_DELAY
-        #`RANDOMIZE_DELAY begin end
-      `else
-        #0.002 begin end
-      `endif
-    `endif
-  _RAND_0 = {1{`RANDOM}};
-  `ifdef RANDOMIZE_MEM_INIT
-  for (initvar = 0; initvar < 8; initvar = initvar+1)
-    _T[initvar] = _RAND_0[2:0];
-  `endif // RANDOMIZE_MEM_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_1 = {1{`RANDOM}};
-  value = _RAND_1[2:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_2 = {1{`RANDOM}};
-  value_1 = _RAND_2[2:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_3 = {1{`RANDOM}};
-  _T_1 = _RAND_3[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `endif // RANDOMIZE
-end // initial
-`endif // SYNTHESIS
-  always @(posedge clock) begin
-    if(_T__T_10_en & _T__T_10_mask) begin
-      _T[_T__T_10_addr] <= _T__T_10_data; // @[Decoupled.scala 218:24]
-    end
-    if (reset) begin
-      value <= 3'h0;
-    end else if (_GEN_12) begin
-      value <= _T_12;
-    end
-    if (reset) begin
-      value_1 <= 3'h0;
-    end else if (_GEN_11) begin
-      value_1 <= _T_14;
-    end
-    if (reset) begin
-      _T_1 <= 1'h0;
-    end else if (_T_15) begin
-      if (_T_4) begin
-        if (io_deq_ready) begin
-          _T_1 <= 1'h0;
-        end else begin
-          _T_1 <= _T_6;
+        if (_T & _T_75) begin
+          $fwrite(32'h80000002,"Init:\n"); // @[POSIT.scala 233:31]
         end
-      end else begin
-        _T_1 <= _T_6;
+    `ifdef PRINTF_COND
       end
-    end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T & _T_75) begin
+          $fwrite(32'h80000002,"\tinit_valid: %d\n",io_request_valid); // @[POSIT.scala 234:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T & _T_75) begin
+          $fwrite(32'h80000002,"\tinit_inst: %d\n",io_request_bits_inst); // @[POSIT.scala 235:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T & _T_75) begin
+          $fwrite(32'h80000002,"\tidx: %d\n",io_in_idx); // @[POSIT.scala 236:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_GEN_45 & _T_75) begin
+          $fwrite(32'h80000002,"\tinit_valid: %d\n",1'h0); // @[POSIT.scala 239:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (new_result_valid & _T_75) begin
+          $fwrite(32'h80000002,"new results!\n"); // @[POSIT.scala 242:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_4 & _T_75) begin
+          $fwrite(32'h80000002,"Exec:\n"); // @[POSIT.scala 245:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_4 & _T_75) begin
+          $fwrite(32'h80000002,"\t exec_valid: %d\n",init_valid); // @[POSIT.scala 246:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_4 & _T_75) begin
+          $fwrite(32'h80000002,"\t exec_inst: %d\n",init_inst); // @[POSIT.scala 247:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_4 & _T_75) begin
+          $fwrite(32'h80000002,"\t exec_idx: %d\n",init_idx); // @[POSIT.scala 248:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_GEN_47 & _T_75) begin
+          $fwrite(32'h80000002,"\t exec_valid: %d\n",1'h0); // @[POSIT.scala 250:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (new_result_valid & _T_75) begin
+          $fwrite(32'h80000002,"\tdispatched: %d\n",1'h0); // @[POSIT.scala 254:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_GEN_49 & _T_75) begin
+          $fwrite(32'h80000002,"\tdispatched: %d\n",1'h1); // @[POSIT.scala 256:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (io_result_valid & _T_75) begin
+          $fwrite(32'h80000002,"valid idx: %d\n",io_out_idx); // @[POSIT.scala 260:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
   end
 endmodule
 module DispatchArbiter(
@@ -2208,7 +2414,7 @@ module POSIT_Locality(
   output        io_mem_write_bits_result_eq,
   output        io_mem_write_bits_result_gt,
   output [4:0]  io_mem_write_bits_result_exceptions,
-  output [47:0] io_mem_write_bits_wr_addr,
+  output [7:0]  io_mem_write_bits_wr_addr,
   output        io_mem_read_req_valid,
   output [7:0]  io_mem_read_req_addr,
   input  [31:0] io_mem_read_data,
@@ -2233,22 +2439,16 @@ module POSIT_Locality(
   wire  pe_io_result_bits_eq; // @[POSIT_Locality.scala 10:24]
   wire  pe_io_result_bits_gt; // @[POSIT_Locality.scala 10:24]
   wire [4:0] pe_io_result_bits_exceptions; // @[POSIT_Locality.scala 10:24]
-  wire  processQueue_clock; // @[POSIT_Locality.scala 59:31]
-  wire  processQueue_reset; // @[POSIT_Locality.scala 59:31]
-  wire  processQueue_io_enq_ready; // @[POSIT_Locality.scala 59:31]
-  wire  processQueue_io_enq_valid; // @[POSIT_Locality.scala 59:31]
-  wire [2:0] processQueue_io_enq_bits; // @[POSIT_Locality.scala 59:31]
-  wire  processQueue_io_deq_ready; // @[POSIT_Locality.scala 59:31]
-  wire  processQueue_io_deq_valid; // @[POSIT_Locality.scala 59:31]
-  wire [2:0] processQueue_io_deq_bits; // @[POSIT_Locality.scala 59:31]
+  wire [2:0] pe_io_in_idx; // @[POSIT_Locality.scala 10:24]
+  wire [2:0] pe_io_out_idx; // @[POSIT_Locality.scala 10:24]
   wire [7:0] dispatchArb_io_validity; // @[POSIT_Locality.scala 61:33]
   wire [2:0] dispatchArb_io_priority; // @[POSIT_Locality.scala 61:33]
   wire [2:0] dispatchArb_io_chosen; // @[POSIT_Locality.scala 61:33]
   wire  dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 61:33]
-  wire [23:0] fetchArb_io_validity; // @[POSIT_Locality.scala 155:30]
-  wire [4:0] fetchArb_io_priority; // @[POSIT_Locality.scala 155:30]
-  wire [4:0] fetchArb_io_chosen; // @[POSIT_Locality.scala 155:30]
-  wire  fetchArb_io_hasChosen; // @[POSIT_Locality.scala 155:30]
+  wire [23:0] fetchArb_io_validity; // @[POSIT_Locality.scala 154:30]
+  wire [4:0] fetchArb_io_priority; // @[POSIT_Locality.scala 154:30]
+  wire [4:0] fetchArb_io_chosen; // @[POSIT_Locality.scala 154:30]
+  wire  fetchArb_io_hasChosen; // @[POSIT_Locality.scala 154:30]
   reg  rb_entries_0_completed; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_0;
   reg  rb_entries_0_valid; // @[POSIT_Locality.scala 14:25]
@@ -2257,8 +2457,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_2;
   reg  rb_entries_0_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_3;
-  reg [47:0] rb_entries_0_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_4;
+  reg [7:0] rb_entries_0_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_4;
   reg [31:0] rb_entries_0_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_5;
   reg [1:0] rb_entries_0_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2303,8 +2503,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_25;
   reg  rb_entries_1_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_26;
-  reg [47:0] rb_entries_1_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_27;
+  reg [7:0] rb_entries_1_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_27;
   reg [31:0] rb_entries_1_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_28;
   reg [1:0] rb_entries_1_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2349,8 +2549,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_48;
   reg  rb_entries_2_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_49;
-  reg [47:0] rb_entries_2_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_50;
+  reg [7:0] rb_entries_2_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_50;
   reg [31:0] rb_entries_2_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_51;
   reg [1:0] rb_entries_2_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2395,8 +2595,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_71;
   reg  rb_entries_3_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_72;
-  reg [47:0] rb_entries_3_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_73;
+  reg [7:0] rb_entries_3_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_73;
   reg [31:0] rb_entries_3_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_74;
   reg [1:0] rb_entries_3_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2441,8 +2641,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_94;
   reg  rb_entries_4_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_95;
-  reg [47:0] rb_entries_4_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_96;
+  reg [7:0] rb_entries_4_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_96;
   reg [31:0] rb_entries_4_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_97;
   reg [1:0] rb_entries_4_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2487,8 +2687,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_117;
   reg  rb_entries_5_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_118;
-  reg [47:0] rb_entries_5_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_119;
+  reg [7:0] rb_entries_5_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_119;
   reg [31:0] rb_entries_5_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_120;
   reg [1:0] rb_entries_5_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2533,8 +2733,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_140;
   reg  rb_entries_6_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_141;
-  reg [47:0] rb_entries_6_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_142;
+  reg [7:0] rb_entries_6_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_142;
   reg [31:0] rb_entries_6_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_143;
   reg [1:0] rb_entries_6_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2579,8 +2779,8 @@ module POSIT_Locality(
   reg [31:0] _RAND_163;
   reg  rb_entries_7_written; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_164;
-  reg [47:0] rb_entries_7_wr_addr; // @[POSIT_Locality.scala 14:25]
-  reg [63:0] _RAND_165;
+  reg [7:0] rb_entries_7_wr_addr; // @[POSIT_Locality.scala 14:25]
+  reg [31:0] _RAND_165;
   reg [31:0] rb_entries_7_request_operands_0_value; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_166;
   reg [1:0] rb_entries_7_request_operands_0_mode; // @[POSIT_Locality.scala 14:25]
@@ -2617,779 +2817,801 @@ module POSIT_Locality(
   reg [31:0] _RAND_182;
   reg [4:0] rb_entries_7_result_exceptions; // @[POSIT_Locality.scala 14:25]
   reg [31:0] _RAND_183;
+  wire  _GEN_37 = 3'h1 == io_request_bits_wr_addr[2:0] ? rb_entries_1_valid : rb_entries_0_valid; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_39 = 3'h1 == io_request_bits_wr_addr[2:0] ? rb_entries_1_written : rb_entries_0_written; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_67 = 3'h2 == io_request_bits_wr_addr[2:0] ? rb_entries_2_valid : _GEN_37; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_69 = 3'h2 == io_request_bits_wr_addr[2:0] ? rb_entries_2_written : _GEN_39; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_97 = 3'h3 == io_request_bits_wr_addr[2:0] ? rb_entries_3_valid : _GEN_67; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_99 = 3'h3 == io_request_bits_wr_addr[2:0] ? rb_entries_3_written : _GEN_69; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_127 = 3'h4 == io_request_bits_wr_addr[2:0] ? rb_entries_4_valid : _GEN_97; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_129 = 3'h4 == io_request_bits_wr_addr[2:0] ? rb_entries_4_written : _GEN_99; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_157 = 3'h5 == io_request_bits_wr_addr[2:0] ? rb_entries_5_valid : _GEN_127; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_159 = 3'h5 == io_request_bits_wr_addr[2:0] ? rb_entries_5_written : _GEN_129; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_187 = 3'h6 == io_request_bits_wr_addr[2:0] ? rb_entries_6_valid : _GEN_157; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_189 = 3'h6 == io_request_bits_wr_addr[2:0] ? rb_entries_6_written : _GEN_159; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_217 = 3'h7 == io_request_bits_wr_addr[2:0] ? rb_entries_7_valid : _GEN_187; // @[POSIT_Locality.scala 19:80]
+  wire  _GEN_219 = 3'h7 == io_request_bits_wr_addr[2:0] ? rb_entries_7_written : _GEN_189; // @[POSIT_Locality.scala 19:80]
+  wire  _T_3 = ~_GEN_217; // @[POSIT_Locality.scala 19:80]
+  wire  _T_4 = _GEN_219 | _T_3; // @[POSIT_Locality.scala 19:77]
+  wire  new_input_log = io_request_valid & _T_4; // @[POSIT_Locality.scala 19:43]
+  wire  _T_11 = ~reset; // @[POSIT_Locality.scala 24:23]
+  wire  _GEN_960 = 3'h0 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_0_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_961 = 3'h1 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_1_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_962 = 3'h2 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_2_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_963 = 3'h3 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_3_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_964 = 3'h4 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_4_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_965 = 3'h5 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_5_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_966 = 3'h6 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_6_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_967 = 3'h7 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_7_completed; // @[POSIT_Locality.scala 25:49]
+  wire  _GEN_13750 = 3'h0 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_968 = _GEN_13750 | rb_entries_0_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_13751 = 3'h1 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_969 = _GEN_13751 | rb_entries_1_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_13752 = 3'h2 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_970 = _GEN_13752 | rb_entries_2_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_13753 = 3'h3 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_971 = _GEN_13753 | rb_entries_3_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_13754 = 3'h4 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_972 = _GEN_13754 | rb_entries_4_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_13755 = 3'h5 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_973 = _GEN_13755 | rb_entries_5_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_13756 = 3'h6 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_974 = _GEN_13756 | rb_entries_6_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_13757 = 3'h7 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_975 = _GEN_13757 | rb_entries_7_valid; // @[POSIT_Locality.scala 26:45]
+  wire  _GEN_976 = 3'h0 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_0_written; // @[POSIT_Locality.scala 27:47]
+  wire  _GEN_977 = 3'h1 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_1_written; // @[POSIT_Locality.scala 27:47]
+  wire  _GEN_978 = 3'h2 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_2_written; // @[POSIT_Locality.scala 27:47]
+  wire  _GEN_979 = 3'h3 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_3_written; // @[POSIT_Locality.scala 27:47]
+  wire  _GEN_980 = 3'h4 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_4_written; // @[POSIT_Locality.scala 27:47]
+  wire  _GEN_981 = 3'h5 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_5_written; // @[POSIT_Locality.scala 27:47]
+  wire  _GEN_982 = 3'h6 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_6_written; // @[POSIT_Locality.scala 27:47]
+  wire  _GEN_983 = 3'h7 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_7_written; // @[POSIT_Locality.scala 27:47]
+  wire [31:0] _GEN_1008 = 3'h0 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_0_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1009 = 3'h1 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_1_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1010 = 3'h2 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_2_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1011 = 3'h3 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_3_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1012 = 3'h4 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_4_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1013 = 3'h5 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_5_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1014 = 3'h6 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_6_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1015 = 3'h7 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_value : rb_entries_7_request_operands_0_value; // @[POSIT_Locality.scala 33:73]
+  wire [1:0] _GEN_1016 = 3'h0 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_0_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1017 = 3'h1 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_1_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1018 = 3'h2 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_2_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1019 = 3'h3 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_3_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1020 = 3'h4 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_4_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1021 = 3'h5 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_5_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1022 = 3'h6 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_6_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1023 = 3'h7 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_0_mode : rb_entries_7_request_operands_0_mode; // @[POSIT_Locality.scala 34:72]
+  wire [31:0] _GEN_1024 = 3'h0 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_0_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1025 = 3'h1 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_1_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1026 = 3'h2 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_2_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1027 = 3'h3 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_3_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1028 = 3'h4 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_4_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1029 = 3'h5 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_5_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1030 = 3'h6 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_6_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1031 = 3'h7 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_value : rb_entries_7_request_operands_1_value; // @[POSIT_Locality.scala 33:73]
+  wire [1:0] _GEN_1032 = 3'h0 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_0_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1033 = 3'h1 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_1_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1034 = 3'h2 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_2_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1035 = 3'h3 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_3_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1036 = 3'h4 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_4_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1037 = 3'h5 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_5_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1038 = 3'h6 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_6_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1039 = 3'h7 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_1_mode : rb_entries_7_request_operands_1_mode; // @[POSIT_Locality.scala 34:72]
+  wire [31:0] _GEN_1040 = 3'h0 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_0_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1041 = 3'h1 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_1_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1042 = 3'h2 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_2_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1043 = 3'h3 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_3_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1044 = 3'h4 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_4_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1045 = 3'h5 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_5_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1046 = 3'h6 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_6_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [31:0] _GEN_1047 = 3'h7 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_value : rb_entries_7_request_operands_2_value; // @[POSIT_Locality.scala 33:73]
+  wire [1:0] _GEN_1048 = 3'h0 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_0_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1049 = 3'h1 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_1_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1050 = 3'h2 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_2_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1051 = 3'h3 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_3_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1052 = 3'h4 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_4_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1053 = 3'h5 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_5_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1054 = 3'h6 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_6_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire [1:0] _GEN_1055 = 3'h7 == io_request_bits_wr_addr[2:0] ? io_request_bits_operands_2_mode : rb_entries_7_request_operands_2_mode; // @[POSIT_Locality.scala 34:72]
+  wire  _GEN_1112 = new_input_log ? _GEN_960 : rb_entries_0_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1113 = new_input_log ? _GEN_961 : rb_entries_1_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1114 = new_input_log ? _GEN_962 : rb_entries_2_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1115 = new_input_log ? _GEN_963 : rb_entries_3_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1116 = new_input_log ? _GEN_964 : rb_entries_4_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1117 = new_input_log ? _GEN_965 : rb_entries_5_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1118 = new_input_log ? _GEN_966 : rb_entries_6_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1119 = new_input_log ? _GEN_967 : rb_entries_7_completed; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1128 = new_input_log ? _GEN_976 : rb_entries_0_written; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1129 = new_input_log ? _GEN_977 : rb_entries_1_written; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1130 = new_input_log ? _GEN_978 : rb_entries_2_written; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1131 = new_input_log ? _GEN_979 : rb_entries_3_written; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1132 = new_input_log ? _GEN_980 : rb_entries_4_written; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1133 = new_input_log ? _GEN_981 : rb_entries_5_written; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1134 = new_input_log ? _GEN_982 : rb_entries_6_written; // @[POSIT_Locality.scala 23:28]
+  wire  _GEN_1135 = new_input_log ? _GEN_983 : rb_entries_7_written; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1160 = new_input_log ? _GEN_1008 : rb_entries_0_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1161 = new_input_log ? _GEN_1009 : rb_entries_1_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1162 = new_input_log ? _GEN_1010 : rb_entries_2_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1163 = new_input_log ? _GEN_1011 : rb_entries_3_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1164 = new_input_log ? _GEN_1012 : rb_entries_4_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1165 = new_input_log ? _GEN_1013 : rb_entries_5_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1166 = new_input_log ? _GEN_1014 : rb_entries_6_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1167 = new_input_log ? _GEN_1015 : rb_entries_7_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1168 = new_input_log ? _GEN_1016 : rb_entries_0_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1169 = new_input_log ? _GEN_1017 : rb_entries_1_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1170 = new_input_log ? _GEN_1018 : rb_entries_2_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1171 = new_input_log ? _GEN_1019 : rb_entries_3_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1172 = new_input_log ? _GEN_1020 : rb_entries_4_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1173 = new_input_log ? _GEN_1021 : rb_entries_5_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1174 = new_input_log ? _GEN_1022 : rb_entries_6_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1175 = new_input_log ? _GEN_1023 : rb_entries_7_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1176 = new_input_log ? _GEN_1024 : rb_entries_0_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1177 = new_input_log ? _GEN_1025 : rb_entries_1_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1178 = new_input_log ? _GEN_1026 : rb_entries_2_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1179 = new_input_log ? _GEN_1027 : rb_entries_3_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1180 = new_input_log ? _GEN_1028 : rb_entries_4_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1181 = new_input_log ? _GEN_1029 : rb_entries_5_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1182 = new_input_log ? _GEN_1030 : rb_entries_6_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1183 = new_input_log ? _GEN_1031 : rb_entries_7_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1184 = new_input_log ? _GEN_1032 : rb_entries_0_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1185 = new_input_log ? _GEN_1033 : rb_entries_1_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1186 = new_input_log ? _GEN_1034 : rb_entries_2_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1187 = new_input_log ? _GEN_1035 : rb_entries_3_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1188 = new_input_log ? _GEN_1036 : rb_entries_4_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1189 = new_input_log ? _GEN_1037 : rb_entries_5_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1190 = new_input_log ? _GEN_1038 : rb_entries_6_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1191 = new_input_log ? _GEN_1039 : rb_entries_7_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1192 = new_input_log ? _GEN_1040 : rb_entries_0_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1193 = new_input_log ? _GEN_1041 : rb_entries_1_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1194 = new_input_log ? _GEN_1042 : rb_entries_2_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1195 = new_input_log ? _GEN_1043 : rb_entries_3_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1196 = new_input_log ? _GEN_1044 : rb_entries_4_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1197 = new_input_log ? _GEN_1045 : rb_entries_5_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1198 = new_input_log ? _GEN_1046 : rb_entries_6_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [31:0] _GEN_1199 = new_input_log ? _GEN_1047 : rb_entries_7_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1200 = new_input_log ? _GEN_1048 : rb_entries_0_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1201 = new_input_log ? _GEN_1049 : rb_entries_1_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1202 = new_input_log ? _GEN_1050 : rb_entries_2_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1203 = new_input_log ? _GEN_1051 : rb_entries_3_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1204 = new_input_log ? _GEN_1052 : rb_entries_4_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1205 = new_input_log ? _GEN_1053 : rb_entries_5_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1206 = new_input_log ? _GEN_1054 : rb_entries_6_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
+  wire [1:0] _GEN_1207 = new_input_log ? _GEN_1055 : rb_entries_7_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
   reg [2:0] value; // @[Counter.scala 29:33]
   reg [31:0] _RAND_184;
-  wire [2:0] _T_4 = value + 3'h1; // @[Counter.scala 39:22]
-  wire  _GEN_41 = 3'h1 == value ? rb_entries_1_written : rb_entries_0_written; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_71 = 3'h2 == value ? rb_entries_2_written : _GEN_41; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_101 = 3'h3 == value ? rb_entries_3_written : _GEN_71; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_131 = 3'h4 == value ? rb_entries_4_written : _GEN_101; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_161 = 3'h5 == value ? rb_entries_5_written : _GEN_131; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_191 = 3'h6 == value ? rb_entries_6_written : _GEN_161; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_221 = 3'h7 == value ? rb_entries_7_written : _GEN_191; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_39 = 3'h1 == value ? rb_entries_1_valid : rb_entries_0_valid; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_69 = 3'h2 == value ? rb_entries_2_valid : _GEN_39; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_99 = 3'h3 == value ? rb_entries_3_valid : _GEN_69; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_129 = 3'h4 == value ? rb_entries_4_valid : _GEN_99; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_159 = 3'h5 == value ? rb_entries_5_valid : _GEN_129; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_189 = 3'h6 == value ? rb_entries_6_valid : _GEN_159; // @[POSIT_Locality.scala 19:83]
-  wire  _GEN_219 = 3'h7 == value ? rb_entries_7_valid : _GEN_189; // @[POSIT_Locality.scala 19:83]
-  wire  _T_5 = ~_GEN_219; // @[POSIT_Locality.scala 19:83]
-  wire  _T_6 = _GEN_221 | _T_5; // @[POSIT_Locality.scala 19:80]
-  wire  new_input_log = io_request_valid & _T_6; // @[POSIT_Locality.scala 19:43]
-  wire  _GEN_242 = 3'h0 == value ? 1'h0 : rb_entries_0_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_243 = 3'h1 == value ? 1'h0 : rb_entries_1_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_244 = 3'h2 == value ? 1'h0 : rb_entries_2_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_245 = 3'h3 == value ? 1'h0 : rb_entries_3_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_246 = 3'h4 == value ? 1'h0 : rb_entries_4_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_247 = 3'h5 == value ? 1'h0 : rb_entries_5_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_248 = 3'h6 == value ? 1'h0 : rb_entries_6_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_249 = 3'h7 == value ? 1'h0 : rb_entries_7_completed; // @[POSIT_Locality.scala 24:52]
-  wire  _GEN_13049 = 3'h0 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_250 = _GEN_13049 | rb_entries_0_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_13050 = 3'h1 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_251 = _GEN_13050 | rb_entries_1_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_13051 = 3'h2 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_252 = _GEN_13051 | rb_entries_2_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_13052 = 3'h3 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_253 = _GEN_13052 | rb_entries_3_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_13053 = 3'h4 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_254 = _GEN_13053 | rb_entries_4_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_13054 = 3'h5 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_255 = _GEN_13054 | rb_entries_5_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_13055 = 3'h6 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_256 = _GEN_13055 | rb_entries_6_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_13056 = 3'h7 == value; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_257 = _GEN_13056 | rb_entries_7_valid; // @[POSIT_Locality.scala 25:48]
-  wire  _GEN_258 = 3'h0 == value ? 1'h0 : rb_entries_0_written; // @[POSIT_Locality.scala 26:50]
-  wire  _GEN_259 = 3'h1 == value ? 1'h0 : rb_entries_1_written; // @[POSIT_Locality.scala 26:50]
-  wire  _GEN_260 = 3'h2 == value ? 1'h0 : rb_entries_2_written; // @[POSIT_Locality.scala 26:50]
-  wire  _GEN_261 = 3'h3 == value ? 1'h0 : rb_entries_3_written; // @[POSIT_Locality.scala 26:50]
-  wire  _GEN_262 = 3'h4 == value ? 1'h0 : rb_entries_4_written; // @[POSIT_Locality.scala 26:50]
-  wire  _GEN_263 = 3'h5 == value ? 1'h0 : rb_entries_5_written; // @[POSIT_Locality.scala 26:50]
-  wire  _GEN_264 = 3'h6 == value ? 1'h0 : rb_entries_6_written; // @[POSIT_Locality.scala 26:50]
-  wire  _GEN_265 = 3'h7 == value ? 1'h0 : rb_entries_7_written; // @[POSIT_Locality.scala 26:50]
-  wire [47:0] _rb_entries_value_wr_addr = {{40'd0}, io_request_bits_wr_addr}; // @[POSIT_Locality.scala 27:50 POSIT_Locality.scala 27:50]
-  wire [1:0] _GEN_314 = 3'h0 == value ? io_request_bits_operands_0_mode : rb_entries_0_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_315 = 3'h1 == value ? io_request_bits_operands_0_mode : rb_entries_1_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_316 = 3'h2 == value ? io_request_bits_operands_0_mode : rb_entries_2_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_317 = 3'h3 == value ? io_request_bits_operands_0_mode : rb_entries_3_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_318 = 3'h4 == value ? io_request_bits_operands_0_mode : rb_entries_4_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_319 = 3'h5 == value ? io_request_bits_operands_0_mode : rb_entries_5_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_320 = 3'h6 == value ? io_request_bits_operands_0_mode : rb_entries_6_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_321 = 3'h7 == value ? io_request_bits_operands_0_mode : rb_entries_7_request_operands_0_mode; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_322 = 3'h0 == value ? io_request_bits_operands_0_value : rb_entries_0_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_323 = 3'h1 == value ? io_request_bits_operands_0_value : rb_entries_1_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_324 = 3'h2 == value ? io_request_bits_operands_0_value : rb_entries_2_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_325 = 3'h3 == value ? io_request_bits_operands_0_value : rb_entries_3_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_326 = 3'h4 == value ? io_request_bits_operands_0_value : rb_entries_4_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_327 = 3'h5 == value ? io_request_bits_operands_0_value : rb_entries_5_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_328 = 3'h6 == value ? io_request_bits_operands_0_value : rb_entries_6_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_329 = 3'h7 == value ? io_request_bits_operands_0_value : rb_entries_7_request_operands_0_value; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_330 = 3'h0 == value ? io_request_bits_operands_1_mode : rb_entries_0_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_331 = 3'h1 == value ? io_request_bits_operands_1_mode : rb_entries_1_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_332 = 3'h2 == value ? io_request_bits_operands_1_mode : rb_entries_2_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_333 = 3'h3 == value ? io_request_bits_operands_1_mode : rb_entries_3_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_334 = 3'h4 == value ? io_request_bits_operands_1_mode : rb_entries_4_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_335 = 3'h5 == value ? io_request_bits_operands_1_mode : rb_entries_5_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_336 = 3'h6 == value ? io_request_bits_operands_1_mode : rb_entries_6_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_337 = 3'h7 == value ? io_request_bits_operands_1_mode : rb_entries_7_request_operands_1_mode; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_338 = 3'h0 == value ? io_request_bits_operands_1_value : rb_entries_0_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_339 = 3'h1 == value ? io_request_bits_operands_1_value : rb_entries_1_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_340 = 3'h2 == value ? io_request_bits_operands_1_value : rb_entries_2_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_341 = 3'h3 == value ? io_request_bits_operands_1_value : rb_entries_3_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_342 = 3'h4 == value ? io_request_bits_operands_1_value : rb_entries_4_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_343 = 3'h5 == value ? io_request_bits_operands_1_value : rb_entries_5_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_344 = 3'h6 == value ? io_request_bits_operands_1_value : rb_entries_6_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_345 = 3'h7 == value ? io_request_bits_operands_1_value : rb_entries_7_request_operands_1_value; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_346 = 3'h0 == value ? io_request_bits_operands_2_mode : rb_entries_0_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_347 = 3'h1 == value ? io_request_bits_operands_2_mode : rb_entries_1_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_348 = 3'h2 == value ? io_request_bits_operands_2_mode : rb_entries_2_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_349 = 3'h3 == value ? io_request_bits_operands_2_mode : rb_entries_3_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_350 = 3'h4 == value ? io_request_bits_operands_2_mode : rb_entries_4_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_351 = 3'h5 == value ? io_request_bits_operands_2_mode : rb_entries_5_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_352 = 3'h6 == value ? io_request_bits_operands_2_mode : rb_entries_6_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [1:0] _GEN_353 = 3'h7 == value ? io_request_bits_operands_2_mode : rb_entries_7_request_operands_2_mode; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_354 = 3'h0 == value ? io_request_bits_operands_2_value : rb_entries_0_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_355 = 3'h1 == value ? io_request_bits_operands_2_value : rb_entries_1_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_356 = 3'h2 == value ? io_request_bits_operands_2_value : rb_entries_2_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_357 = 3'h3 == value ? io_request_bits_operands_2_value : rb_entries_3_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_358 = 3'h4 == value ? io_request_bits_operands_2_value : rb_entries_4_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_359 = 3'h5 == value ? io_request_bits_operands_2_value : rb_entries_5_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_360 = 3'h6 == value ? io_request_bits_operands_2_value : rb_entries_6_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire [31:0] _GEN_361 = 3'h7 == value ? io_request_bits_operands_2_value : rb_entries_7_request_operands_2_value; // @[POSIT_Locality.scala 32:70]
-  wire  _GEN_418 = new_input_log ? _GEN_242 : rb_entries_0_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_419 = new_input_log ? _GEN_243 : rb_entries_1_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_420 = new_input_log ? _GEN_244 : rb_entries_2_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_421 = new_input_log ? _GEN_245 : rb_entries_3_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_422 = new_input_log ? _GEN_246 : rb_entries_4_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_423 = new_input_log ? _GEN_247 : rb_entries_5_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_424 = new_input_log ? _GEN_248 : rb_entries_6_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_425 = new_input_log ? _GEN_249 : rb_entries_7_completed; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_434 = new_input_log ? _GEN_258 : rb_entries_0_written; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_435 = new_input_log ? _GEN_259 : rb_entries_1_written; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_436 = new_input_log ? _GEN_260 : rb_entries_2_written; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_437 = new_input_log ? _GEN_261 : rb_entries_3_written; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_438 = new_input_log ? _GEN_262 : rb_entries_4_written; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_439 = new_input_log ? _GEN_263 : rb_entries_5_written; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_440 = new_input_log ? _GEN_264 : rb_entries_6_written; // @[POSIT_Locality.scala 23:28]
-  wire  _GEN_441 = new_input_log ? _GEN_265 : rb_entries_7_written; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_490 = new_input_log ? _GEN_314 : rb_entries_0_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_491 = new_input_log ? _GEN_315 : rb_entries_1_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_492 = new_input_log ? _GEN_316 : rb_entries_2_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_493 = new_input_log ? _GEN_317 : rb_entries_3_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_494 = new_input_log ? _GEN_318 : rb_entries_4_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_495 = new_input_log ? _GEN_319 : rb_entries_5_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_496 = new_input_log ? _GEN_320 : rb_entries_6_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_497 = new_input_log ? _GEN_321 : rb_entries_7_request_operands_0_mode; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_498 = new_input_log ? _GEN_322 : rb_entries_0_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_499 = new_input_log ? _GEN_323 : rb_entries_1_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_500 = new_input_log ? _GEN_324 : rb_entries_2_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_501 = new_input_log ? _GEN_325 : rb_entries_3_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_502 = new_input_log ? _GEN_326 : rb_entries_4_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_503 = new_input_log ? _GEN_327 : rb_entries_5_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_504 = new_input_log ? _GEN_328 : rb_entries_6_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_505 = new_input_log ? _GEN_329 : rb_entries_7_request_operands_0_value; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_506 = new_input_log ? _GEN_330 : rb_entries_0_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_507 = new_input_log ? _GEN_331 : rb_entries_1_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_508 = new_input_log ? _GEN_332 : rb_entries_2_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_509 = new_input_log ? _GEN_333 : rb_entries_3_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_510 = new_input_log ? _GEN_334 : rb_entries_4_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_511 = new_input_log ? _GEN_335 : rb_entries_5_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_512 = new_input_log ? _GEN_336 : rb_entries_6_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_513 = new_input_log ? _GEN_337 : rb_entries_7_request_operands_1_mode; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_514 = new_input_log ? _GEN_338 : rb_entries_0_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_515 = new_input_log ? _GEN_339 : rb_entries_1_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_516 = new_input_log ? _GEN_340 : rb_entries_2_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_517 = new_input_log ? _GEN_341 : rb_entries_3_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_518 = new_input_log ? _GEN_342 : rb_entries_4_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_519 = new_input_log ? _GEN_343 : rb_entries_5_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_520 = new_input_log ? _GEN_344 : rb_entries_6_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_521 = new_input_log ? _GEN_345 : rb_entries_7_request_operands_1_value; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_522 = new_input_log ? _GEN_346 : rb_entries_0_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_523 = new_input_log ? _GEN_347 : rb_entries_1_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_524 = new_input_log ? _GEN_348 : rb_entries_2_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_525 = new_input_log ? _GEN_349 : rb_entries_3_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_526 = new_input_log ? _GEN_350 : rb_entries_4_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_527 = new_input_log ? _GEN_351 : rb_entries_5_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_528 = new_input_log ? _GEN_352 : rb_entries_6_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [1:0] _GEN_529 = new_input_log ? _GEN_353 : rb_entries_7_request_operands_2_mode; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_530 = new_input_log ? _GEN_354 : rb_entries_0_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_531 = new_input_log ? _GEN_355 : rb_entries_1_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_532 = new_input_log ? _GEN_356 : rb_entries_2_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_533 = new_input_log ? _GEN_357 : rb_entries_3_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_534 = new_input_log ? _GEN_358 : rb_entries_4_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_535 = new_input_log ? _GEN_359 : rb_entries_5_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_536 = new_input_log ? _GEN_360 : rb_entries_6_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  wire [31:0] _GEN_537 = new_input_log ? _GEN_361 : rb_entries_7_request_operands_2_value; // @[POSIT_Locality.scala 23:28]
-  reg [2:0] value_1; // @[Counter.scala 29:33]
-  reg [31:0] _RAND_185;
-  wire [2:0] _T_14 = value_1 + 3'h1; // @[Counter.scala 39:22]
-  wire  _GEN_632 = 3'h1 == value_1 ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_662 = 3'h2 == value_1 ? rb_entries_2_completed : _GEN_632; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_692 = 3'h3 == value_1 ? rb_entries_3_completed : _GEN_662; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_722 = 3'h4 == value_1 ? rb_entries_4_completed : _GEN_692; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_752 = 3'h5 == value_1 ? rb_entries_5_completed : _GEN_722; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_782 = 3'h6 == value_1 ? rb_entries_6_completed : _GEN_752; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_812 = 3'h7 == value_1 ? rb_entries_7_completed : _GEN_782; // @[POSIT_Locality.scala 41:33]
-  wire  wbCountOn = io_mem_write_ready & _GEN_812; // @[POSIT_Locality.scala 41:33]
-  wire [47:0] _GEN_636 = 3'h1 == value_1 ? rb_entries_1_wr_addr : rb_entries_0_wr_addr; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_649 = 3'h1 == value_1 ? rb_entries_1_result_isZero : rb_entries_0_result_isZero; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_650 = 3'h1 == value_1 ? rb_entries_1_result_isNaR : rb_entries_0_result_isNaR; // @[POSIT_Locality.scala 41:33]
-  wire [31:0] _GEN_651 = 3'h1 == value_1 ? rb_entries_1_result_out : rb_entries_0_result_out; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_652 = 3'h1 == value_1 ? rb_entries_1_result_lt : rb_entries_0_result_lt; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_653 = 3'h1 == value_1 ? rb_entries_1_result_eq : rb_entries_0_result_eq; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_654 = 3'h1 == value_1 ? rb_entries_1_result_gt : rb_entries_0_result_gt; // @[POSIT_Locality.scala 41:33]
-  wire [4:0] _GEN_655 = 3'h1 == value_1 ? rb_entries_1_result_exceptions : rb_entries_0_result_exceptions; // @[POSIT_Locality.scala 41:33]
-  wire [47:0] _GEN_666 = 3'h2 == value_1 ? rb_entries_2_wr_addr : _GEN_636; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_679 = 3'h2 == value_1 ? rb_entries_2_result_isZero : _GEN_649; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_680 = 3'h2 == value_1 ? rb_entries_2_result_isNaR : _GEN_650; // @[POSIT_Locality.scala 41:33]
-  wire [31:0] _GEN_681 = 3'h2 == value_1 ? rb_entries_2_result_out : _GEN_651; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_682 = 3'h2 == value_1 ? rb_entries_2_result_lt : _GEN_652; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_683 = 3'h2 == value_1 ? rb_entries_2_result_eq : _GEN_653; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_684 = 3'h2 == value_1 ? rb_entries_2_result_gt : _GEN_654; // @[POSIT_Locality.scala 41:33]
-  wire [4:0] _GEN_685 = 3'h2 == value_1 ? rb_entries_2_result_exceptions : _GEN_655; // @[POSIT_Locality.scala 41:33]
-  wire [47:0] _GEN_696 = 3'h3 == value_1 ? rb_entries_3_wr_addr : _GEN_666; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_709 = 3'h3 == value_1 ? rb_entries_3_result_isZero : _GEN_679; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_710 = 3'h3 == value_1 ? rb_entries_3_result_isNaR : _GEN_680; // @[POSIT_Locality.scala 41:33]
-  wire [31:0] _GEN_711 = 3'h3 == value_1 ? rb_entries_3_result_out : _GEN_681; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_712 = 3'h3 == value_1 ? rb_entries_3_result_lt : _GEN_682; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_713 = 3'h3 == value_1 ? rb_entries_3_result_eq : _GEN_683; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_714 = 3'h3 == value_1 ? rb_entries_3_result_gt : _GEN_684; // @[POSIT_Locality.scala 41:33]
-  wire [4:0] _GEN_715 = 3'h3 == value_1 ? rb_entries_3_result_exceptions : _GEN_685; // @[POSIT_Locality.scala 41:33]
-  wire [47:0] _GEN_726 = 3'h4 == value_1 ? rb_entries_4_wr_addr : _GEN_696; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_739 = 3'h4 == value_1 ? rb_entries_4_result_isZero : _GEN_709; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_740 = 3'h4 == value_1 ? rb_entries_4_result_isNaR : _GEN_710; // @[POSIT_Locality.scala 41:33]
-  wire [31:0] _GEN_741 = 3'h4 == value_1 ? rb_entries_4_result_out : _GEN_711; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_742 = 3'h4 == value_1 ? rb_entries_4_result_lt : _GEN_712; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_743 = 3'h4 == value_1 ? rb_entries_4_result_eq : _GEN_713; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_744 = 3'h4 == value_1 ? rb_entries_4_result_gt : _GEN_714; // @[POSIT_Locality.scala 41:33]
-  wire [4:0] _GEN_745 = 3'h4 == value_1 ? rb_entries_4_result_exceptions : _GEN_715; // @[POSIT_Locality.scala 41:33]
-  wire [47:0] _GEN_756 = 3'h5 == value_1 ? rb_entries_5_wr_addr : _GEN_726; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_769 = 3'h5 == value_1 ? rb_entries_5_result_isZero : _GEN_739; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_770 = 3'h5 == value_1 ? rb_entries_5_result_isNaR : _GEN_740; // @[POSIT_Locality.scala 41:33]
-  wire [31:0] _GEN_771 = 3'h5 == value_1 ? rb_entries_5_result_out : _GEN_741; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_772 = 3'h5 == value_1 ? rb_entries_5_result_lt : _GEN_742; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_773 = 3'h5 == value_1 ? rb_entries_5_result_eq : _GEN_743; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_774 = 3'h5 == value_1 ? rb_entries_5_result_gt : _GEN_744; // @[POSIT_Locality.scala 41:33]
-  wire [4:0] _GEN_775 = 3'h5 == value_1 ? rb_entries_5_result_exceptions : _GEN_745; // @[POSIT_Locality.scala 41:33]
-  wire [47:0] _GEN_786 = 3'h6 == value_1 ? rb_entries_6_wr_addr : _GEN_756; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_799 = 3'h6 == value_1 ? rb_entries_6_result_isZero : _GEN_769; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_800 = 3'h6 == value_1 ? rb_entries_6_result_isNaR : _GEN_770; // @[POSIT_Locality.scala 41:33]
-  wire [31:0] _GEN_801 = 3'h6 == value_1 ? rb_entries_6_result_out : _GEN_771; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_802 = 3'h6 == value_1 ? rb_entries_6_result_lt : _GEN_772; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_803 = 3'h6 == value_1 ? rb_entries_6_result_eq : _GEN_773; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_804 = 3'h6 == value_1 ? rb_entries_6_result_gt : _GEN_774; // @[POSIT_Locality.scala 41:33]
-  wire [4:0] _GEN_805 = 3'h6 == value_1 ? rb_entries_6_result_exceptions : _GEN_775; // @[POSIT_Locality.scala 41:33]
-  wire  _GEN_13057 = 3'h0 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_836 = _GEN_13057 | _GEN_434; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_13058 = 3'h1 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_837 = _GEN_13058 | _GEN_435; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_13059 = 3'h2 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_838 = _GEN_13059 | _GEN_436; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_13060 = 3'h3 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_839 = _GEN_13060 | _GEN_437; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_13061 = 3'h4 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_840 = _GEN_13061 | _GEN_438; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_13062 = 3'h5 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_841 = _GEN_13062 | _GEN_439; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_13063 = 3'h6 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_842 = _GEN_13063 | _GEN_440; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_13064 = 3'h7 == value_1; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_843 = _GEN_13064 | _GEN_441; // @[POSIT_Locality.scala 43:47]
-  wire  _GEN_845 = wbCountOn ? _GEN_836 : _GEN_434; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_846 = wbCountOn ? _GEN_837 : _GEN_435; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_847 = wbCountOn ? _GEN_838 : _GEN_436; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_848 = wbCountOn ? _GEN_839 : _GEN_437; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_849 = wbCountOn ? _GEN_840 : _GEN_438; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_850 = wbCountOn ? _GEN_841 : _GEN_439; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_851 = wbCountOn ? _GEN_842 : _GEN_440; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_852 = wbCountOn ? _GEN_843 : _GEN_441; // @[POSIT_Locality.scala 41:68]
-  wire  _GEN_853 = _GEN_13057 | _GEN_845; // @[POSIT_Locality.scala 55:47]
-  wire  _GEN_854 = _GEN_13058 | _GEN_846; // @[POSIT_Locality.scala 55:47]
-  wire  _GEN_855 = _GEN_13059 | _GEN_847; // @[POSIT_Locality.scala 55:47]
-  wire  _GEN_856 = _GEN_13060 | _GEN_848; // @[POSIT_Locality.scala 55:47]
-  wire  _GEN_857 = _GEN_13061 | _GEN_849; // @[POSIT_Locality.scala 55:47]
-  wire  _GEN_858 = _GEN_13062 | _GEN_850; // @[POSIT_Locality.scala 55:47]
-  wire  _GEN_859 = _GEN_13063 | _GEN_851; // @[POSIT_Locality.scala 55:47]
-  wire  _GEN_860 = _GEN_13064 | _GEN_852; // @[POSIT_Locality.scala 55:47]
+  wire [2:0] _T_35 = value + 3'h1; // @[Counter.scala 39:22]
+  wire  _GEN_1302 = 3'h1 == value ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1332 = 3'h2 == value ? rb_entries_2_completed : _GEN_1302; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1362 = 3'h3 == value ? rb_entries_3_completed : _GEN_1332; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1392 = 3'h4 == value ? rb_entries_4_completed : _GEN_1362; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1422 = 3'h5 == value ? rb_entries_5_completed : _GEN_1392; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1452 = 3'h6 == value ? rb_entries_6_completed : _GEN_1422; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1482 = 3'h7 == value ? rb_entries_7_completed : _GEN_1452; // @[POSIT_Locality.scala 43:33]
+  wire  wbCountOn = io_mem_write_ready & _GEN_1482; // @[POSIT_Locality.scala 43:33]
+  wire [7:0] _GEN_1306 = 3'h1 == value ? rb_entries_1_wr_addr : rb_entries_0_wr_addr; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1319 = 3'h1 == value ? rb_entries_1_result_isZero : rb_entries_0_result_isZero; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1320 = 3'h1 == value ? rb_entries_1_result_isNaR : rb_entries_0_result_isNaR; // @[POSIT_Locality.scala 43:33]
+  wire [31:0] _GEN_1321 = 3'h1 == value ? rb_entries_1_result_out : rb_entries_0_result_out; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1322 = 3'h1 == value ? rb_entries_1_result_lt : rb_entries_0_result_lt; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1323 = 3'h1 == value ? rb_entries_1_result_eq : rb_entries_0_result_eq; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1324 = 3'h1 == value ? rb_entries_1_result_gt : rb_entries_0_result_gt; // @[POSIT_Locality.scala 43:33]
+  wire [4:0] _GEN_1325 = 3'h1 == value ? rb_entries_1_result_exceptions : rb_entries_0_result_exceptions; // @[POSIT_Locality.scala 43:33]
+  wire [7:0] _GEN_1336 = 3'h2 == value ? rb_entries_2_wr_addr : _GEN_1306; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1349 = 3'h2 == value ? rb_entries_2_result_isZero : _GEN_1319; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1350 = 3'h2 == value ? rb_entries_2_result_isNaR : _GEN_1320; // @[POSIT_Locality.scala 43:33]
+  wire [31:0] _GEN_1351 = 3'h2 == value ? rb_entries_2_result_out : _GEN_1321; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1352 = 3'h2 == value ? rb_entries_2_result_lt : _GEN_1322; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1353 = 3'h2 == value ? rb_entries_2_result_eq : _GEN_1323; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1354 = 3'h2 == value ? rb_entries_2_result_gt : _GEN_1324; // @[POSIT_Locality.scala 43:33]
+  wire [4:0] _GEN_1355 = 3'h2 == value ? rb_entries_2_result_exceptions : _GEN_1325; // @[POSIT_Locality.scala 43:33]
+  wire [7:0] _GEN_1366 = 3'h3 == value ? rb_entries_3_wr_addr : _GEN_1336; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1379 = 3'h3 == value ? rb_entries_3_result_isZero : _GEN_1349; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1380 = 3'h3 == value ? rb_entries_3_result_isNaR : _GEN_1350; // @[POSIT_Locality.scala 43:33]
+  wire [31:0] _GEN_1381 = 3'h3 == value ? rb_entries_3_result_out : _GEN_1351; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1382 = 3'h3 == value ? rb_entries_3_result_lt : _GEN_1352; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1383 = 3'h3 == value ? rb_entries_3_result_eq : _GEN_1353; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1384 = 3'h3 == value ? rb_entries_3_result_gt : _GEN_1354; // @[POSIT_Locality.scala 43:33]
+  wire [4:0] _GEN_1385 = 3'h3 == value ? rb_entries_3_result_exceptions : _GEN_1355; // @[POSIT_Locality.scala 43:33]
+  wire [7:0] _GEN_1396 = 3'h4 == value ? rb_entries_4_wr_addr : _GEN_1366; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1409 = 3'h4 == value ? rb_entries_4_result_isZero : _GEN_1379; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1410 = 3'h4 == value ? rb_entries_4_result_isNaR : _GEN_1380; // @[POSIT_Locality.scala 43:33]
+  wire [31:0] _GEN_1411 = 3'h4 == value ? rb_entries_4_result_out : _GEN_1381; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1412 = 3'h4 == value ? rb_entries_4_result_lt : _GEN_1382; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1413 = 3'h4 == value ? rb_entries_4_result_eq : _GEN_1383; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1414 = 3'h4 == value ? rb_entries_4_result_gt : _GEN_1384; // @[POSIT_Locality.scala 43:33]
+  wire [4:0] _GEN_1415 = 3'h4 == value ? rb_entries_4_result_exceptions : _GEN_1385; // @[POSIT_Locality.scala 43:33]
+  wire [7:0] _GEN_1426 = 3'h5 == value ? rb_entries_5_wr_addr : _GEN_1396; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1439 = 3'h5 == value ? rb_entries_5_result_isZero : _GEN_1409; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1440 = 3'h5 == value ? rb_entries_5_result_isNaR : _GEN_1410; // @[POSIT_Locality.scala 43:33]
+  wire [31:0] _GEN_1441 = 3'h5 == value ? rb_entries_5_result_out : _GEN_1411; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1442 = 3'h5 == value ? rb_entries_5_result_lt : _GEN_1412; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1443 = 3'h5 == value ? rb_entries_5_result_eq : _GEN_1413; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1444 = 3'h5 == value ? rb_entries_5_result_gt : _GEN_1414; // @[POSIT_Locality.scala 43:33]
+  wire [4:0] _GEN_1445 = 3'h5 == value ? rb_entries_5_result_exceptions : _GEN_1415; // @[POSIT_Locality.scala 43:33]
+  wire [7:0] _GEN_1456 = 3'h6 == value ? rb_entries_6_wr_addr : _GEN_1426; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1469 = 3'h6 == value ? rb_entries_6_result_isZero : _GEN_1439; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1470 = 3'h6 == value ? rb_entries_6_result_isNaR : _GEN_1440; // @[POSIT_Locality.scala 43:33]
+  wire [31:0] _GEN_1471 = 3'h6 == value ? rb_entries_6_result_out : _GEN_1441; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1472 = 3'h6 == value ? rb_entries_6_result_lt : _GEN_1442; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1473 = 3'h6 == value ? rb_entries_6_result_eq : _GEN_1443; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_1474 = 3'h6 == value ? rb_entries_6_result_gt : _GEN_1444; // @[POSIT_Locality.scala 43:33]
+  wire [4:0] _GEN_1475 = 3'h6 == value ? rb_entries_6_result_exceptions : _GEN_1445; // @[POSIT_Locality.scala 43:33]
+  wire  _GEN_13758 = 3'h0 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1506 = _GEN_13758 | _GEN_1128; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_13759 = 3'h1 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1507 = _GEN_13759 | _GEN_1129; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_13760 = 3'h2 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1508 = _GEN_13760 | _GEN_1130; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_13761 = 3'h3 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1509 = _GEN_13761 | _GEN_1131; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_13762 = 3'h4 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1510 = _GEN_13762 | _GEN_1132; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_13763 = 3'h5 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1511 = _GEN_13763 | _GEN_1133; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_13764 = 3'h6 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1512 = _GEN_13764 | _GEN_1134; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_13765 = 3'h7 == value; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1513 = _GEN_13765 | _GEN_1135; // @[POSIT_Locality.scala 45:47]
+  wire  _GEN_1515 = wbCountOn ? _GEN_1506 : _GEN_1128; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1516 = wbCountOn ? _GEN_1507 : _GEN_1129; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1517 = wbCountOn ? _GEN_1508 : _GEN_1130; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1518 = wbCountOn ? _GEN_1509 : _GEN_1131; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1519 = wbCountOn ? _GEN_1510 : _GEN_1132; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1520 = wbCountOn ? _GEN_1511 : _GEN_1133; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1521 = wbCountOn ? _GEN_1512 : _GEN_1134; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1522 = wbCountOn ? _GEN_1513 : _GEN_1135; // @[POSIT_Locality.scala 43:68]
+  wire  _GEN_1523 = _GEN_13758 | _GEN_1515; // @[POSIT_Locality.scala 57:47]
+  wire  _GEN_1524 = _GEN_13759 | _GEN_1516; // @[POSIT_Locality.scala 57:47]
+  wire  _GEN_1525 = _GEN_13760 | _GEN_1517; // @[POSIT_Locality.scala 57:47]
+  wire  _GEN_1526 = _GEN_13761 | _GEN_1518; // @[POSIT_Locality.scala 57:47]
+  wire  _GEN_1527 = _GEN_13762 | _GEN_1519; // @[POSIT_Locality.scala 57:47]
+  wire  _GEN_1528 = _GEN_13763 | _GEN_1520; // @[POSIT_Locality.scala 57:47]
+  wire  _GEN_1529 = _GEN_13764 | _GEN_1521; // @[POSIT_Locality.scala 57:47]
+  wire  _GEN_1530 = _GEN_13765 | _GEN_1522; // @[POSIT_Locality.scala 57:47]
   wire  singleOpValidVec_0 = rb_entries_0_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_17 = rb_entries_0_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_1 = singleOpValidVec_0 & _T_17; // @[POSIT_Locality.scala 72:110]
-  wire  _T_19 = rb_entries_0_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_2 = singleOpValidVec_1 & _T_19; // @[POSIT_Locality.scala 72:110]
+  wire  _T_38 = rb_entries_0_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_1 = singleOpValidVec_0 & _T_38; // @[POSIT_Locality.scala 72:110]
+  wire  _T_40 = rb_entries_0_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_2 = singleOpValidVec_1 & _T_40; // @[POSIT_Locality.scala 72:110]
   wire  singleOpValidVec_3 = rb_entries_1_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_22 = rb_entries_1_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_4 = singleOpValidVec_3 & _T_22; // @[POSIT_Locality.scala 72:110]
-  wire  _T_24 = rb_entries_1_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_5 = singleOpValidVec_4 & _T_24; // @[POSIT_Locality.scala 72:110]
+  wire  _T_43 = rb_entries_1_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_4 = singleOpValidVec_3 & _T_43; // @[POSIT_Locality.scala 72:110]
+  wire  _T_45 = rb_entries_1_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_5 = singleOpValidVec_4 & _T_45; // @[POSIT_Locality.scala 72:110]
   wire  singleOpValidVec_6 = rb_entries_2_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_27 = rb_entries_2_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_7 = singleOpValidVec_6 & _T_27; // @[POSIT_Locality.scala 72:110]
-  wire  _T_29 = rb_entries_2_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_8 = singleOpValidVec_7 & _T_29; // @[POSIT_Locality.scala 72:110]
+  wire  _T_48 = rb_entries_2_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_7 = singleOpValidVec_6 & _T_48; // @[POSIT_Locality.scala 72:110]
+  wire  _T_50 = rb_entries_2_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_8 = singleOpValidVec_7 & _T_50; // @[POSIT_Locality.scala 72:110]
   wire  singleOpValidVec_9 = rb_entries_3_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_32 = rb_entries_3_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_10 = singleOpValidVec_9 & _T_32; // @[POSIT_Locality.scala 72:110]
-  wire  _T_34 = rb_entries_3_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_11 = singleOpValidVec_10 & _T_34; // @[POSIT_Locality.scala 72:110]
+  wire  _T_53 = rb_entries_3_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_10 = singleOpValidVec_9 & _T_53; // @[POSIT_Locality.scala 72:110]
+  wire  _T_55 = rb_entries_3_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_11 = singleOpValidVec_10 & _T_55; // @[POSIT_Locality.scala 72:110]
   wire  singleOpValidVec_12 = rb_entries_4_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_37 = rb_entries_4_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_13 = singleOpValidVec_12 & _T_37; // @[POSIT_Locality.scala 72:110]
-  wire  _T_39 = rb_entries_4_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_14 = singleOpValidVec_13 & _T_39; // @[POSIT_Locality.scala 72:110]
+  wire  _T_58 = rb_entries_4_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_13 = singleOpValidVec_12 & _T_58; // @[POSIT_Locality.scala 72:110]
+  wire  _T_60 = rb_entries_4_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_14 = singleOpValidVec_13 & _T_60; // @[POSIT_Locality.scala 72:110]
   wire  singleOpValidVec_15 = rb_entries_5_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_42 = rb_entries_5_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_16 = singleOpValidVec_15 & _T_42; // @[POSIT_Locality.scala 72:110]
-  wire  _T_44 = rb_entries_5_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_17 = singleOpValidVec_16 & _T_44; // @[POSIT_Locality.scala 72:110]
+  wire  _T_63 = rb_entries_5_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_16 = singleOpValidVec_15 & _T_63; // @[POSIT_Locality.scala 72:110]
+  wire  _T_65 = rb_entries_5_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_17 = singleOpValidVec_16 & _T_65; // @[POSIT_Locality.scala 72:110]
   wire  singleOpValidVec_18 = rb_entries_6_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_47 = rb_entries_6_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_19 = singleOpValidVec_18 & _T_47; // @[POSIT_Locality.scala 72:110]
-  wire  _T_49 = rb_entries_6_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_20 = singleOpValidVec_19 & _T_49; // @[POSIT_Locality.scala 72:110]
+  wire  _T_68 = rb_entries_6_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_19 = singleOpValidVec_18 & _T_68; // @[POSIT_Locality.scala 72:110]
+  wire  _T_70 = rb_entries_6_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_20 = singleOpValidVec_19 & _T_70; // @[POSIT_Locality.scala 72:110]
   wire  singleOpValidVec_21 = rb_entries_7_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 70:59]
-  wire  _T_52 = rb_entries_7_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_22 = singleOpValidVec_21 & _T_52; // @[POSIT_Locality.scala 72:110]
-  wire  _T_54 = rb_entries_7_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
-  wire  singleOpValidVec_23 = singleOpValidVec_22 & _T_54; // @[POSIT_Locality.scala 72:110]
-  wire  _T_56 = singleOpValidVec_2 & rb_entries_0_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_57 = ~rb_entries_0_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_0 = _T_56 & _T_57; // @[POSIT_Locality.scala 78:82]
-  wire  _T_59 = singleOpValidVec_5 & rb_entries_1_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_60 = ~rb_entries_1_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_1 = _T_59 & _T_60; // @[POSIT_Locality.scala 78:82]
-  wire  _T_62 = singleOpValidVec_8 & rb_entries_2_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_63 = ~rb_entries_2_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_2 = _T_62 & _T_63; // @[POSIT_Locality.scala 78:82]
-  wire  _T_65 = singleOpValidVec_11 & rb_entries_3_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_66 = ~rb_entries_3_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_3 = _T_65 & _T_66; // @[POSIT_Locality.scala 78:82]
-  wire  _T_68 = singleOpValidVec_14 & rb_entries_4_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_69 = ~rb_entries_4_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_4 = _T_68 & _T_69; // @[POSIT_Locality.scala 78:82]
-  wire  _T_71 = singleOpValidVec_17 & rb_entries_5_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_72 = ~rb_entries_5_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_5 = _T_71 & _T_72; // @[POSIT_Locality.scala 78:82]
-  wire  _T_74 = singleOpValidVec_20 & rb_entries_6_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_75 = ~rb_entries_6_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_6 = _T_74 & _T_75; // @[POSIT_Locality.scala 78:82]
-  wire  _T_77 = singleOpValidVec_23 & rb_entries_7_valid; // @[POSIT_Locality.scala 78:60]
-  wire  _T_78 = ~rb_entries_7_dispatched; // @[POSIT_Locality.scala 78:85]
-  wire  waitingForDispatchVec_7 = _T_77 & _T_78; // @[POSIT_Locality.scala 78:82]
-  wire [3:0] _T_82 = {waitingForDispatchVec_3,waitingForDispatchVec_2,waitingForDispatchVec_1,waitingForDispatchVec_0}; // @[POSIT_Locality.scala 82:58]
-  wire [3:0] _T_85 = {waitingForDispatchVec_7,waitingForDispatchVec_6,waitingForDispatchVec_5,waitingForDispatchVec_4}; // @[POSIT_Locality.scala 82:58]
-  wire  _T_87 = dispatchArb_io_chosen == 3'h0; // @[POSIT_Locality.scala 87:81]
-  wire  _T_88 = _T_87 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_89 = rb_entries_0_dispatched | _T_88; // @[POSIT_Locality.scala 87:70]
-  wire  _T_90 = dispatchArb_io_chosen == 3'h1; // @[POSIT_Locality.scala 87:81]
-  wire  _T_91 = _T_90 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_92 = rb_entries_1_dispatched | _T_91; // @[POSIT_Locality.scala 87:70]
-  wire  _T_93 = dispatchArb_io_chosen == 3'h2; // @[POSIT_Locality.scala 87:81]
-  wire  _T_94 = _T_93 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_95 = rb_entries_2_dispatched | _T_94; // @[POSIT_Locality.scala 87:70]
-  wire  _T_96 = dispatchArb_io_chosen == 3'h3; // @[POSIT_Locality.scala 87:81]
-  wire  _T_97 = _T_96 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_98 = rb_entries_3_dispatched | _T_97; // @[POSIT_Locality.scala 87:70]
-  wire  _T_99 = dispatchArb_io_chosen == 3'h4; // @[POSIT_Locality.scala 87:81]
-  wire  _T_100 = _T_99 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_101 = rb_entries_4_dispatched | _T_100; // @[POSIT_Locality.scala 87:70]
-  wire  _T_102 = dispatchArb_io_chosen == 3'h5; // @[POSIT_Locality.scala 87:81]
-  wire  _T_103 = _T_102 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_104 = rb_entries_5_dispatched | _T_103; // @[POSIT_Locality.scala 87:70]
-  wire  _T_105 = dispatchArb_io_chosen == 3'h6; // @[POSIT_Locality.scala 87:81]
-  wire  _T_106 = _T_105 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_107 = rb_entries_6_dispatched | _T_106; // @[POSIT_Locality.scala 87:70]
-  wire  _T_108 = dispatchArb_io_chosen == 3'h7; // @[POSIT_Locality.scala 87:81]
-  wire  _T_109 = _T_108 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 87:94]
-  wire  _T_110 = rb_entries_7_dispatched | _T_109; // @[POSIT_Locality.scala 87:70]
-  wire  _T_111 = dispatchArb_io_hasChosen & pe_io_request_ready; // @[POSIT_Locality.scala 91:39]
-  wire [31:0] _GEN_911 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_operands_0_value : rb_entries_0_request_operands_0_value; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_913 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_operands_1_value : rb_entries_0_request_operands_1_value; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_915 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_operands_2_value : rb_entries_0_request_operands_2_value; // @[POSIT_Locality.scala 100:80]
-  wire [2:0] _GEN_917 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_inst : rb_entries_0_request_inst; // @[POSIT_Locality.scala 100:80]
-  wire [1:0] _GEN_918 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_mode : rb_entries_0_request_mode; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_941 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_operands_0_value : _GEN_911; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_943 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_operands_1_value : _GEN_913; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_945 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_operands_2_value : _GEN_915; // @[POSIT_Locality.scala 100:80]
-  wire [2:0] _GEN_947 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_inst : _GEN_917; // @[POSIT_Locality.scala 100:80]
-  wire [1:0] _GEN_948 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_mode : _GEN_918; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_971 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_operands_0_value : _GEN_941; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_973 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_operands_1_value : _GEN_943; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_975 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_operands_2_value : _GEN_945; // @[POSIT_Locality.scala 100:80]
-  wire [2:0] _GEN_977 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_inst : _GEN_947; // @[POSIT_Locality.scala 100:80]
-  wire [1:0] _GEN_978 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_mode : _GEN_948; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1001 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_operands_0_value : _GEN_971; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1003 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_operands_1_value : _GEN_973; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1005 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_operands_2_value : _GEN_975; // @[POSIT_Locality.scala 100:80]
-  wire [2:0] _GEN_1007 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_inst : _GEN_977; // @[POSIT_Locality.scala 100:80]
-  wire [1:0] _GEN_1008 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_mode : _GEN_978; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1031 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_operands_0_value : _GEN_1001; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1033 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_operands_1_value : _GEN_1003; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1035 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_operands_2_value : _GEN_1005; // @[POSIT_Locality.scala 100:80]
-  wire [2:0] _GEN_1037 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_inst : _GEN_1007; // @[POSIT_Locality.scala 100:80]
-  wire [1:0] _GEN_1038 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_mode : _GEN_1008; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1061 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_operands_0_value : _GEN_1031; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1063 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_operands_1_value : _GEN_1033; // @[POSIT_Locality.scala 100:80]
-  wire [31:0] _GEN_1065 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_operands_2_value : _GEN_1035; // @[POSIT_Locality.scala 100:80]
-  wire [2:0] _GEN_1067 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_inst : _GEN_1037; // @[POSIT_Locality.scala 100:80]
-  wire [1:0] _GEN_1068 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_mode : _GEN_1038; // @[POSIT_Locality.scala 100:80]
-  wire  _T_116 = pe_io_result_ready & pe_io_result_valid; // @[POSIT_Locality.scala 108:33]
-  wire [2:0] result_idx = processQueue_io_deq_bits; // @[POSIT_Locality.scala 106:30 POSIT_Locality.scala 107:20]
-  wire [4:0] _rb_entries_result_idx_result_exceptions = pe_io_result_bits_exceptions; // @[POSIT_Locality.scala 110:47 POSIT_Locality.scala 110:47]
-  wire  _rb_entries_result_idx_result_gt = pe_io_result_bits_gt; // @[POSIT_Locality.scala 110:47 POSIT_Locality.scala 110:47]
-  wire  _rb_entries_result_idx_result_eq = pe_io_result_bits_eq; // @[POSIT_Locality.scala 110:47 POSIT_Locality.scala 110:47]
-  wire  _rb_entries_result_idx_result_lt = pe_io_result_bits_lt; // @[POSIT_Locality.scala 110:47 POSIT_Locality.scala 110:47]
-  wire [31:0] _rb_entries_result_idx_result_out = pe_io_result_bits_out; // @[POSIT_Locality.scala 110:47 POSIT_Locality.scala 110:47]
-  wire  _rb_entries_result_idx_result_isNaR = pe_io_result_bits_isNaR; // @[POSIT_Locality.scala 110:47 POSIT_Locality.scala 110:47]
-  wire  _rb_entries_result_idx_result_isZero = pe_io_result_bits_isZero; // @[POSIT_Locality.scala 110:47 POSIT_Locality.scala 110:47]
-  wire  _GEN_13073 = 3'h0 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1166 = _GEN_13073 | _GEN_418; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_13074 = 3'h1 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1167 = _GEN_13074 | _GEN_419; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_13075 = 3'h2 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1168 = _GEN_13075 | _GEN_420; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_13076 = 3'h3 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1169 = _GEN_13076 | _GEN_421; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_13077 = 3'h4 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1170 = _GEN_13077 | _GEN_422; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_13078 = 3'h5 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1171 = _GEN_13078 | _GEN_423; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_13079 = 3'h6 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1172 = _GEN_13079 | _GEN_424; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_13080 = 3'h7 == result_idx; // @[POSIT_Locality.scala 111:50]
-  wire  _GEN_1173 = _GEN_13080 | _GEN_425; // @[POSIT_Locality.scala 111:50]
-  wire  _T_117 = rb_entries_0_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_1275 = 3'h1 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1305 = 3'h2 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_1275; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1335 = 3'h3 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_1305; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1365 = 3'h4 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_1335; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1395 = 3'h5 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_1365; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1425 = 3'h6 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_1395; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1455 = 3'h7 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_1425; // @[POSIT_Locality.scala 120:100]
-  wire  _T_120 = rb_entries_0_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_1759 = 3'h1 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1789 = 3'h2 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_1759; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1819 = 3'h3 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_1789; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1849 = 3'h4 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_1819; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1879 = 3'h5 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_1849; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1909 = 3'h6 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_1879; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_1939 = 3'h7 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_1909; // @[POSIT_Locality.scala 120:100]
-  wire  _T_123 = rb_entries_0_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_2243 = 3'h1 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2273 = 3'h2 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_2243; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2303 = 3'h3 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_2273; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2333 = 3'h4 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_2303; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2363 = 3'h5 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_2333; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2393 = 3'h6 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_2363; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2423 = 3'h7 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_2393; // @[POSIT_Locality.scala 120:100]
-  wire  _T_126 = rb_entries_1_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_2727 = 3'h1 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2757 = 3'h2 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_2727; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2787 = 3'h3 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_2757; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2817 = 3'h4 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_2787; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2847 = 3'h5 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_2817; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2877 = 3'h6 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_2847; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_2907 = 3'h7 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_2877; // @[POSIT_Locality.scala 120:100]
-  wire  _T_129 = rb_entries_1_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_3211 = 3'h1 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3241 = 3'h2 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_3211; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3271 = 3'h3 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_3241; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3301 = 3'h4 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_3271; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3331 = 3'h5 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_3301; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3361 = 3'h6 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_3331; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3391 = 3'h7 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_3361; // @[POSIT_Locality.scala 120:100]
-  wire  _T_132 = rb_entries_1_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_3695 = 3'h1 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3725 = 3'h2 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_3695; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3755 = 3'h3 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_3725; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3785 = 3'h4 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_3755; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3815 = 3'h5 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_3785; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3845 = 3'h6 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_3815; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_3875 = 3'h7 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_3845; // @[POSIT_Locality.scala 120:100]
-  wire  _T_135 = rb_entries_2_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_4179 = 3'h1 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4209 = 3'h2 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_4179; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4239 = 3'h3 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_4209; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4269 = 3'h4 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_4239; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4299 = 3'h5 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_4269; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4329 = 3'h6 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_4299; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4359 = 3'h7 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_4329; // @[POSIT_Locality.scala 120:100]
-  wire  _T_138 = rb_entries_2_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_4663 = 3'h1 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4693 = 3'h2 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_4663; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4723 = 3'h3 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_4693; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4753 = 3'h4 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_4723; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4783 = 3'h5 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_4753; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4813 = 3'h6 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_4783; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_4843 = 3'h7 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_4813; // @[POSIT_Locality.scala 120:100]
-  wire  _T_141 = rb_entries_2_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_5147 = 3'h1 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5177 = 3'h2 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_5147; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5207 = 3'h3 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_5177; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5237 = 3'h4 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_5207; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5267 = 3'h5 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_5237; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5297 = 3'h6 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_5267; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5327 = 3'h7 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_5297; // @[POSIT_Locality.scala 120:100]
-  wire  _T_144 = rb_entries_3_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_5631 = 3'h1 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5661 = 3'h2 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_5631; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5691 = 3'h3 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_5661; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5721 = 3'h4 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_5691; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5751 = 3'h5 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_5721; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5781 = 3'h6 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_5751; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_5811 = 3'h7 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_5781; // @[POSIT_Locality.scala 120:100]
-  wire  _T_147 = rb_entries_3_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_6115 = 3'h1 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6145 = 3'h2 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_6115; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6175 = 3'h3 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_6145; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6205 = 3'h4 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_6175; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6235 = 3'h5 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_6205; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6265 = 3'h6 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_6235; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6295 = 3'h7 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_6265; // @[POSIT_Locality.scala 120:100]
-  wire  _T_150 = rb_entries_3_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_6599 = 3'h1 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6629 = 3'h2 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_6599; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6659 = 3'h3 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_6629; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6689 = 3'h4 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_6659; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6719 = 3'h5 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_6689; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6749 = 3'h6 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_6719; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_6779 = 3'h7 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_6749; // @[POSIT_Locality.scala 120:100]
-  wire  _T_153 = rb_entries_4_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_7083 = 3'h1 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7113 = 3'h2 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_7083; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7143 = 3'h3 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_7113; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7173 = 3'h4 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_7143; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7203 = 3'h5 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_7173; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7233 = 3'h6 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_7203; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7263 = 3'h7 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_7233; // @[POSIT_Locality.scala 120:100]
-  wire  _T_156 = rb_entries_4_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_7567 = 3'h1 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7597 = 3'h2 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_7567; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7627 = 3'h3 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_7597; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7657 = 3'h4 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_7627; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7687 = 3'h5 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_7657; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7717 = 3'h6 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_7687; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_7747 = 3'h7 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_7717; // @[POSIT_Locality.scala 120:100]
-  wire  _T_159 = rb_entries_4_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_8051 = 3'h1 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8081 = 3'h2 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_8051; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8111 = 3'h3 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_8081; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8141 = 3'h4 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_8111; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8171 = 3'h5 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_8141; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8201 = 3'h6 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_8171; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8231 = 3'h7 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_8201; // @[POSIT_Locality.scala 120:100]
-  wire  _T_162 = rb_entries_5_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_8535 = 3'h1 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8565 = 3'h2 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_8535; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8595 = 3'h3 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_8565; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8625 = 3'h4 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_8595; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8655 = 3'h5 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_8625; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8685 = 3'h6 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_8655; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_8715 = 3'h7 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_8685; // @[POSIT_Locality.scala 120:100]
-  wire  _T_165 = rb_entries_5_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_9019 = 3'h1 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9049 = 3'h2 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_9019; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9079 = 3'h3 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_9049; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9109 = 3'h4 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_9079; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9139 = 3'h5 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_9109; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9169 = 3'h6 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_9139; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9199 = 3'h7 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_9169; // @[POSIT_Locality.scala 120:100]
-  wire  _T_168 = rb_entries_5_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_9503 = 3'h1 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9533 = 3'h2 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_9503; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9563 = 3'h3 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_9533; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9593 = 3'h4 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_9563; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9623 = 3'h5 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_9593; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9653 = 3'h6 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_9623; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_9683 = 3'h7 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_9653; // @[POSIT_Locality.scala 120:100]
-  wire  _T_171 = rb_entries_6_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_9987 = 3'h1 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10017 = 3'h2 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_9987; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10047 = 3'h3 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_10017; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10077 = 3'h4 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_10047; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10107 = 3'h5 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_10077; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10137 = 3'h6 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_10107; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10167 = 3'h7 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_10137; // @[POSIT_Locality.scala 120:100]
-  wire  _T_174 = rb_entries_6_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_10471 = 3'h1 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10501 = 3'h2 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_10471; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10531 = 3'h3 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_10501; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10561 = 3'h4 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_10531; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10591 = 3'h5 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_10561; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10621 = 3'h6 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_10591; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10651 = 3'h7 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_10621; // @[POSIT_Locality.scala 120:100]
-  wire  _T_177 = rb_entries_6_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_10955 = 3'h1 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_10985 = 3'h2 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_10955; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11015 = 3'h3 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_10985; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11045 = 3'h4 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_11015; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11075 = 3'h5 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_11045; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11105 = 3'h6 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_11075; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11135 = 3'h7 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_11105; // @[POSIT_Locality.scala 120:100]
-  wire  _T_180 = rb_entries_7_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_11439 = 3'h1 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11469 = 3'h2 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_11439; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11499 = 3'h3 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_11469; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11529 = 3'h4 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_11499; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11559 = 3'h5 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_11529; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11589 = 3'h6 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_11559; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11619 = 3'h7 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_11589; // @[POSIT_Locality.scala 120:100]
-  wire  _T_183 = rb_entries_7_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_11923 = 3'h1 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11953 = 3'h2 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_11923; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_11983 = 3'h3 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_11953; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12013 = 3'h4 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_11983; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12043 = 3'h5 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_12013; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12073 = 3'h6 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_12043; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12103 = 3'h7 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_12073; // @[POSIT_Locality.scala 120:100]
-  wire  _T_186 = rb_entries_7_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 119:69]
-  wire  _GEN_12407 = 3'h1 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12437 = 3'h2 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_12407; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12467 = 3'h3 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_12437; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12497 = 3'h4 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_12467; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12527 = 3'h5 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_12497; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12557 = 3'h6 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_12527; // @[POSIT_Locality.scala 120:100]
-  wire  _GEN_12587 = 3'h7 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_12557; // @[POSIT_Locality.scala 120:100]
-  wire  _T_189 = rb_entries_0_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire [31:0] _GEN_13081 = {{24'd0}, io_mem_read_resp_tag}; // @[POSIT_Locality.scala 134:86]
-  wire  _T_190 = rb_entries_0_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_191 = rb_entries_0_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_192 = rb_entries_0_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_193 = rb_entries_0_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_194 = rb_entries_0_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_195 = rb_entries_1_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_196 = rb_entries_1_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_197 = rb_entries_1_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_198 = rb_entries_1_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_199 = rb_entries_1_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_200 = rb_entries_1_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_201 = rb_entries_2_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_202 = rb_entries_2_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_203 = rb_entries_2_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_204 = rb_entries_2_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_205 = rb_entries_2_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_206 = rb_entries_2_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_207 = rb_entries_3_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_208 = rb_entries_3_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_209 = rb_entries_3_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_210 = rb_entries_3_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_211 = rb_entries_3_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_212 = rb_entries_3_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_213 = rb_entries_4_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_214 = rb_entries_4_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_215 = rb_entries_4_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_216 = rb_entries_4_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_217 = rb_entries_4_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_218 = rb_entries_4_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_219 = rb_entries_5_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_220 = rb_entries_5_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_221 = rb_entries_5_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_222 = rb_entries_5_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_223 = rb_entries_5_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_224 = rb_entries_5_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_225 = rb_entries_6_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_226 = rb_entries_6_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_227 = rb_entries_6_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_228 = rb_entries_6_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_229 = rb_entries_6_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_230 = rb_entries_6_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_231 = rb_entries_7_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_232 = rb_entries_7_request_operands_0_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_233 = rb_entries_7_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_234 = rb_entries_7_request_operands_1_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_235 = rb_entries_7_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 133:77]
-  wire  _T_236 = rb_entries_7_request_operands_2_value == _GEN_13081; // @[POSIT_Locality.scala 134:86]
-  wire  _T_238 = rb_entries_0_valid & _T_189; // @[POSIT_Locality.scala 150:53]
-  wire  _T_239 = ~rb_entries_0_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_0 = _T_238 & _T_239; // @[POSIT_Locality.scala 150:105]
-  wire  _T_242 = rb_entries_0_valid & _T_191; // @[POSIT_Locality.scala 150:53]
-  wire  _T_243 = ~rb_entries_0_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_1 = _T_242 & _T_243; // @[POSIT_Locality.scala 150:105]
-  wire  _T_246 = rb_entries_0_valid & _T_193; // @[POSIT_Locality.scala 150:53]
-  wire  _T_247 = ~rb_entries_0_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_2 = _T_246 & _T_247; // @[POSIT_Locality.scala 150:105]
-  wire  _T_250 = rb_entries_1_valid & _T_195; // @[POSIT_Locality.scala 150:53]
-  wire  _T_251 = ~rb_entries_1_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_3 = _T_250 & _T_251; // @[POSIT_Locality.scala 150:105]
-  wire  _T_254 = rb_entries_1_valid & _T_197; // @[POSIT_Locality.scala 150:53]
-  wire  _T_255 = ~rb_entries_1_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_4 = _T_254 & _T_255; // @[POSIT_Locality.scala 150:105]
-  wire  _T_258 = rb_entries_1_valid & _T_199; // @[POSIT_Locality.scala 150:53]
-  wire  _T_259 = ~rb_entries_1_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_5 = _T_258 & _T_259; // @[POSIT_Locality.scala 150:105]
-  wire  _T_262 = rb_entries_2_valid & _T_201; // @[POSIT_Locality.scala 150:53]
-  wire  _T_263 = ~rb_entries_2_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_6 = _T_262 & _T_263; // @[POSIT_Locality.scala 150:105]
-  wire  _T_266 = rb_entries_2_valid & _T_203; // @[POSIT_Locality.scala 150:53]
-  wire  _T_267 = ~rb_entries_2_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_7 = _T_266 & _T_267; // @[POSIT_Locality.scala 150:105]
-  wire  _T_270 = rb_entries_2_valid & _T_205; // @[POSIT_Locality.scala 150:53]
-  wire  _T_271 = ~rb_entries_2_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_8 = _T_270 & _T_271; // @[POSIT_Locality.scala 150:105]
-  wire  _T_274 = rb_entries_3_valid & _T_207; // @[POSIT_Locality.scala 150:53]
-  wire  _T_275 = ~rb_entries_3_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_9 = _T_274 & _T_275; // @[POSIT_Locality.scala 150:105]
-  wire  _T_278 = rb_entries_3_valid & _T_209; // @[POSIT_Locality.scala 150:53]
-  wire  _T_279 = ~rb_entries_3_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_10 = _T_278 & _T_279; // @[POSIT_Locality.scala 150:105]
-  wire  _T_282 = rb_entries_3_valid & _T_211; // @[POSIT_Locality.scala 150:53]
-  wire  _T_283 = ~rb_entries_3_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_11 = _T_282 & _T_283; // @[POSIT_Locality.scala 150:105]
-  wire  _T_286 = rb_entries_4_valid & _T_213; // @[POSIT_Locality.scala 150:53]
-  wire  _T_287 = ~rb_entries_4_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_12 = _T_286 & _T_287; // @[POSIT_Locality.scala 150:105]
-  wire  _T_290 = rb_entries_4_valid & _T_215; // @[POSIT_Locality.scala 150:53]
-  wire  _T_291 = ~rb_entries_4_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_13 = _T_290 & _T_291; // @[POSIT_Locality.scala 150:105]
-  wire  _T_294 = rb_entries_4_valid & _T_217; // @[POSIT_Locality.scala 150:53]
-  wire  _T_295 = ~rb_entries_4_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_14 = _T_294 & _T_295; // @[POSIT_Locality.scala 150:105]
-  wire  _T_298 = rb_entries_5_valid & _T_219; // @[POSIT_Locality.scala 150:53]
-  wire  _T_299 = ~rb_entries_5_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_15 = _T_298 & _T_299; // @[POSIT_Locality.scala 150:105]
-  wire  _T_302 = rb_entries_5_valid & _T_221; // @[POSIT_Locality.scala 150:53]
-  wire  _T_303 = ~rb_entries_5_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_16 = _T_302 & _T_303; // @[POSIT_Locality.scala 150:105]
-  wire  _T_306 = rb_entries_5_valid & _T_223; // @[POSIT_Locality.scala 150:53]
-  wire  _T_307 = ~rb_entries_5_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_17 = _T_306 & _T_307; // @[POSIT_Locality.scala 150:105]
-  wire  _T_310 = rb_entries_6_valid & _T_225; // @[POSIT_Locality.scala 150:53]
-  wire  _T_311 = ~rb_entries_6_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_18 = _T_310 & _T_311; // @[POSIT_Locality.scala 150:105]
-  wire  _T_314 = rb_entries_6_valid & _T_227; // @[POSIT_Locality.scala 150:53]
-  wire  _T_315 = ~rb_entries_6_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_19 = _T_314 & _T_315; // @[POSIT_Locality.scala 150:105]
-  wire  _T_318 = rb_entries_6_valid & _T_229; // @[POSIT_Locality.scala 150:53]
-  wire  _T_319 = ~rb_entries_6_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_20 = _T_318 & _T_319; // @[POSIT_Locality.scala 150:105]
-  wire  _T_322 = rb_entries_7_valid & _T_231; // @[POSIT_Locality.scala 150:53]
-  wire  _T_323 = ~rb_entries_7_request_inFetch_0; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_21 = _T_322 & _T_323; // @[POSIT_Locality.scala 150:105]
-  wire  _T_326 = rb_entries_7_valid & _T_233; // @[POSIT_Locality.scala 150:53]
-  wire  _T_327 = ~rb_entries_7_request_inFetch_1; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_22 = _T_326 & _T_327; // @[POSIT_Locality.scala 150:105]
-  wire  _T_330 = rb_entries_7_valid & _T_235; // @[POSIT_Locality.scala 150:53]
-  wire  _T_331 = ~rb_entries_7_request_inFetch_2; // @[POSIT_Locality.scala 150:109]
-  wire  waitingToBeFetched_23 = _T_330 & _T_331; // @[POSIT_Locality.scala 150:105]
-  wire [5:0] _T_337 = {waitingToBeFetched_5,waitingToBeFetched_4,waitingToBeFetched_3,waitingToBeFetched_2,waitingToBeFetched_1,waitingToBeFetched_0}; // @[POSIT_Locality.scala 156:52]
-  wire [11:0] _T_343 = {waitingToBeFetched_11,waitingToBeFetched_10,waitingToBeFetched_9,waitingToBeFetched_8,waitingToBeFetched_7,waitingToBeFetched_6,_T_337}; // @[POSIT_Locality.scala 156:52]
-  wire [5:0] _T_348 = {waitingToBeFetched_17,waitingToBeFetched_16,waitingToBeFetched_15,waitingToBeFetched_14,waitingToBeFetched_13,waitingToBeFetched_12}; // @[POSIT_Locality.scala 156:52]
-  wire [11:0] _T_354 = {waitingToBeFetched_23,waitingToBeFetched_22,waitingToBeFetched_21,waitingToBeFetched_20,waitingToBeFetched_19,waitingToBeFetched_18,_T_348}; // @[POSIT_Locality.scala 156:52]
-  wire [5:0] _T_360 = {rb_entries_1_request_inFetch_2,rb_entries_1_request_inFetch_1,rb_entries_1_request_inFetch_0,rb_entries_0_request_inFetch_2,rb_entries_0_request_inFetch_1,rb_entries_0_request_inFetch_0}; // @[POSIT_Locality.scala 165:42]
-  wire [11:0] _T_366 = {rb_entries_3_request_inFetch_2,rb_entries_3_request_inFetch_1,rb_entries_3_request_inFetch_0,rb_entries_2_request_inFetch_2,rb_entries_2_request_inFetch_1,rb_entries_2_request_inFetch_0,_T_360}; // @[POSIT_Locality.scala 165:42]
-  wire [5:0] _T_371 = {rb_entries_5_request_inFetch_2,rb_entries_5_request_inFetch_1,rb_entries_5_request_inFetch_0,rb_entries_4_request_inFetch_2,rb_entries_4_request_inFetch_1,rb_entries_4_request_inFetch_0}; // @[POSIT_Locality.scala 165:42]
-  wire [23:0] _T_378 = {rb_entries_7_request_inFetch_2,rb_entries_7_request_inFetch_1,rb_entries_7_request_inFetch_0,rb_entries_6_request_inFetch_2,rb_entries_6_request_inFetch_1,rb_entries_6_request_inFetch_0,_T_371,_T_366}; // @[POSIT_Locality.scala 165:42]
-  wire [31:0] _T_379 = 32'h1 << fetchArb_io_chosen; // @[OneHot.scala 58:35]
-  wire [23:0] _T_381 = _T_378 ^ _T_379[23:0]; // @[POSIT_Locality.scala 165:49]
-  wire [47:0] fetchOffSet_0 = {{16'd0}, rb_entries_0_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] fetchOffSet_1 = {{16'd0}, rb_entries_0_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13000 = 5'h1 == fetchArb_io_chosen ? fetchOffSet_1 : fetchOffSet_0; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_2 = {{16'd0}, rb_entries_0_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13001 = 5'h2 == fetchArb_io_chosen ? fetchOffSet_2 : _GEN_13000; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_3 = {{16'd0}, rb_entries_1_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13002 = 5'h3 == fetchArb_io_chosen ? fetchOffSet_3 : _GEN_13001; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_4 = {{16'd0}, rb_entries_1_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13003 = 5'h4 == fetchArb_io_chosen ? fetchOffSet_4 : _GEN_13002; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_5 = {{16'd0}, rb_entries_1_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13004 = 5'h5 == fetchArb_io_chosen ? fetchOffSet_5 : _GEN_13003; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_6 = {{16'd0}, rb_entries_2_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13005 = 5'h6 == fetchArb_io_chosen ? fetchOffSet_6 : _GEN_13004; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_7 = {{16'd0}, rb_entries_2_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13006 = 5'h7 == fetchArb_io_chosen ? fetchOffSet_7 : _GEN_13005; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_8 = {{16'd0}, rb_entries_2_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13007 = 5'h8 == fetchArb_io_chosen ? fetchOffSet_8 : _GEN_13006; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_9 = {{16'd0}, rb_entries_3_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13008 = 5'h9 == fetchArb_io_chosen ? fetchOffSet_9 : _GEN_13007; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_10 = {{16'd0}, rb_entries_3_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13009 = 5'ha == fetchArb_io_chosen ? fetchOffSet_10 : _GEN_13008; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_11 = {{16'd0}, rb_entries_3_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13010 = 5'hb == fetchArb_io_chosen ? fetchOffSet_11 : _GEN_13009; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_12 = {{16'd0}, rb_entries_4_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13011 = 5'hc == fetchArb_io_chosen ? fetchOffSet_12 : _GEN_13010; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_13 = {{16'd0}, rb_entries_4_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13012 = 5'hd == fetchArb_io_chosen ? fetchOffSet_13 : _GEN_13011; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_14 = {{16'd0}, rb_entries_4_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13013 = 5'he == fetchArb_io_chosen ? fetchOffSet_14 : _GEN_13012; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_15 = {{16'd0}, rb_entries_5_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13014 = 5'hf == fetchArb_io_chosen ? fetchOffSet_15 : _GEN_13013; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_16 = {{16'd0}, rb_entries_5_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13015 = 5'h10 == fetchArb_io_chosen ? fetchOffSet_16 : _GEN_13014; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_17 = {{16'd0}, rb_entries_5_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13016 = 5'h11 == fetchArb_io_chosen ? fetchOffSet_17 : _GEN_13015; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_18 = {{16'd0}, rb_entries_6_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13017 = 5'h12 == fetchArb_io_chosen ? fetchOffSet_18 : _GEN_13016; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_19 = {{16'd0}, rb_entries_6_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13018 = 5'h13 == fetchArb_io_chosen ? fetchOffSet_19 : _GEN_13017; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_20 = {{16'd0}, rb_entries_6_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13019 = 5'h14 == fetchArb_io_chosen ? fetchOffSet_20 : _GEN_13018; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_21 = {{16'd0}, rb_entries_7_request_operands_0_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13020 = 5'h15 == fetchArb_io_chosen ? fetchOffSet_21 : _GEN_13019; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_22 = {{16'd0}, rb_entries_7_request_operands_1_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13021 = 5'h16 == fetchArb_io_chosen ? fetchOffSet_22 : _GEN_13020; // @[POSIT_Locality.scala 167:38]
-  wire [47:0] fetchOffSet_23 = {{16'd0}, rb_entries_7_request_operands_2_value}; // @[POSIT_Locality.scala 144:31 POSIT_Locality.scala 151:60]
-  wire [47:0] _GEN_13022 = 5'h17 == fetchArb_io_chosen ? fetchOffSet_23 : _GEN_13021; // @[POSIT_Locality.scala 167:38]
-  wire  _T_407 = ~reset; // @[POSIT_Locality.scala 180:23]
+  wire  _T_73 = rb_entries_7_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_22 = singleOpValidVec_21 & _T_73; // @[POSIT_Locality.scala 72:110]
+  wire  _T_75 = rb_entries_7_request_operands_2_mode == 2'h0; // @[POSIT_Locality.scala 72:153]
+  wire  singleOpValidVec_23 = singleOpValidVec_22 & _T_75; // @[POSIT_Locality.scala 72:110]
+  wire  _T_77 = singleOpValidVec_2 & rb_entries_0_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_78 = ~rb_entries_0_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_0 = _T_77 & _T_78; // @[POSIT_Locality.scala 78:82]
+  wire  _T_80 = singleOpValidVec_5 & rb_entries_1_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_81 = ~rb_entries_1_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_1 = _T_80 & _T_81; // @[POSIT_Locality.scala 78:82]
+  wire  _T_83 = singleOpValidVec_8 & rb_entries_2_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_84 = ~rb_entries_2_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_2 = _T_83 & _T_84; // @[POSIT_Locality.scala 78:82]
+  wire  _T_86 = singleOpValidVec_11 & rb_entries_3_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_87 = ~rb_entries_3_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_3 = _T_86 & _T_87; // @[POSIT_Locality.scala 78:82]
+  wire  _T_89 = singleOpValidVec_14 & rb_entries_4_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_90 = ~rb_entries_4_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_4 = _T_89 & _T_90; // @[POSIT_Locality.scala 78:82]
+  wire  _T_92 = singleOpValidVec_17 & rb_entries_5_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_93 = ~rb_entries_5_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_5 = _T_92 & _T_93; // @[POSIT_Locality.scala 78:82]
+  wire  _T_95 = singleOpValidVec_20 & rb_entries_6_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_96 = ~rb_entries_6_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_6 = _T_95 & _T_96; // @[POSIT_Locality.scala 78:82]
+  wire  _T_98 = singleOpValidVec_23 & rb_entries_7_valid; // @[POSIT_Locality.scala 78:60]
+  wire  _T_99 = ~rb_entries_7_dispatched; // @[POSIT_Locality.scala 78:85]
+  wire  waitingForDispatchVec_7 = _T_98 & _T_99; // @[POSIT_Locality.scala 78:82]
+  wire [3:0] _T_103 = {waitingForDispatchVec_3,waitingForDispatchVec_2,waitingForDispatchVec_1,waitingForDispatchVec_0}; // @[POSIT_Locality.scala 82:58]
+  wire [3:0] _T_106 = {waitingForDispatchVec_7,waitingForDispatchVec_6,waitingForDispatchVec_5,waitingForDispatchVec_4}; // @[POSIT_Locality.scala 82:58]
+  wire  _T_108 = io_request_bits_wr_addr == 8'h0; // @[POSIT_Locality.scala 87:32]
+  wire  _T_109 = _T_108 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_110 = dispatchArb_io_chosen == 3'h0; // @[POSIT_Locality.scala 90:89]
+  wire  _T_111 = _T_110 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_112 = _T_111 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_113 = rb_entries_0_dispatched | _T_112; // @[POSIT_Locality.scala 90:78]
+  wire  _T_114 = io_request_bits_wr_addr == 8'h1; // @[POSIT_Locality.scala 87:32]
+  wire  _T_115 = _T_114 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_116 = dispatchArb_io_chosen == 3'h1; // @[POSIT_Locality.scala 90:89]
+  wire  _T_117 = _T_116 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_118 = _T_117 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_119 = rb_entries_1_dispatched | _T_118; // @[POSIT_Locality.scala 90:78]
+  wire  _T_120 = io_request_bits_wr_addr == 8'h2; // @[POSIT_Locality.scala 87:32]
+  wire  _T_121 = _T_120 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_122 = dispatchArb_io_chosen == 3'h2; // @[POSIT_Locality.scala 90:89]
+  wire  _T_123 = _T_122 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_124 = _T_123 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_125 = rb_entries_2_dispatched | _T_124; // @[POSIT_Locality.scala 90:78]
+  wire  _T_126 = io_request_bits_wr_addr == 8'h3; // @[POSIT_Locality.scala 87:32]
+  wire  _T_127 = _T_126 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_128 = dispatchArb_io_chosen == 3'h3; // @[POSIT_Locality.scala 90:89]
+  wire  _T_129 = _T_128 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_130 = _T_129 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_131 = rb_entries_3_dispatched | _T_130; // @[POSIT_Locality.scala 90:78]
+  wire  _T_132 = io_request_bits_wr_addr == 8'h4; // @[POSIT_Locality.scala 87:32]
+  wire  _T_133 = _T_132 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_134 = dispatchArb_io_chosen == 3'h4; // @[POSIT_Locality.scala 90:89]
+  wire  _T_135 = _T_134 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_136 = _T_135 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_137 = rb_entries_4_dispatched | _T_136; // @[POSIT_Locality.scala 90:78]
+  wire  _T_138 = io_request_bits_wr_addr == 8'h5; // @[POSIT_Locality.scala 87:32]
+  wire  _T_139 = _T_138 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_140 = dispatchArb_io_chosen == 3'h5; // @[POSIT_Locality.scala 90:89]
+  wire  _T_141 = _T_140 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_142 = _T_141 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_143 = rb_entries_5_dispatched | _T_142; // @[POSIT_Locality.scala 90:78]
+  wire  _T_144 = io_request_bits_wr_addr == 8'h6; // @[POSIT_Locality.scala 87:32]
+  wire  _T_145 = _T_144 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_146 = dispatchArb_io_chosen == 3'h6; // @[POSIT_Locality.scala 90:89]
+  wire  _T_147 = _T_146 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_148 = _T_147 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_149 = rb_entries_6_dispatched | _T_148; // @[POSIT_Locality.scala 90:78]
+  wire  _T_150 = io_request_bits_wr_addr == 8'h7; // @[POSIT_Locality.scala 87:32]
+  wire  _T_151 = _T_150 & new_input_log; // @[POSIT_Locality.scala 87:40]
+  wire  _T_152 = dispatchArb_io_chosen == 3'h7; // @[POSIT_Locality.scala 90:89]
+  wire  _T_153 = _T_152 & dispatchArb_io_hasChosen; // @[POSIT_Locality.scala 90:102]
+  wire  _T_154 = _T_153 & pe_io_request_ready; // @[POSIT_Locality.scala 90:130]
+  wire  _T_155 = rb_entries_7_dispatched | _T_154; // @[POSIT_Locality.scala 90:78]
+  wire [31:0] _GEN_1589 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_operands_0_value : rb_entries_0_request_operands_0_value; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1591 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_operands_1_value : rb_entries_0_request_operands_1_value; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1593 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_operands_2_value : rb_entries_0_request_operands_2_value; // @[POSIT_Locality.scala 102:80]
+  wire [2:0] _GEN_1595 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_inst : rb_entries_0_request_inst; // @[POSIT_Locality.scala 102:80]
+  wire [1:0] _GEN_1596 = 3'h1 == dispatchArb_io_chosen ? rb_entries_1_request_mode : rb_entries_0_request_mode; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1619 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_operands_0_value : _GEN_1589; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1621 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_operands_1_value : _GEN_1591; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1623 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_operands_2_value : _GEN_1593; // @[POSIT_Locality.scala 102:80]
+  wire [2:0] _GEN_1625 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_inst : _GEN_1595; // @[POSIT_Locality.scala 102:80]
+  wire [1:0] _GEN_1626 = 3'h2 == dispatchArb_io_chosen ? rb_entries_2_request_mode : _GEN_1596; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1649 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_operands_0_value : _GEN_1619; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1651 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_operands_1_value : _GEN_1621; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1653 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_operands_2_value : _GEN_1623; // @[POSIT_Locality.scala 102:80]
+  wire [2:0] _GEN_1655 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_inst : _GEN_1625; // @[POSIT_Locality.scala 102:80]
+  wire [1:0] _GEN_1656 = 3'h3 == dispatchArb_io_chosen ? rb_entries_3_request_mode : _GEN_1626; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1679 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_operands_0_value : _GEN_1649; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1681 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_operands_1_value : _GEN_1651; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1683 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_operands_2_value : _GEN_1653; // @[POSIT_Locality.scala 102:80]
+  wire [2:0] _GEN_1685 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_inst : _GEN_1655; // @[POSIT_Locality.scala 102:80]
+  wire [1:0] _GEN_1686 = 3'h4 == dispatchArb_io_chosen ? rb_entries_4_request_mode : _GEN_1656; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1709 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_operands_0_value : _GEN_1679; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1711 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_operands_1_value : _GEN_1681; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1713 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_operands_2_value : _GEN_1683; // @[POSIT_Locality.scala 102:80]
+  wire [2:0] _GEN_1715 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_inst : _GEN_1685; // @[POSIT_Locality.scala 102:80]
+  wire [1:0] _GEN_1716 = 3'h5 == dispatchArb_io_chosen ? rb_entries_5_request_mode : _GEN_1686; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1739 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_operands_0_value : _GEN_1709; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1741 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_operands_1_value : _GEN_1711; // @[POSIT_Locality.scala 102:80]
+  wire [31:0] _GEN_1743 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_operands_2_value : _GEN_1713; // @[POSIT_Locality.scala 102:80]
+  wire [2:0] _GEN_1745 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_inst : _GEN_1715; // @[POSIT_Locality.scala 102:80]
+  wire [1:0] _GEN_1746 = 3'h6 == dispatchArb_io_chosen ? rb_entries_6_request_mode : _GEN_1716; // @[POSIT_Locality.scala 102:80]
+  wire  _T_160 = pe_io_result_ready & pe_io_result_valid; // @[POSIT_Locality.scala 110:33]
+  wire [2:0] result_idx = pe_io_out_idx; // @[POSIT_Locality.scala 108:30 POSIT_Locality.scala 109:20]
+  wire [4:0] _rb_entries_result_idx_result_exceptions = pe_io_result_bits_exceptions; // @[POSIT_Locality.scala 111:47 POSIT_Locality.scala 111:47]
+  wire  _rb_entries_result_idx_result_gt = pe_io_result_bits_gt; // @[POSIT_Locality.scala 111:47 POSIT_Locality.scala 111:47]
+  wire  _rb_entries_result_idx_result_eq = pe_io_result_bits_eq; // @[POSIT_Locality.scala 111:47 POSIT_Locality.scala 111:47]
+  wire  _rb_entries_result_idx_result_lt = pe_io_result_bits_lt; // @[POSIT_Locality.scala 111:47 POSIT_Locality.scala 111:47]
+  wire [31:0] _rb_entries_result_idx_result_out = pe_io_result_bits_out; // @[POSIT_Locality.scala 111:47 POSIT_Locality.scala 111:47]
+  wire  _rb_entries_result_idx_result_isNaR = pe_io_result_bits_isNaR; // @[POSIT_Locality.scala 111:47 POSIT_Locality.scala 111:47]
+  wire  _rb_entries_result_idx_result_isZero = pe_io_result_bits_isZero; // @[POSIT_Locality.scala 111:47 POSIT_Locality.scala 111:47]
+  wire  _GEN_13774 = 3'h0 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1844 = _GEN_13774 | _GEN_1112; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_13775 = 3'h1 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1845 = _GEN_13775 | _GEN_1113; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_13776 = 3'h2 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1846 = _GEN_13776 | _GEN_1114; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_13777 = 3'h3 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1847 = _GEN_13777 | _GEN_1115; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_13778 = 3'h4 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1848 = _GEN_13778 | _GEN_1116; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_13779 = 3'h5 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1849 = _GEN_13779 | _GEN_1117; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_13780 = 3'h6 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1850 = _GEN_13780 | _GEN_1118; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_13781 = 3'h7 == result_idx; // @[POSIT_Locality.scala 112:50]
+  wire  _GEN_1851 = _GEN_13781 | _GEN_1119; // @[POSIT_Locality.scala 112:50]
+  wire  _T_161 = rb_entries_0_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_1952 = 3'h1 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_1982 = 3'h2 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_1952; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2012 = 3'h3 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_1982; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2042 = 3'h4 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_2012; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2072 = 3'h5 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_2042; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2102 = 3'h6 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_2072; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2132 = 3'h7 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_2102; // @[POSIT_Locality.scala 119:100]
+  wire  _T_164 = rb_entries_0_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_2436 = 3'h1 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2466 = 3'h2 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_2436; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2496 = 3'h3 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_2466; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2526 = 3'h4 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_2496; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2556 = 3'h5 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_2526; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2586 = 3'h6 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_2556; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2616 = 3'h7 == rb_entries_0_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_2586; // @[POSIT_Locality.scala 119:100]
+  wire  _T_167 = rb_entries_0_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_2920 = 3'h1 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2950 = 3'h2 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_2920; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_2980 = 3'h3 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_2950; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3010 = 3'h4 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_2980; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3040 = 3'h5 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_3010; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3070 = 3'h6 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_3040; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3100 = 3'h7 == rb_entries_0_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_3070; // @[POSIT_Locality.scala 119:100]
+  wire  _T_170 = rb_entries_1_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_3404 = 3'h1 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3434 = 3'h2 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_3404; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3464 = 3'h3 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_3434; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3494 = 3'h4 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_3464; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3524 = 3'h5 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_3494; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3554 = 3'h6 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_3524; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3584 = 3'h7 == rb_entries_1_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_3554; // @[POSIT_Locality.scala 119:100]
+  wire  _T_173 = rb_entries_1_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_3888 = 3'h1 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3918 = 3'h2 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_3888; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3948 = 3'h3 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_3918; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_3978 = 3'h4 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_3948; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4008 = 3'h5 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_3978; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4038 = 3'h6 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_4008; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4068 = 3'h7 == rb_entries_1_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_4038; // @[POSIT_Locality.scala 119:100]
+  wire  _T_176 = rb_entries_1_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_4372 = 3'h1 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4402 = 3'h2 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_4372; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4432 = 3'h3 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_4402; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4462 = 3'h4 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_4432; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4492 = 3'h5 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_4462; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4522 = 3'h6 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_4492; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4552 = 3'h7 == rb_entries_1_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_4522; // @[POSIT_Locality.scala 119:100]
+  wire  _T_179 = rb_entries_2_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_4856 = 3'h1 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4886 = 3'h2 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_4856; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4916 = 3'h3 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_4886; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4946 = 3'h4 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_4916; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_4976 = 3'h5 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_4946; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5006 = 3'h6 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_4976; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5036 = 3'h7 == rb_entries_2_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_5006; // @[POSIT_Locality.scala 119:100]
+  wire  _T_182 = rb_entries_2_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_5340 = 3'h1 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5370 = 3'h2 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_5340; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5400 = 3'h3 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_5370; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5430 = 3'h4 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_5400; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5460 = 3'h5 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_5430; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5490 = 3'h6 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_5460; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5520 = 3'h7 == rb_entries_2_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_5490; // @[POSIT_Locality.scala 119:100]
+  wire  _T_185 = rb_entries_2_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_5824 = 3'h1 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5854 = 3'h2 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_5824; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5884 = 3'h3 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_5854; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5914 = 3'h4 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_5884; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5944 = 3'h5 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_5914; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_5974 = 3'h6 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_5944; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6004 = 3'h7 == rb_entries_2_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_5974; // @[POSIT_Locality.scala 119:100]
+  wire  _T_188 = rb_entries_3_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_6308 = 3'h1 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6338 = 3'h2 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_6308; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6368 = 3'h3 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_6338; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6398 = 3'h4 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_6368; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6428 = 3'h5 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_6398; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6458 = 3'h6 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_6428; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6488 = 3'h7 == rb_entries_3_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_6458; // @[POSIT_Locality.scala 119:100]
+  wire  _T_191 = rb_entries_3_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_6792 = 3'h1 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6822 = 3'h2 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_6792; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6852 = 3'h3 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_6822; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6882 = 3'h4 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_6852; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6912 = 3'h5 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_6882; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6942 = 3'h6 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_6912; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_6972 = 3'h7 == rb_entries_3_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_6942; // @[POSIT_Locality.scala 119:100]
+  wire  _T_194 = rb_entries_3_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_7276 = 3'h1 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7306 = 3'h2 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_7276; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7336 = 3'h3 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_7306; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7366 = 3'h4 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_7336; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7396 = 3'h5 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_7366; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7426 = 3'h6 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_7396; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7456 = 3'h7 == rb_entries_3_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_7426; // @[POSIT_Locality.scala 119:100]
+  wire  _T_197 = rb_entries_4_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_7760 = 3'h1 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7790 = 3'h2 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_7760; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7820 = 3'h3 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_7790; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7850 = 3'h4 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_7820; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7880 = 3'h5 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_7850; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7910 = 3'h6 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_7880; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_7940 = 3'h7 == rb_entries_4_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_7910; // @[POSIT_Locality.scala 119:100]
+  wire  _T_200 = rb_entries_4_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_8244 = 3'h1 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8274 = 3'h2 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_8244; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8304 = 3'h3 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_8274; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8334 = 3'h4 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_8304; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8364 = 3'h5 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_8334; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8394 = 3'h6 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_8364; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8424 = 3'h7 == rb_entries_4_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_8394; // @[POSIT_Locality.scala 119:100]
+  wire  _T_203 = rb_entries_4_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_8728 = 3'h1 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8758 = 3'h2 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_8728; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8788 = 3'h3 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_8758; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8818 = 3'h4 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_8788; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8848 = 3'h5 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_8818; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8878 = 3'h6 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_8848; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_8908 = 3'h7 == rb_entries_4_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_8878; // @[POSIT_Locality.scala 119:100]
+  wire  _T_206 = rb_entries_5_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_9212 = 3'h1 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9242 = 3'h2 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_9212; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9272 = 3'h3 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_9242; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9302 = 3'h4 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_9272; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9332 = 3'h5 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_9302; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9362 = 3'h6 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_9332; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9392 = 3'h7 == rb_entries_5_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_9362; // @[POSIT_Locality.scala 119:100]
+  wire  _T_209 = rb_entries_5_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_9696 = 3'h1 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9726 = 3'h2 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_9696; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9756 = 3'h3 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_9726; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9786 = 3'h4 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_9756; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9816 = 3'h5 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_9786; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9846 = 3'h6 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_9816; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_9876 = 3'h7 == rb_entries_5_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_9846; // @[POSIT_Locality.scala 119:100]
+  wire  _T_212 = rb_entries_5_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_10180 = 3'h1 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10210 = 3'h2 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_10180; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10240 = 3'h3 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_10210; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10270 = 3'h4 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_10240; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10300 = 3'h5 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_10270; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10330 = 3'h6 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_10300; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10360 = 3'h7 == rb_entries_5_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_10330; // @[POSIT_Locality.scala 119:100]
+  wire  _T_215 = rb_entries_6_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_10664 = 3'h1 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10694 = 3'h2 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_10664; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10724 = 3'h3 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_10694; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10754 = 3'h4 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_10724; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10784 = 3'h5 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_10754; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10814 = 3'h6 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_10784; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_10844 = 3'h7 == rb_entries_6_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_10814; // @[POSIT_Locality.scala 119:100]
+  wire  _T_218 = rb_entries_6_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_11148 = 3'h1 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11178 = 3'h2 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_11148; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11208 = 3'h3 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_11178; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11238 = 3'h4 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_11208; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11268 = 3'h5 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_11238; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11298 = 3'h6 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_11268; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11328 = 3'h7 == rb_entries_6_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_11298; // @[POSIT_Locality.scala 119:100]
+  wire  _T_221 = rb_entries_6_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_11632 = 3'h1 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11662 = 3'h2 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_11632; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11692 = 3'h3 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_11662; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11722 = 3'h4 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_11692; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11752 = 3'h5 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_11722; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11782 = 3'h6 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_11752; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_11812 = 3'h7 == rb_entries_6_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_11782; // @[POSIT_Locality.scala 119:100]
+  wire  _T_224 = rb_entries_7_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_12116 = 3'h1 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12146 = 3'h2 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_12116; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12176 = 3'h3 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_3_completed : _GEN_12146; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12206 = 3'h4 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_4_completed : _GEN_12176; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12236 = 3'h5 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_5_completed : _GEN_12206; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12266 = 3'h6 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_6_completed : _GEN_12236; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12296 = 3'h7 == rb_entries_7_request_operands_0_value[2:0] ? rb_entries_7_completed : _GEN_12266; // @[POSIT_Locality.scala 119:100]
+  wire  _T_227 = rb_entries_7_request_operands_1_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_12600 = 3'h1 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12630 = 3'h2 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_2_completed : _GEN_12600; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12660 = 3'h3 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_3_completed : _GEN_12630; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12690 = 3'h4 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_4_completed : _GEN_12660; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12720 = 3'h5 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_5_completed : _GEN_12690; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12750 = 3'h6 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_6_completed : _GEN_12720; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_12780 = 3'h7 == rb_entries_7_request_operands_1_value[2:0] ? rb_entries_7_completed : _GEN_12750; // @[POSIT_Locality.scala 119:100]
+  wire  _T_230 = rb_entries_7_request_operands_2_mode == 2'h1; // @[POSIT_Locality.scala 118:69]
+  wire  _GEN_13084 = 3'h1 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_13114 = 3'h2 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_2_completed : _GEN_13084; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_13144 = 3'h3 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_3_completed : _GEN_13114; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_13174 = 3'h4 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_4_completed : _GEN_13144; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_13204 = 3'h5 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_13174; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_13234 = 3'h6 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_13204; // @[POSIT_Locality.scala 119:100]
+  wire  _GEN_13264 = 3'h7 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_13234; // @[POSIT_Locality.scala 119:100]
+  wire  _T_233 = rb_entries_0_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire [31:0] _GEN_13782 = {{24'd0}, io_mem_read_resp_tag}; // @[POSIT_Locality.scala 133:86]
+  wire  _T_234 = rb_entries_0_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_235 = rb_entries_0_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_236 = rb_entries_0_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_237 = rb_entries_0_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_238 = rb_entries_0_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_239 = rb_entries_1_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_240 = rb_entries_1_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_241 = rb_entries_1_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_242 = rb_entries_1_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_243 = rb_entries_1_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_244 = rb_entries_1_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_245 = rb_entries_2_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_246 = rb_entries_2_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_247 = rb_entries_2_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_248 = rb_entries_2_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_249 = rb_entries_2_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_250 = rb_entries_2_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_251 = rb_entries_3_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_252 = rb_entries_3_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_253 = rb_entries_3_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_254 = rb_entries_3_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_255 = rb_entries_3_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_256 = rb_entries_3_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_257 = rb_entries_4_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_258 = rb_entries_4_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_259 = rb_entries_4_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_260 = rb_entries_4_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_261 = rb_entries_4_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_262 = rb_entries_4_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_263 = rb_entries_5_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_264 = rb_entries_5_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_265 = rb_entries_5_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_266 = rb_entries_5_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_267 = rb_entries_5_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_268 = rb_entries_5_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_269 = rb_entries_6_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_270 = rb_entries_6_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_271 = rb_entries_6_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_272 = rb_entries_6_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_273 = rb_entries_6_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_274 = rb_entries_6_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_275 = rb_entries_7_request_operands_0_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_276 = rb_entries_7_request_operands_0_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_277 = rb_entries_7_request_operands_1_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_278 = rb_entries_7_request_operands_1_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_279 = rb_entries_7_request_operands_2_mode == 2'h2; // @[POSIT_Locality.scala 132:77]
+  wire  _T_280 = rb_entries_7_request_operands_2_value == _GEN_13782; // @[POSIT_Locality.scala 133:86]
+  wire  _T_282 = rb_entries_0_valid & _T_233; // @[POSIT_Locality.scala 149:53]
+  wire  _T_283 = ~rb_entries_0_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_0 = _T_282 & _T_283; // @[POSIT_Locality.scala 149:105]
+  wire  _T_286 = rb_entries_0_valid & _T_235; // @[POSIT_Locality.scala 149:53]
+  wire  _T_287 = ~rb_entries_0_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_1 = _T_286 & _T_287; // @[POSIT_Locality.scala 149:105]
+  wire  _T_290 = rb_entries_0_valid & _T_237; // @[POSIT_Locality.scala 149:53]
+  wire  _T_291 = ~rb_entries_0_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_2 = _T_290 & _T_291; // @[POSIT_Locality.scala 149:105]
+  wire  _T_294 = rb_entries_1_valid & _T_239; // @[POSIT_Locality.scala 149:53]
+  wire  _T_295 = ~rb_entries_1_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_3 = _T_294 & _T_295; // @[POSIT_Locality.scala 149:105]
+  wire  _T_298 = rb_entries_1_valid & _T_241; // @[POSIT_Locality.scala 149:53]
+  wire  _T_299 = ~rb_entries_1_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_4 = _T_298 & _T_299; // @[POSIT_Locality.scala 149:105]
+  wire  _T_302 = rb_entries_1_valid & _T_243; // @[POSIT_Locality.scala 149:53]
+  wire  _T_303 = ~rb_entries_1_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_5 = _T_302 & _T_303; // @[POSIT_Locality.scala 149:105]
+  wire  _T_306 = rb_entries_2_valid & _T_245; // @[POSIT_Locality.scala 149:53]
+  wire  _T_307 = ~rb_entries_2_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_6 = _T_306 & _T_307; // @[POSIT_Locality.scala 149:105]
+  wire  _T_310 = rb_entries_2_valid & _T_247; // @[POSIT_Locality.scala 149:53]
+  wire  _T_311 = ~rb_entries_2_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_7 = _T_310 & _T_311; // @[POSIT_Locality.scala 149:105]
+  wire  _T_314 = rb_entries_2_valid & _T_249; // @[POSIT_Locality.scala 149:53]
+  wire  _T_315 = ~rb_entries_2_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_8 = _T_314 & _T_315; // @[POSIT_Locality.scala 149:105]
+  wire  _T_318 = rb_entries_3_valid & _T_251; // @[POSIT_Locality.scala 149:53]
+  wire  _T_319 = ~rb_entries_3_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_9 = _T_318 & _T_319; // @[POSIT_Locality.scala 149:105]
+  wire  _T_322 = rb_entries_3_valid & _T_253; // @[POSIT_Locality.scala 149:53]
+  wire  _T_323 = ~rb_entries_3_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_10 = _T_322 & _T_323; // @[POSIT_Locality.scala 149:105]
+  wire  _T_326 = rb_entries_3_valid & _T_255; // @[POSIT_Locality.scala 149:53]
+  wire  _T_327 = ~rb_entries_3_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_11 = _T_326 & _T_327; // @[POSIT_Locality.scala 149:105]
+  wire  _T_330 = rb_entries_4_valid & _T_257; // @[POSIT_Locality.scala 149:53]
+  wire  _T_331 = ~rb_entries_4_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_12 = _T_330 & _T_331; // @[POSIT_Locality.scala 149:105]
+  wire  _T_334 = rb_entries_4_valid & _T_259; // @[POSIT_Locality.scala 149:53]
+  wire  _T_335 = ~rb_entries_4_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_13 = _T_334 & _T_335; // @[POSIT_Locality.scala 149:105]
+  wire  _T_338 = rb_entries_4_valid & _T_261; // @[POSIT_Locality.scala 149:53]
+  wire  _T_339 = ~rb_entries_4_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_14 = _T_338 & _T_339; // @[POSIT_Locality.scala 149:105]
+  wire  _T_342 = rb_entries_5_valid & _T_263; // @[POSIT_Locality.scala 149:53]
+  wire  _T_343 = ~rb_entries_5_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_15 = _T_342 & _T_343; // @[POSIT_Locality.scala 149:105]
+  wire  _T_346 = rb_entries_5_valid & _T_265; // @[POSIT_Locality.scala 149:53]
+  wire  _T_347 = ~rb_entries_5_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_16 = _T_346 & _T_347; // @[POSIT_Locality.scala 149:105]
+  wire  _T_350 = rb_entries_5_valid & _T_267; // @[POSIT_Locality.scala 149:53]
+  wire  _T_351 = ~rb_entries_5_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_17 = _T_350 & _T_351; // @[POSIT_Locality.scala 149:105]
+  wire  _T_354 = rb_entries_6_valid & _T_269; // @[POSIT_Locality.scala 149:53]
+  wire  _T_355 = ~rb_entries_6_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_18 = _T_354 & _T_355; // @[POSIT_Locality.scala 149:105]
+  wire  _T_358 = rb_entries_6_valid & _T_271; // @[POSIT_Locality.scala 149:53]
+  wire  _T_359 = ~rb_entries_6_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_19 = _T_358 & _T_359; // @[POSIT_Locality.scala 149:105]
+  wire  _T_362 = rb_entries_6_valid & _T_273; // @[POSIT_Locality.scala 149:53]
+  wire  _T_363 = ~rb_entries_6_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_20 = _T_362 & _T_363; // @[POSIT_Locality.scala 149:105]
+  wire  _T_366 = rb_entries_7_valid & _T_275; // @[POSIT_Locality.scala 149:53]
+  wire  _T_367 = ~rb_entries_7_request_inFetch_0; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_21 = _T_366 & _T_367; // @[POSIT_Locality.scala 149:105]
+  wire  _T_370 = rb_entries_7_valid & _T_277; // @[POSIT_Locality.scala 149:53]
+  wire  _T_371 = ~rb_entries_7_request_inFetch_1; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_22 = _T_370 & _T_371; // @[POSIT_Locality.scala 149:105]
+  wire  _T_374 = rb_entries_7_valid & _T_279; // @[POSIT_Locality.scala 149:53]
+  wire  _T_375 = ~rb_entries_7_request_inFetch_2; // @[POSIT_Locality.scala 149:109]
+  wire  waitingToBeFetched_23 = _T_374 & _T_375; // @[POSIT_Locality.scala 149:105]
+  wire [5:0] _T_381 = {waitingToBeFetched_5,waitingToBeFetched_4,waitingToBeFetched_3,waitingToBeFetched_2,waitingToBeFetched_1,waitingToBeFetched_0}; // @[POSIT_Locality.scala 155:52]
+  wire [11:0] _T_387 = {waitingToBeFetched_11,waitingToBeFetched_10,waitingToBeFetched_9,waitingToBeFetched_8,waitingToBeFetched_7,waitingToBeFetched_6,_T_381}; // @[POSIT_Locality.scala 155:52]
+  wire [5:0] _T_392 = {waitingToBeFetched_17,waitingToBeFetched_16,waitingToBeFetched_15,waitingToBeFetched_14,waitingToBeFetched_13,waitingToBeFetched_12}; // @[POSIT_Locality.scala 155:52]
+  wire [11:0] _T_398 = {waitingToBeFetched_23,waitingToBeFetched_22,waitingToBeFetched_21,waitingToBeFetched_20,waitingToBeFetched_19,waitingToBeFetched_18,_T_392}; // @[POSIT_Locality.scala 155:52]
+  wire [5:0] _T_404 = {rb_entries_1_request_inFetch_2,rb_entries_1_request_inFetch_1,rb_entries_1_request_inFetch_0,rb_entries_0_request_inFetch_2,rb_entries_0_request_inFetch_1,rb_entries_0_request_inFetch_0}; // @[POSIT_Locality.scala 164:42]
+  wire [11:0] _T_410 = {rb_entries_3_request_inFetch_2,rb_entries_3_request_inFetch_1,rb_entries_3_request_inFetch_0,rb_entries_2_request_inFetch_2,rb_entries_2_request_inFetch_1,rb_entries_2_request_inFetch_0,_T_404}; // @[POSIT_Locality.scala 164:42]
+  wire [5:0] _T_415 = {rb_entries_5_request_inFetch_2,rb_entries_5_request_inFetch_1,rb_entries_5_request_inFetch_0,rb_entries_4_request_inFetch_2,rb_entries_4_request_inFetch_1,rb_entries_4_request_inFetch_0}; // @[POSIT_Locality.scala 164:42]
+  wire [23:0] _T_422 = {rb_entries_7_request_inFetch_2,rb_entries_7_request_inFetch_1,rb_entries_7_request_inFetch_0,rb_entries_6_request_inFetch_2,rb_entries_6_request_inFetch_1,rb_entries_6_request_inFetch_0,_T_415,_T_410}; // @[POSIT_Locality.scala 164:42]
+  wire [31:0] _T_423 = 32'h1 << fetchArb_io_chosen; // @[OneHot.scala 58:35]
+  wire [23:0] _T_425 = _T_422 ^ _T_423[23:0]; // @[POSIT_Locality.scala 164:49]
+  wire [47:0] fetchOffSet_0 = {{16'd0}, rb_entries_0_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] fetchOffSet_1 = {{16'd0}, rb_entries_0_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13677 = 5'h1 == fetchArb_io_chosen ? fetchOffSet_1 : fetchOffSet_0; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_2 = {{16'd0}, rb_entries_0_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13678 = 5'h2 == fetchArb_io_chosen ? fetchOffSet_2 : _GEN_13677; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_3 = {{16'd0}, rb_entries_1_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13679 = 5'h3 == fetchArb_io_chosen ? fetchOffSet_3 : _GEN_13678; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_4 = {{16'd0}, rb_entries_1_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13680 = 5'h4 == fetchArb_io_chosen ? fetchOffSet_4 : _GEN_13679; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_5 = {{16'd0}, rb_entries_1_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13681 = 5'h5 == fetchArb_io_chosen ? fetchOffSet_5 : _GEN_13680; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_6 = {{16'd0}, rb_entries_2_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13682 = 5'h6 == fetchArb_io_chosen ? fetchOffSet_6 : _GEN_13681; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_7 = {{16'd0}, rb_entries_2_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13683 = 5'h7 == fetchArb_io_chosen ? fetchOffSet_7 : _GEN_13682; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_8 = {{16'd0}, rb_entries_2_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13684 = 5'h8 == fetchArb_io_chosen ? fetchOffSet_8 : _GEN_13683; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_9 = {{16'd0}, rb_entries_3_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13685 = 5'h9 == fetchArb_io_chosen ? fetchOffSet_9 : _GEN_13684; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_10 = {{16'd0}, rb_entries_3_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13686 = 5'ha == fetchArb_io_chosen ? fetchOffSet_10 : _GEN_13685; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_11 = {{16'd0}, rb_entries_3_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13687 = 5'hb == fetchArb_io_chosen ? fetchOffSet_11 : _GEN_13686; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_12 = {{16'd0}, rb_entries_4_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13688 = 5'hc == fetchArb_io_chosen ? fetchOffSet_12 : _GEN_13687; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_13 = {{16'd0}, rb_entries_4_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13689 = 5'hd == fetchArb_io_chosen ? fetchOffSet_13 : _GEN_13688; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_14 = {{16'd0}, rb_entries_4_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13690 = 5'he == fetchArb_io_chosen ? fetchOffSet_14 : _GEN_13689; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_15 = {{16'd0}, rb_entries_5_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13691 = 5'hf == fetchArb_io_chosen ? fetchOffSet_15 : _GEN_13690; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_16 = {{16'd0}, rb_entries_5_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13692 = 5'h10 == fetchArb_io_chosen ? fetchOffSet_16 : _GEN_13691; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_17 = {{16'd0}, rb_entries_5_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13693 = 5'h11 == fetchArb_io_chosen ? fetchOffSet_17 : _GEN_13692; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_18 = {{16'd0}, rb_entries_6_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13694 = 5'h12 == fetchArb_io_chosen ? fetchOffSet_18 : _GEN_13693; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_19 = {{16'd0}, rb_entries_6_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13695 = 5'h13 == fetchArb_io_chosen ? fetchOffSet_19 : _GEN_13694; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_20 = {{16'd0}, rb_entries_6_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13696 = 5'h14 == fetchArb_io_chosen ? fetchOffSet_20 : _GEN_13695; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_21 = {{16'd0}, rb_entries_7_request_operands_0_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13697 = 5'h15 == fetchArb_io_chosen ? fetchOffSet_21 : _GEN_13696; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_22 = {{16'd0}, rb_entries_7_request_operands_1_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13698 = 5'h16 == fetchArb_io_chosen ? fetchOffSet_22 : _GEN_13697; // @[POSIT_Locality.scala 166:38]
+  wire [47:0] fetchOffSet_23 = {{16'd0}, rb_entries_7_request_operands_2_value}; // @[POSIT_Locality.scala 143:31 POSIT_Locality.scala 150:60]
+  wire [47:0] _GEN_13699 = 5'h17 == fetchArb_io_chosen ? fetchOffSet_23 : _GEN_13698; // @[POSIT_Locality.scala 166:38]
+  wire  _T_466 = io_mem_read_req_valid | io_mem_read_resp_valid; // @[POSIT_Locality.scala 183:44]
+  wire  _T_505 = io_request_valid | io_mem_write_valid; // @[POSIT_Locality.scala 207:39]
+  wire  _T_506 = _T_505 | pe_io_result_valid; // @[POSIT_Locality.scala 207:61]
   Posit pe ( // @[POSIT_Locality.scala 10:24]
     .clock(pe_clock),
     .reset(pe_reset),
@@ -3408,17 +3630,9 @@ module POSIT_Locality(
     .io_result_bits_lt(pe_io_result_bits_lt),
     .io_result_bits_eq(pe_io_result_bits_eq),
     .io_result_bits_gt(pe_io_result_bits_gt),
-    .io_result_bits_exceptions(pe_io_result_bits_exceptions)
-  );
-  Queue processQueue ( // @[POSIT_Locality.scala 59:31]
-    .clock(processQueue_clock),
-    .reset(processQueue_reset),
-    .io_enq_ready(processQueue_io_enq_ready),
-    .io_enq_valid(processQueue_io_enq_valid),
-    .io_enq_bits(processQueue_io_enq_bits),
-    .io_deq_ready(processQueue_io_deq_ready),
-    .io_deq_valid(processQueue_io_deq_valid),
-    .io_deq_bits(processQueue_io_deq_bits)
+    .io_result_bits_exceptions(pe_io_result_bits_exceptions),
+    .io_in_idx(pe_io_in_idx),
+    .io_out_idx(pe_io_out_idx)
   );
   DispatchArbiter dispatchArb ( // @[POSIT_Locality.scala 61:33]
     .io_validity(dispatchArb_io_validity),
@@ -3426,42 +3640,38 @@ module POSIT_Locality(
     .io_chosen(dispatchArb_io_chosen),
     .io_hasChosen(dispatchArb_io_hasChosen)
   );
-  DispatchArbiter_1 fetchArb ( // @[POSIT_Locality.scala 155:30]
+  DispatchArbiter_1 fetchArb ( // @[POSIT_Locality.scala 154:30]
     .io_validity(fetchArb_io_validity),
     .io_priority(fetchArb_io_priority),
     .io_chosen(fetchArb_io_chosen),
     .io_hasChosen(fetchArb_io_hasChosen)
   );
-  assign io_request_ready = _GEN_221 | _T_5; // @[POSIT_Locality.scala 22:26]
-  assign io_mem_write_valid = 3'h7 == value_1 ? rb_entries_7_completed : _GEN_782; // @[POSIT_Locality.scala 49:28]
-  assign io_mem_write_bits_result_isZero = 3'h7 == value_1 ? rb_entries_7_result_isZero : _GEN_799; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_result_isNaR = 3'h7 == value_1 ? rb_entries_7_result_isNaR : _GEN_800; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_result_out = 3'h7 == value_1 ? rb_entries_7_result_out : _GEN_801; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_result_lt = 3'h7 == value_1 ? rb_entries_7_result_lt : _GEN_802; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_result_eq = 3'h7 == value_1 ? rb_entries_7_result_eq : _GEN_803; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_result_gt = 3'h7 == value_1 ? rb_entries_7_result_gt : _GEN_804; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_result_exceptions = 3'h7 == value_1 ? rb_entries_7_result_exceptions : _GEN_805; // @[POSIT_Locality.scala 51:34]
-  assign io_mem_write_bits_wr_addr = 3'h7 == value_1 ? rb_entries_7_wr_addr : _GEN_786; // @[POSIT_Locality.scala 50:35]
-  assign io_mem_read_req_valid = fetchArb_io_hasChosen; // @[POSIT_Locality.scala 166:39 POSIT_Locality.scala 170:39]
-  assign io_mem_read_req_addr = _GEN_13022[7:0]; // @[POSIT_Locality.scala 167:38 POSIT_Locality.scala 171:38]
+  assign io_request_ready = _GEN_219 | _T_3; // @[POSIT_Locality.scala 22:26]
+  assign io_mem_write_valid = 3'h7 == value ? rb_entries_7_completed : _GEN_1452; // @[POSIT_Locality.scala 51:28]
+  assign io_mem_write_bits_result_isZero = 3'h7 == value ? rb_entries_7_result_isZero : _GEN_1469; // @[POSIT_Locality.scala 53:34]
+  assign io_mem_write_bits_result_isNaR = 3'h7 == value ? rb_entries_7_result_isNaR : _GEN_1470; // @[POSIT_Locality.scala 53:34]
+  assign io_mem_write_bits_result_out = 3'h7 == value ? rb_entries_7_result_out : _GEN_1471; // @[POSIT_Locality.scala 53:34]
+  assign io_mem_write_bits_result_lt = 3'h7 == value ? rb_entries_7_result_lt : _GEN_1472; // @[POSIT_Locality.scala 53:34]
+  assign io_mem_write_bits_result_eq = 3'h7 == value ? rb_entries_7_result_eq : _GEN_1473; // @[POSIT_Locality.scala 53:34]
+  assign io_mem_write_bits_result_gt = 3'h7 == value ? rb_entries_7_result_gt : _GEN_1474; // @[POSIT_Locality.scala 53:34]
+  assign io_mem_write_bits_result_exceptions = 3'h7 == value ? rb_entries_7_result_exceptions : _GEN_1475; // @[POSIT_Locality.scala 53:34]
+  assign io_mem_write_bits_wr_addr = 3'h7 == value ? rb_entries_7_wr_addr : _GEN_1456; // @[POSIT_Locality.scala 52:35]
+  assign io_mem_read_req_valid = fetchArb_io_hasChosen; // @[POSIT_Locality.scala 165:39 POSIT_Locality.scala 169:39]
+  assign io_mem_read_req_addr = _GEN_13699[7:0]; // @[POSIT_Locality.scala 166:38 POSIT_Locality.scala 170:38]
   assign pe_clock = clock;
   assign pe_reset = reset;
-  assign pe_io_request_valid = _T_111 & processQueue_io_enq_ready; // @[POSIT_Locality.scala 92:37 POSIT_Locality.scala 95:37]
-  assign pe_io_request_bits_num1 = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_operands_0_value : _GEN_1061; // @[POSIT_Locality.scala 100:33]
-  assign pe_io_request_bits_num2 = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_operands_1_value : _GEN_1063; // @[POSIT_Locality.scala 101:33]
-  assign pe_io_request_bits_num3 = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_operands_2_value : _GEN_1065; // @[POSIT_Locality.scala 102:33]
-  assign pe_io_request_bits_inst = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_inst : _GEN_1067; // @[POSIT_Locality.scala 104:33]
-  assign pe_io_request_bits_mode = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_mode : _GEN_1068; // @[POSIT_Locality.scala 103:33]
-  assign pe_io_result_ready = io_mem_write_ready; // @[POSIT_Locality.scala 99:28]
-  assign processQueue_clock = clock;
-  assign processQueue_reset = reset;
-  assign processQueue_io_enq_valid = _T_111 & processQueue_io_enq_ready; // @[POSIT_Locality.scala 93:43 POSIT_Locality.scala 96:43]
-  assign processQueue_io_enq_bits = dispatchArb_io_chosen; // @[POSIT_Locality.scala 90:34]
-  assign processQueue_io_deq_ready = pe_io_result_ready & pe_io_result_valid; // @[POSIT_Locality.scala 109:43 POSIT_Locality.scala 113:43]
-  assign dispatchArb_io_validity = {_T_85,_T_82}; // @[POSIT_Locality.scala 82:33]
+  assign pe_io_request_valid = dispatchArb_io_hasChosen & pe_io_request_ready; // @[POSIT_Locality.scala 95:37 POSIT_Locality.scala 97:37]
+  assign pe_io_request_bits_num1 = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_operands_0_value : _GEN_1739; // @[POSIT_Locality.scala 102:33]
+  assign pe_io_request_bits_num2 = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_operands_1_value : _GEN_1741; // @[POSIT_Locality.scala 103:33]
+  assign pe_io_request_bits_num3 = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_operands_2_value : _GEN_1743; // @[POSIT_Locality.scala 104:33]
+  assign pe_io_request_bits_inst = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_inst : _GEN_1745; // @[POSIT_Locality.scala 106:33]
+  assign pe_io_request_bits_mode = 3'h7 == dispatchArb_io_chosen ? rb_entries_7_request_mode : _GEN_1746; // @[POSIT_Locality.scala 105:33]
+  assign pe_io_result_ready = io_mem_write_ready; // @[POSIT_Locality.scala 101:28]
+  assign pe_io_in_idx = dispatchArb_io_chosen; // @[POSIT_Locality.scala 99:22]
+  assign dispatchArb_io_validity = {_T_106,_T_103}; // @[POSIT_Locality.scala 82:33]
   assign dispatchArb_io_priority = {{2'd0}, wbCountOn}; // @[POSIT_Locality.scala 83:33]
-  assign fetchArb_io_validity = {_T_354,_T_343}; // @[POSIT_Locality.scala 156:30]
-  assign fetchArb_io_priority = {{4'd0}, wbCountOn}; // @[POSIT_Locality.scala 157:30]
+  assign fetchArb_io_validity = {_T_398,_T_387}; // @[POSIT_Locality.scala 155:30]
+  assign fetchArb_io_priority = {{4'd0}, wbCountOn}; // @[POSIT_Locality.scala 156:30]
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
 `define RANDOMIZE
 `endif
@@ -3510,8 +3720,8 @@ initial begin
   rb_entries_0_written = _RAND_3[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_4 = {2{`RANDOM}};
-  rb_entries_0_wr_addr = _RAND_4[47:0];
+  _RAND_4 = {1{`RANDOM}};
+  rb_entries_0_wr_addr = _RAND_4[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_5 = {1{`RANDOM}};
@@ -3602,8 +3812,8 @@ initial begin
   rb_entries_1_written = _RAND_26[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_27 = {2{`RANDOM}};
-  rb_entries_1_wr_addr = _RAND_27[47:0];
+  _RAND_27 = {1{`RANDOM}};
+  rb_entries_1_wr_addr = _RAND_27[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_28 = {1{`RANDOM}};
@@ -3694,8 +3904,8 @@ initial begin
   rb_entries_2_written = _RAND_49[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_50 = {2{`RANDOM}};
-  rb_entries_2_wr_addr = _RAND_50[47:0];
+  _RAND_50 = {1{`RANDOM}};
+  rb_entries_2_wr_addr = _RAND_50[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_51 = {1{`RANDOM}};
@@ -3786,8 +3996,8 @@ initial begin
   rb_entries_3_written = _RAND_72[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_73 = {2{`RANDOM}};
-  rb_entries_3_wr_addr = _RAND_73[47:0];
+  _RAND_73 = {1{`RANDOM}};
+  rb_entries_3_wr_addr = _RAND_73[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_74 = {1{`RANDOM}};
@@ -3878,8 +4088,8 @@ initial begin
   rb_entries_4_written = _RAND_95[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_96 = {2{`RANDOM}};
-  rb_entries_4_wr_addr = _RAND_96[47:0];
+  _RAND_96 = {1{`RANDOM}};
+  rb_entries_4_wr_addr = _RAND_96[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_97 = {1{`RANDOM}};
@@ -3970,8 +4180,8 @@ initial begin
   rb_entries_5_written = _RAND_118[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_119 = {2{`RANDOM}};
-  rb_entries_5_wr_addr = _RAND_119[47:0];
+  _RAND_119 = {1{`RANDOM}};
+  rb_entries_5_wr_addr = _RAND_119[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_120 = {1{`RANDOM}};
@@ -4062,8 +4272,8 @@ initial begin
   rb_entries_6_written = _RAND_141[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_142 = {2{`RANDOM}};
-  rb_entries_6_wr_addr = _RAND_142[47:0];
+  _RAND_142 = {1{`RANDOM}};
+  rb_entries_6_wr_addr = _RAND_142[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_143 = {1{`RANDOM}};
@@ -4154,8 +4364,8 @@ initial begin
   rb_entries_7_written = _RAND_164[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
-  _RAND_165 = {2{`RANDOM}};
-  rb_entries_7_wr_addr = _RAND_165[47:0];
+  _RAND_165 = {1{`RANDOM}};
+  rb_entries_7_wr_addr = _RAND_165[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_166 = {1{`RANDOM}};
@@ -4233,59 +4443,57 @@ initial begin
   _RAND_184 = {1{`RANDOM}};
   value = _RAND_184[2:0];
   `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_185 = {1{`RANDOM}};
-  value_1 = _RAND_185[2:0];
-  `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
 `endif // SYNTHESIS
   always @(posedge clock) begin
     if (reset) begin
       rb_entries_0_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_0_completed <= _GEN_1166;
+    end else if (_T_160) begin
+      rb_entries_0_completed <= _GEN_1844;
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_0_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_0_valid <= _GEN_250;
+      rb_entries_0_valid <= _GEN_968;
     end
     if (reset) begin
       rb_entries_0_dispatched <= 1'h0;
+    end else if (_T_109) begin
+      rb_entries_0_dispatched <= 1'h0;
     end else begin
-      rb_entries_0_dispatched <= _T_89;
+      rb_entries_0_dispatched <= _T_113;
     end
     if (reset) begin
       rb_entries_0_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_0_written <= _GEN_853;
+      rb_entries_0_written <= _GEN_1523;
     end else if (wbCountOn) begin
-      rb_entries_0_written <= _GEN_836;
+      rb_entries_0_written <= _GEN_1506;
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_0_wr_addr <= 48'h0;
+      rb_entries_0_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
-        rb_entries_0_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_0_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_0_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_189) begin
-        if (_T_190) begin
+      if (_T_233) begin
+        if (_T_234) begin
           rb_entries_0_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_117) begin
-          if (_GEN_1455) begin
+        end else if (_T_161) begin
+          if (_GEN_2132) begin
             if (3'h7 == rb_entries_0_request_operands_0_value[2:0]) begin
               rb_entries_0_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_0_request_operands_0_value[2:0]) begin
@@ -4304,17 +4512,17 @@ end // initial
               rb_entries_0_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h0 == value) begin
+            if (3'h0 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_0_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_117) begin
-        if (_GEN_1455) begin
+      end else if (_T_161) begin
+        if (_GEN_2132) begin
           if (3'h7 == rb_entries_0_request_operands_0_value[2:0]) begin
             rb_entries_0_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_0_request_operands_0_value[2:0]) begin
@@ -4333,17 +4541,17 @@ end // initial
             rb_entries_0_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_117) begin
-      if (_GEN_1455) begin
+    end else if (_T_161) begin
+      if (_GEN_2132) begin
         if (3'h7 == rb_entries_0_request_operands_0_value[2:0]) begin
           rb_entries_0_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_0_request_operands_0_value[2:0]) begin
@@ -4362,60 +4570,60 @@ end // initial
           rb_entries_0_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_0_request_operands_0_value <= _GEN_498;
+        rb_entries_0_request_operands_0_value <= _GEN_1160;
       end
     end else begin
-      rb_entries_0_request_operands_0_value <= _GEN_498;
+      rb_entries_0_request_operands_0_value <= _GEN_1160;
     end
     if (reset) begin
       rb_entries_0_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_189) begin
-        if (_T_190) begin
+      if (_T_233) begin
+        if (_T_234) begin
           rb_entries_0_request_operands_0_mode <= 2'h0;
-        end else if (_T_117) begin
-          if (_GEN_1455) begin
+        end else if (_T_161) begin
+          if (_GEN_2132) begin
             rb_entries_0_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h0 == value) begin
+            if (3'h0 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_0_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_117) begin
-        if (_GEN_1455) begin
+      end else if (_T_161) begin
+        if (_GEN_2132) begin
           rb_entries_0_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_117) begin
-      if (_GEN_1455) begin
+    end else if (_T_161) begin
+      if (_GEN_2132) begin
         rb_entries_0_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_0_request_operands_0_mode <= _GEN_490;
+        rb_entries_0_request_operands_0_mode <= _GEN_1168;
       end
     end else begin
-      rb_entries_0_request_operands_0_mode <= _GEN_490;
+      rb_entries_0_request_operands_0_mode <= _GEN_1168;
     end
     if (reset) begin
       rb_entries_0_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_191) begin
-        if (_T_192) begin
+      if (_T_235) begin
+        if (_T_236) begin
           rb_entries_0_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_120) begin
-          if (_GEN_1939) begin
+        end else if (_T_164) begin
+          if (_GEN_2616) begin
             if (3'h7 == rb_entries_0_request_operands_1_value[2:0]) begin
               rb_entries_0_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_0_request_operands_1_value[2:0]) begin
@@ -4434,17 +4642,17 @@ end // initial
               rb_entries_0_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h0 == value) begin
+            if (3'h0 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_0_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_120) begin
-        if (_GEN_1939) begin
+      end else if (_T_164) begin
+        if (_GEN_2616) begin
           if (3'h7 == rb_entries_0_request_operands_1_value[2:0]) begin
             rb_entries_0_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_0_request_operands_1_value[2:0]) begin
@@ -4463,17 +4671,17 @@ end // initial
             rb_entries_0_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_120) begin
-      if (_GEN_1939) begin
+    end else if (_T_164) begin
+      if (_GEN_2616) begin
         if (3'h7 == rb_entries_0_request_operands_1_value[2:0]) begin
           rb_entries_0_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_0_request_operands_1_value[2:0]) begin
@@ -4492,60 +4700,60 @@ end // initial
           rb_entries_0_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_0_request_operands_1_value <= _GEN_514;
+        rb_entries_0_request_operands_1_value <= _GEN_1176;
       end
     end else begin
-      rb_entries_0_request_operands_1_value <= _GEN_514;
+      rb_entries_0_request_operands_1_value <= _GEN_1176;
     end
     if (reset) begin
       rb_entries_0_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_191) begin
-        if (_T_192) begin
+      if (_T_235) begin
+        if (_T_236) begin
           rb_entries_0_request_operands_1_mode <= 2'h0;
-        end else if (_T_120) begin
-          if (_GEN_1939) begin
+        end else if (_T_164) begin
+          if (_GEN_2616) begin
             rb_entries_0_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h0 == value) begin
+            if (3'h0 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_0_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_120) begin
-        if (_GEN_1939) begin
+      end else if (_T_164) begin
+        if (_GEN_2616) begin
           rb_entries_0_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_120) begin
-      if (_GEN_1939) begin
+    end else if (_T_164) begin
+      if (_GEN_2616) begin
         rb_entries_0_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_0_request_operands_1_mode <= _GEN_506;
+        rb_entries_0_request_operands_1_mode <= _GEN_1184;
       end
     end else begin
-      rb_entries_0_request_operands_1_mode <= _GEN_506;
+      rb_entries_0_request_operands_1_mode <= _GEN_1184;
     end
     if (reset) begin
       rb_entries_0_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_193) begin
-        if (_T_194) begin
+      if (_T_237) begin
+        if (_T_238) begin
           rb_entries_0_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_123) begin
-          if (_GEN_2423) begin
+        end else if (_T_167) begin
+          if (_GEN_3100) begin
             if (3'h7 == rb_entries_0_request_operands_2_value[2:0]) begin
               rb_entries_0_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_0_request_operands_2_value[2:0]) begin
@@ -4564,17 +4772,17 @@ end // initial
               rb_entries_0_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h0 == value) begin
+            if (3'h0 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_0_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_123) begin
-        if (_GEN_2423) begin
+      end else if (_T_167) begin
+        if (_GEN_3100) begin
           if (3'h7 == rb_entries_0_request_operands_2_value[2:0]) begin
             rb_entries_0_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_0_request_operands_2_value[2:0]) begin
@@ -4593,17 +4801,17 @@ end // initial
             rb_entries_0_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_123) begin
-      if (_GEN_2423) begin
+    end else if (_T_167) begin
+      if (_GEN_3100) begin
         if (3'h7 == rb_entries_0_request_operands_2_value[2:0]) begin
           rb_entries_0_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_0_request_operands_2_value[2:0]) begin
@@ -4622,231 +4830,239 @@ end // initial
           rb_entries_0_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_0_request_operands_2_value <= _GEN_530;
+        rb_entries_0_request_operands_2_value <= _GEN_1192;
       end
     end else begin
-      rb_entries_0_request_operands_2_value <= _GEN_530;
+      rb_entries_0_request_operands_2_value <= _GEN_1192;
     end
     if (reset) begin
       rb_entries_0_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_193) begin
-        if (_T_194) begin
+      if (_T_237) begin
+        if (_T_238) begin
           rb_entries_0_request_operands_2_mode <= 2'h0;
-        end else if (_T_123) begin
-          if (_GEN_2423) begin
+        end else if (_T_167) begin
+          if (_GEN_3100) begin
             rb_entries_0_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h0 == value) begin
+            if (3'h0 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_0_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_123) begin
-        if (_GEN_2423) begin
+      end else if (_T_167) begin
+        if (_GEN_3100) begin
           rb_entries_0_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h0 == value) begin
+          if (3'h0 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_0_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_123) begin
-      if (_GEN_2423) begin
+    end else if (_T_167) begin
+      if (_GEN_3100) begin
         rb_entries_0_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_0_request_operands_2_mode <= _GEN_522;
+        rb_entries_0_request_operands_2_mode <= _GEN_1200;
       end
     end else begin
-      rb_entries_0_request_operands_2_mode <= _GEN_522;
+      rb_entries_0_request_operands_2_mode <= _GEN_1200;
     end
     if (reset) begin
       rb_entries_0_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_0_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_0_request_inFetch_0 <= 1'h0;
+    end else if (_T_109) begin
+      rb_entries_0_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_0_request_inFetch_0 <= _T_381[0];
+      rb_entries_0_request_inFetch_0 <= _T_425[0];
     end
     if (reset) begin
       rb_entries_0_request_inFetch_1 <= 1'h0;
+    end else if (_T_109) begin
+      rb_entries_0_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_0_request_inFetch_1 <= _T_381[1];
+      rb_entries_0_request_inFetch_1 <= _T_425[1];
     end
     if (reset) begin
       rb_entries_0_request_inFetch_2 <= 1'h0;
+    end else if (_T_109) begin
+      rb_entries_0_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_0_request_inFetch_2 <= _T_381[2];
+      rb_entries_0_request_inFetch_2 <= _T_425[2];
     end
     if (reset) begin
       rb_entries_0_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h0 == result_idx) begin
         rb_entries_0_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_0_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h0 == result_idx) begin
         rb_entries_0_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_0_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h0 == result_idx) begin
         rb_entries_0_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_0_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h0 == result_idx) begin
         rb_entries_0_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_0_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h0 == result_idx) begin
         rb_entries_0_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_0_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h0 == result_idx) begin
         rb_entries_0_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_0_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h0 == result_idx) begin
         rb_entries_0_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h0 == value) begin
+        if (3'h0 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_0_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h0 == value) begin
+      if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       rb_entries_1_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_1_completed <= _GEN_1167;
+    end else if (_T_160) begin
+      rb_entries_1_completed <= _GEN_1845;
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_1_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_1_valid <= _GEN_251;
+      rb_entries_1_valid <= _GEN_969;
     end
     if (reset) begin
       rb_entries_1_dispatched <= 1'h0;
+    end else if (_T_115) begin
+      rb_entries_1_dispatched <= 1'h0;
     end else begin
-      rb_entries_1_dispatched <= _T_92;
+      rb_entries_1_dispatched <= _T_119;
     end
     if (reset) begin
       rb_entries_1_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_1_written <= _GEN_854;
+      rb_entries_1_written <= _GEN_1524;
     end else if (wbCountOn) begin
-      rb_entries_1_written <= _GEN_837;
+      rb_entries_1_written <= _GEN_1507;
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_1_wr_addr <= 48'h0;
+      rb_entries_1_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
-        rb_entries_1_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_1_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_1_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_195) begin
-        if (_T_196) begin
+      if (_T_239) begin
+        if (_T_240) begin
           rb_entries_1_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_126) begin
-          if (_GEN_2907) begin
+        end else if (_T_170) begin
+          if (_GEN_3584) begin
             if (3'h7 == rb_entries_1_request_operands_0_value[2:0]) begin
               rb_entries_1_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_1_request_operands_0_value[2:0]) begin
@@ -4865,17 +5081,17 @@ end // initial
               rb_entries_1_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h1 == value) begin
+            if (3'h1 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_1_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_126) begin
-        if (_GEN_2907) begin
+      end else if (_T_170) begin
+        if (_GEN_3584) begin
           if (3'h7 == rb_entries_1_request_operands_0_value[2:0]) begin
             rb_entries_1_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_1_request_operands_0_value[2:0]) begin
@@ -4894,17 +5110,17 @@ end // initial
             rb_entries_1_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_126) begin
-      if (_GEN_2907) begin
+    end else if (_T_170) begin
+      if (_GEN_3584) begin
         if (3'h7 == rb_entries_1_request_operands_0_value[2:0]) begin
           rb_entries_1_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_1_request_operands_0_value[2:0]) begin
@@ -4923,60 +5139,60 @@ end // initial
           rb_entries_1_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_1_request_operands_0_value <= _GEN_499;
+        rb_entries_1_request_operands_0_value <= _GEN_1161;
       end
     end else begin
-      rb_entries_1_request_operands_0_value <= _GEN_499;
+      rb_entries_1_request_operands_0_value <= _GEN_1161;
     end
     if (reset) begin
       rb_entries_1_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_195) begin
-        if (_T_196) begin
+      if (_T_239) begin
+        if (_T_240) begin
           rb_entries_1_request_operands_0_mode <= 2'h0;
-        end else if (_T_126) begin
-          if (_GEN_2907) begin
+        end else if (_T_170) begin
+          if (_GEN_3584) begin
             rb_entries_1_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h1 == value) begin
+            if (3'h1 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_1_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_126) begin
-        if (_GEN_2907) begin
+      end else if (_T_170) begin
+        if (_GEN_3584) begin
           rb_entries_1_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_126) begin
-      if (_GEN_2907) begin
+    end else if (_T_170) begin
+      if (_GEN_3584) begin
         rb_entries_1_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_1_request_operands_0_mode <= _GEN_491;
+        rb_entries_1_request_operands_0_mode <= _GEN_1169;
       end
     end else begin
-      rb_entries_1_request_operands_0_mode <= _GEN_491;
+      rb_entries_1_request_operands_0_mode <= _GEN_1169;
     end
     if (reset) begin
       rb_entries_1_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_197) begin
-        if (_T_198) begin
+      if (_T_241) begin
+        if (_T_242) begin
           rb_entries_1_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_129) begin
-          if (_GEN_3391) begin
+        end else if (_T_173) begin
+          if (_GEN_4068) begin
             if (3'h7 == rb_entries_1_request_operands_1_value[2:0]) begin
               rb_entries_1_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_1_request_operands_1_value[2:0]) begin
@@ -4995,17 +5211,17 @@ end // initial
               rb_entries_1_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h1 == value) begin
+            if (3'h1 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_1_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_129) begin
-        if (_GEN_3391) begin
+      end else if (_T_173) begin
+        if (_GEN_4068) begin
           if (3'h7 == rb_entries_1_request_operands_1_value[2:0]) begin
             rb_entries_1_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_1_request_operands_1_value[2:0]) begin
@@ -5024,17 +5240,17 @@ end // initial
             rb_entries_1_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_129) begin
-      if (_GEN_3391) begin
+    end else if (_T_173) begin
+      if (_GEN_4068) begin
         if (3'h7 == rb_entries_1_request_operands_1_value[2:0]) begin
           rb_entries_1_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_1_request_operands_1_value[2:0]) begin
@@ -5053,60 +5269,60 @@ end // initial
           rb_entries_1_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_1_request_operands_1_value <= _GEN_515;
+        rb_entries_1_request_operands_1_value <= _GEN_1177;
       end
     end else begin
-      rb_entries_1_request_operands_1_value <= _GEN_515;
+      rb_entries_1_request_operands_1_value <= _GEN_1177;
     end
     if (reset) begin
       rb_entries_1_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_197) begin
-        if (_T_198) begin
+      if (_T_241) begin
+        if (_T_242) begin
           rb_entries_1_request_operands_1_mode <= 2'h0;
-        end else if (_T_129) begin
-          if (_GEN_3391) begin
+        end else if (_T_173) begin
+          if (_GEN_4068) begin
             rb_entries_1_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h1 == value) begin
+            if (3'h1 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_1_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_129) begin
-        if (_GEN_3391) begin
+      end else if (_T_173) begin
+        if (_GEN_4068) begin
           rb_entries_1_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_129) begin
-      if (_GEN_3391) begin
+    end else if (_T_173) begin
+      if (_GEN_4068) begin
         rb_entries_1_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_1_request_operands_1_mode <= _GEN_507;
+        rb_entries_1_request_operands_1_mode <= _GEN_1185;
       end
     end else begin
-      rb_entries_1_request_operands_1_mode <= _GEN_507;
+      rb_entries_1_request_operands_1_mode <= _GEN_1185;
     end
     if (reset) begin
       rb_entries_1_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_199) begin
-        if (_T_200) begin
+      if (_T_243) begin
+        if (_T_244) begin
           rb_entries_1_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_132) begin
-          if (_GEN_3875) begin
+        end else if (_T_176) begin
+          if (_GEN_4552) begin
             if (3'h7 == rb_entries_1_request_operands_2_value[2:0]) begin
               rb_entries_1_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_1_request_operands_2_value[2:0]) begin
@@ -5125,17 +5341,17 @@ end // initial
               rb_entries_1_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h1 == value) begin
+            if (3'h1 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_1_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_132) begin
-        if (_GEN_3875) begin
+      end else if (_T_176) begin
+        if (_GEN_4552) begin
           if (3'h7 == rb_entries_1_request_operands_2_value[2:0]) begin
             rb_entries_1_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_1_request_operands_2_value[2:0]) begin
@@ -5154,17 +5370,17 @@ end // initial
             rb_entries_1_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_132) begin
-      if (_GEN_3875) begin
+    end else if (_T_176) begin
+      if (_GEN_4552) begin
         if (3'h7 == rb_entries_1_request_operands_2_value[2:0]) begin
           rb_entries_1_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_1_request_operands_2_value[2:0]) begin
@@ -5183,231 +5399,239 @@ end // initial
           rb_entries_1_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_1_request_operands_2_value <= _GEN_531;
+        rb_entries_1_request_operands_2_value <= _GEN_1193;
       end
     end else begin
-      rb_entries_1_request_operands_2_value <= _GEN_531;
+      rb_entries_1_request_operands_2_value <= _GEN_1193;
     end
     if (reset) begin
       rb_entries_1_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_199) begin
-        if (_T_200) begin
+      if (_T_243) begin
+        if (_T_244) begin
           rb_entries_1_request_operands_2_mode <= 2'h0;
-        end else if (_T_132) begin
-          if (_GEN_3875) begin
+        end else if (_T_176) begin
+          if (_GEN_4552) begin
             rb_entries_1_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h1 == value) begin
+            if (3'h1 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_1_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_132) begin
-        if (_GEN_3875) begin
+      end else if (_T_176) begin
+        if (_GEN_4552) begin
           rb_entries_1_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h1 == value) begin
+          if (3'h1 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_1_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_132) begin
-      if (_GEN_3875) begin
+    end else if (_T_176) begin
+      if (_GEN_4552) begin
         rb_entries_1_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_1_request_operands_2_mode <= _GEN_523;
+        rb_entries_1_request_operands_2_mode <= _GEN_1201;
       end
     end else begin
-      rb_entries_1_request_operands_2_mode <= _GEN_523;
+      rb_entries_1_request_operands_2_mode <= _GEN_1201;
     end
     if (reset) begin
       rb_entries_1_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_1_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_1_request_inFetch_0 <= 1'h0;
+    end else if (_T_115) begin
+      rb_entries_1_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_1_request_inFetch_0 <= _T_381[3];
+      rb_entries_1_request_inFetch_0 <= _T_425[3];
     end
     if (reset) begin
       rb_entries_1_request_inFetch_1 <= 1'h0;
+    end else if (_T_115) begin
+      rb_entries_1_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_1_request_inFetch_1 <= _T_381[4];
+      rb_entries_1_request_inFetch_1 <= _T_425[4];
     end
     if (reset) begin
       rb_entries_1_request_inFetch_2 <= 1'h0;
+    end else if (_T_115) begin
+      rb_entries_1_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_1_request_inFetch_2 <= _T_381[5];
+      rb_entries_1_request_inFetch_2 <= _T_425[5];
     end
     if (reset) begin
       rb_entries_1_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h1 == result_idx) begin
         rb_entries_1_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_1_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h1 == result_idx) begin
         rb_entries_1_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_1_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h1 == result_idx) begin
         rb_entries_1_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_1_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h1 == result_idx) begin
         rb_entries_1_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_1_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h1 == result_idx) begin
         rb_entries_1_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_1_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h1 == result_idx) begin
         rb_entries_1_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_1_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h1 == result_idx) begin
         rb_entries_1_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h1 == value) begin
+        if (3'h1 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_1_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h1 == value) begin
+      if (3'h1 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_1_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       rb_entries_2_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_2_completed <= _GEN_1168;
+    end else if (_T_160) begin
+      rb_entries_2_completed <= _GEN_1846;
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_2_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_2_valid <= _GEN_252;
+      rb_entries_2_valid <= _GEN_970;
     end
     if (reset) begin
       rb_entries_2_dispatched <= 1'h0;
+    end else if (_T_121) begin
+      rb_entries_2_dispatched <= 1'h0;
     end else begin
-      rb_entries_2_dispatched <= _T_95;
+      rb_entries_2_dispatched <= _T_125;
     end
     if (reset) begin
       rb_entries_2_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_2_written <= _GEN_855;
+      rb_entries_2_written <= _GEN_1525;
     end else if (wbCountOn) begin
-      rb_entries_2_written <= _GEN_838;
+      rb_entries_2_written <= _GEN_1508;
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_2_wr_addr <= 48'h0;
+      rb_entries_2_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
-        rb_entries_2_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_2_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_2_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_201) begin
-        if (_T_202) begin
+      if (_T_245) begin
+        if (_T_246) begin
           rb_entries_2_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_135) begin
-          if (_GEN_4359) begin
+        end else if (_T_179) begin
+          if (_GEN_5036) begin
             if (3'h7 == rb_entries_2_request_operands_0_value[2:0]) begin
               rb_entries_2_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_2_request_operands_0_value[2:0]) begin
@@ -5426,17 +5650,17 @@ end // initial
               rb_entries_2_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h2 == value) begin
+            if (3'h2 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_2_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_135) begin
-        if (_GEN_4359) begin
+      end else if (_T_179) begin
+        if (_GEN_5036) begin
           if (3'h7 == rb_entries_2_request_operands_0_value[2:0]) begin
             rb_entries_2_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_2_request_operands_0_value[2:0]) begin
@@ -5455,17 +5679,17 @@ end // initial
             rb_entries_2_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_135) begin
-      if (_GEN_4359) begin
+    end else if (_T_179) begin
+      if (_GEN_5036) begin
         if (3'h7 == rb_entries_2_request_operands_0_value[2:0]) begin
           rb_entries_2_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_2_request_operands_0_value[2:0]) begin
@@ -5484,60 +5708,60 @@ end // initial
           rb_entries_2_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_2_request_operands_0_value <= _GEN_500;
+        rb_entries_2_request_operands_0_value <= _GEN_1162;
       end
     end else begin
-      rb_entries_2_request_operands_0_value <= _GEN_500;
+      rb_entries_2_request_operands_0_value <= _GEN_1162;
     end
     if (reset) begin
       rb_entries_2_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_201) begin
-        if (_T_202) begin
+      if (_T_245) begin
+        if (_T_246) begin
           rb_entries_2_request_operands_0_mode <= 2'h0;
-        end else if (_T_135) begin
-          if (_GEN_4359) begin
+        end else if (_T_179) begin
+          if (_GEN_5036) begin
             rb_entries_2_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h2 == value) begin
+            if (3'h2 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_2_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_135) begin
-        if (_GEN_4359) begin
+      end else if (_T_179) begin
+        if (_GEN_5036) begin
           rb_entries_2_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_135) begin
-      if (_GEN_4359) begin
+    end else if (_T_179) begin
+      if (_GEN_5036) begin
         rb_entries_2_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_2_request_operands_0_mode <= _GEN_492;
+        rb_entries_2_request_operands_0_mode <= _GEN_1170;
       end
     end else begin
-      rb_entries_2_request_operands_0_mode <= _GEN_492;
+      rb_entries_2_request_operands_0_mode <= _GEN_1170;
     end
     if (reset) begin
       rb_entries_2_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_203) begin
-        if (_T_204) begin
+      if (_T_247) begin
+        if (_T_248) begin
           rb_entries_2_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_138) begin
-          if (_GEN_4843) begin
+        end else if (_T_182) begin
+          if (_GEN_5520) begin
             if (3'h7 == rb_entries_2_request_operands_1_value[2:0]) begin
               rb_entries_2_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_2_request_operands_1_value[2:0]) begin
@@ -5556,17 +5780,17 @@ end // initial
               rb_entries_2_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h2 == value) begin
+            if (3'h2 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_2_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_138) begin
-        if (_GEN_4843) begin
+      end else if (_T_182) begin
+        if (_GEN_5520) begin
           if (3'h7 == rb_entries_2_request_operands_1_value[2:0]) begin
             rb_entries_2_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_2_request_operands_1_value[2:0]) begin
@@ -5585,17 +5809,17 @@ end // initial
             rb_entries_2_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_138) begin
-      if (_GEN_4843) begin
+    end else if (_T_182) begin
+      if (_GEN_5520) begin
         if (3'h7 == rb_entries_2_request_operands_1_value[2:0]) begin
           rb_entries_2_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_2_request_operands_1_value[2:0]) begin
@@ -5614,60 +5838,60 @@ end // initial
           rb_entries_2_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_2_request_operands_1_value <= _GEN_516;
+        rb_entries_2_request_operands_1_value <= _GEN_1178;
       end
     end else begin
-      rb_entries_2_request_operands_1_value <= _GEN_516;
+      rb_entries_2_request_operands_1_value <= _GEN_1178;
     end
     if (reset) begin
       rb_entries_2_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_203) begin
-        if (_T_204) begin
+      if (_T_247) begin
+        if (_T_248) begin
           rb_entries_2_request_operands_1_mode <= 2'h0;
-        end else if (_T_138) begin
-          if (_GEN_4843) begin
+        end else if (_T_182) begin
+          if (_GEN_5520) begin
             rb_entries_2_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h2 == value) begin
+            if (3'h2 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_2_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_138) begin
-        if (_GEN_4843) begin
+      end else if (_T_182) begin
+        if (_GEN_5520) begin
           rb_entries_2_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_138) begin
-      if (_GEN_4843) begin
+    end else if (_T_182) begin
+      if (_GEN_5520) begin
         rb_entries_2_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_2_request_operands_1_mode <= _GEN_508;
+        rb_entries_2_request_operands_1_mode <= _GEN_1186;
       end
     end else begin
-      rb_entries_2_request_operands_1_mode <= _GEN_508;
+      rb_entries_2_request_operands_1_mode <= _GEN_1186;
     end
     if (reset) begin
       rb_entries_2_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_205) begin
-        if (_T_206) begin
+      if (_T_249) begin
+        if (_T_250) begin
           rb_entries_2_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_141) begin
-          if (_GEN_5327) begin
+        end else if (_T_185) begin
+          if (_GEN_6004) begin
             if (3'h7 == rb_entries_2_request_operands_2_value[2:0]) begin
               rb_entries_2_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_2_request_operands_2_value[2:0]) begin
@@ -5686,17 +5910,17 @@ end // initial
               rb_entries_2_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h2 == value) begin
+            if (3'h2 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_2_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_141) begin
-        if (_GEN_5327) begin
+      end else if (_T_185) begin
+        if (_GEN_6004) begin
           if (3'h7 == rb_entries_2_request_operands_2_value[2:0]) begin
             rb_entries_2_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_2_request_operands_2_value[2:0]) begin
@@ -5715,17 +5939,17 @@ end // initial
             rb_entries_2_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_141) begin
-      if (_GEN_5327) begin
+    end else if (_T_185) begin
+      if (_GEN_6004) begin
         if (3'h7 == rb_entries_2_request_operands_2_value[2:0]) begin
           rb_entries_2_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_2_request_operands_2_value[2:0]) begin
@@ -5744,231 +5968,239 @@ end // initial
           rb_entries_2_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_2_request_operands_2_value <= _GEN_532;
+        rb_entries_2_request_operands_2_value <= _GEN_1194;
       end
     end else begin
-      rb_entries_2_request_operands_2_value <= _GEN_532;
+      rb_entries_2_request_operands_2_value <= _GEN_1194;
     end
     if (reset) begin
       rb_entries_2_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_205) begin
-        if (_T_206) begin
+      if (_T_249) begin
+        if (_T_250) begin
           rb_entries_2_request_operands_2_mode <= 2'h0;
-        end else if (_T_141) begin
-          if (_GEN_5327) begin
+        end else if (_T_185) begin
+          if (_GEN_6004) begin
             rb_entries_2_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h2 == value) begin
+            if (3'h2 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_2_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_141) begin
-        if (_GEN_5327) begin
+      end else if (_T_185) begin
+        if (_GEN_6004) begin
           rb_entries_2_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h2 == value) begin
+          if (3'h2 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_2_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_141) begin
-      if (_GEN_5327) begin
+    end else if (_T_185) begin
+      if (_GEN_6004) begin
         rb_entries_2_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_2_request_operands_2_mode <= _GEN_524;
+        rb_entries_2_request_operands_2_mode <= _GEN_1202;
       end
     end else begin
-      rb_entries_2_request_operands_2_mode <= _GEN_524;
+      rb_entries_2_request_operands_2_mode <= _GEN_1202;
     end
     if (reset) begin
       rb_entries_2_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_2_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_2_request_inFetch_0 <= 1'h0;
+    end else if (_T_121) begin
+      rb_entries_2_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_2_request_inFetch_0 <= _T_381[6];
+      rb_entries_2_request_inFetch_0 <= _T_425[6];
     end
     if (reset) begin
       rb_entries_2_request_inFetch_1 <= 1'h0;
+    end else if (_T_121) begin
+      rb_entries_2_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_2_request_inFetch_1 <= _T_381[7];
+      rb_entries_2_request_inFetch_1 <= _T_425[7];
     end
     if (reset) begin
       rb_entries_2_request_inFetch_2 <= 1'h0;
+    end else if (_T_121) begin
+      rb_entries_2_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_2_request_inFetch_2 <= _T_381[8];
+      rb_entries_2_request_inFetch_2 <= _T_425[8];
     end
     if (reset) begin
       rb_entries_2_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h2 == result_idx) begin
         rb_entries_2_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_2_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h2 == result_idx) begin
         rb_entries_2_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_2_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h2 == result_idx) begin
         rb_entries_2_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_2_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h2 == result_idx) begin
         rb_entries_2_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_2_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h2 == result_idx) begin
         rb_entries_2_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_2_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h2 == result_idx) begin
         rb_entries_2_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_2_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h2 == result_idx) begin
         rb_entries_2_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h2 == value) begin
+        if (3'h2 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_2_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h2 == value) begin
+      if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       rb_entries_3_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_3_completed <= _GEN_1169;
+    end else if (_T_160) begin
+      rb_entries_3_completed <= _GEN_1847;
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_3_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_3_valid <= _GEN_253;
+      rb_entries_3_valid <= _GEN_971;
     end
     if (reset) begin
       rb_entries_3_dispatched <= 1'h0;
+    end else if (_T_127) begin
+      rb_entries_3_dispatched <= 1'h0;
     end else begin
-      rb_entries_3_dispatched <= _T_98;
+      rb_entries_3_dispatched <= _T_131;
     end
     if (reset) begin
       rb_entries_3_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_3_written <= _GEN_856;
+      rb_entries_3_written <= _GEN_1526;
     end else if (wbCountOn) begin
-      rb_entries_3_written <= _GEN_839;
+      rb_entries_3_written <= _GEN_1509;
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_3_wr_addr <= 48'h0;
+      rb_entries_3_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
-        rb_entries_3_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_3_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_3_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_207) begin
-        if (_T_208) begin
+      if (_T_251) begin
+        if (_T_252) begin
           rb_entries_3_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_144) begin
-          if (_GEN_5811) begin
+        end else if (_T_188) begin
+          if (_GEN_6488) begin
             if (3'h7 == rb_entries_3_request_operands_0_value[2:0]) begin
               rb_entries_3_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_3_request_operands_0_value[2:0]) begin
@@ -5987,17 +6219,17 @@ end // initial
               rb_entries_3_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h3 == value) begin
+            if (3'h3 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_3_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_144) begin
-        if (_GEN_5811) begin
+      end else if (_T_188) begin
+        if (_GEN_6488) begin
           if (3'h7 == rb_entries_3_request_operands_0_value[2:0]) begin
             rb_entries_3_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_3_request_operands_0_value[2:0]) begin
@@ -6016,17 +6248,17 @@ end // initial
             rb_entries_3_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_144) begin
-      if (_GEN_5811) begin
+    end else if (_T_188) begin
+      if (_GEN_6488) begin
         if (3'h7 == rb_entries_3_request_operands_0_value[2:0]) begin
           rb_entries_3_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_3_request_operands_0_value[2:0]) begin
@@ -6045,60 +6277,60 @@ end // initial
           rb_entries_3_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_3_request_operands_0_value <= _GEN_501;
+        rb_entries_3_request_operands_0_value <= _GEN_1163;
       end
     end else begin
-      rb_entries_3_request_operands_0_value <= _GEN_501;
+      rb_entries_3_request_operands_0_value <= _GEN_1163;
     end
     if (reset) begin
       rb_entries_3_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_207) begin
-        if (_T_208) begin
+      if (_T_251) begin
+        if (_T_252) begin
           rb_entries_3_request_operands_0_mode <= 2'h0;
-        end else if (_T_144) begin
-          if (_GEN_5811) begin
+        end else if (_T_188) begin
+          if (_GEN_6488) begin
             rb_entries_3_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h3 == value) begin
+            if (3'h3 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_3_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_144) begin
-        if (_GEN_5811) begin
+      end else if (_T_188) begin
+        if (_GEN_6488) begin
           rb_entries_3_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_144) begin
-      if (_GEN_5811) begin
+    end else if (_T_188) begin
+      if (_GEN_6488) begin
         rb_entries_3_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_3_request_operands_0_mode <= _GEN_493;
+        rb_entries_3_request_operands_0_mode <= _GEN_1171;
       end
     end else begin
-      rb_entries_3_request_operands_0_mode <= _GEN_493;
+      rb_entries_3_request_operands_0_mode <= _GEN_1171;
     end
     if (reset) begin
       rb_entries_3_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_209) begin
-        if (_T_210) begin
+      if (_T_253) begin
+        if (_T_254) begin
           rb_entries_3_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_147) begin
-          if (_GEN_6295) begin
+        end else if (_T_191) begin
+          if (_GEN_6972) begin
             if (3'h7 == rb_entries_3_request_operands_1_value[2:0]) begin
               rb_entries_3_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_3_request_operands_1_value[2:0]) begin
@@ -6117,17 +6349,17 @@ end // initial
               rb_entries_3_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h3 == value) begin
+            if (3'h3 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_3_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_147) begin
-        if (_GEN_6295) begin
+      end else if (_T_191) begin
+        if (_GEN_6972) begin
           if (3'h7 == rb_entries_3_request_operands_1_value[2:0]) begin
             rb_entries_3_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_3_request_operands_1_value[2:0]) begin
@@ -6146,17 +6378,17 @@ end // initial
             rb_entries_3_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_147) begin
-      if (_GEN_6295) begin
+    end else if (_T_191) begin
+      if (_GEN_6972) begin
         if (3'h7 == rb_entries_3_request_operands_1_value[2:0]) begin
           rb_entries_3_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_3_request_operands_1_value[2:0]) begin
@@ -6175,60 +6407,60 @@ end // initial
           rb_entries_3_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_3_request_operands_1_value <= _GEN_517;
+        rb_entries_3_request_operands_1_value <= _GEN_1179;
       end
     end else begin
-      rb_entries_3_request_operands_1_value <= _GEN_517;
+      rb_entries_3_request_operands_1_value <= _GEN_1179;
     end
     if (reset) begin
       rb_entries_3_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_209) begin
-        if (_T_210) begin
+      if (_T_253) begin
+        if (_T_254) begin
           rb_entries_3_request_operands_1_mode <= 2'h0;
-        end else if (_T_147) begin
-          if (_GEN_6295) begin
+        end else if (_T_191) begin
+          if (_GEN_6972) begin
             rb_entries_3_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h3 == value) begin
+            if (3'h3 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_3_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_147) begin
-        if (_GEN_6295) begin
+      end else if (_T_191) begin
+        if (_GEN_6972) begin
           rb_entries_3_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_147) begin
-      if (_GEN_6295) begin
+    end else if (_T_191) begin
+      if (_GEN_6972) begin
         rb_entries_3_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_3_request_operands_1_mode <= _GEN_509;
+        rb_entries_3_request_operands_1_mode <= _GEN_1187;
       end
     end else begin
-      rb_entries_3_request_operands_1_mode <= _GEN_509;
+      rb_entries_3_request_operands_1_mode <= _GEN_1187;
     end
     if (reset) begin
       rb_entries_3_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_211) begin
-        if (_T_212) begin
+      if (_T_255) begin
+        if (_T_256) begin
           rb_entries_3_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_150) begin
-          if (_GEN_6779) begin
+        end else if (_T_194) begin
+          if (_GEN_7456) begin
             if (3'h7 == rb_entries_3_request_operands_2_value[2:0]) begin
               rb_entries_3_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_3_request_operands_2_value[2:0]) begin
@@ -6247,17 +6479,17 @@ end // initial
               rb_entries_3_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h3 == value) begin
+            if (3'h3 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_3_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_150) begin
-        if (_GEN_6779) begin
+      end else if (_T_194) begin
+        if (_GEN_7456) begin
           if (3'h7 == rb_entries_3_request_operands_2_value[2:0]) begin
             rb_entries_3_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_3_request_operands_2_value[2:0]) begin
@@ -6276,17 +6508,17 @@ end // initial
             rb_entries_3_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_150) begin
-      if (_GEN_6779) begin
+    end else if (_T_194) begin
+      if (_GEN_7456) begin
         if (3'h7 == rb_entries_3_request_operands_2_value[2:0]) begin
           rb_entries_3_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_3_request_operands_2_value[2:0]) begin
@@ -6305,231 +6537,239 @@ end // initial
           rb_entries_3_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_3_request_operands_2_value <= _GEN_533;
+        rb_entries_3_request_operands_2_value <= _GEN_1195;
       end
     end else begin
-      rb_entries_3_request_operands_2_value <= _GEN_533;
+      rb_entries_3_request_operands_2_value <= _GEN_1195;
     end
     if (reset) begin
       rb_entries_3_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_211) begin
-        if (_T_212) begin
+      if (_T_255) begin
+        if (_T_256) begin
           rb_entries_3_request_operands_2_mode <= 2'h0;
-        end else if (_T_150) begin
-          if (_GEN_6779) begin
+        end else if (_T_194) begin
+          if (_GEN_7456) begin
             rb_entries_3_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h3 == value) begin
+            if (3'h3 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_3_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_150) begin
-        if (_GEN_6779) begin
+      end else if (_T_194) begin
+        if (_GEN_7456) begin
           rb_entries_3_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h3 == value) begin
+          if (3'h3 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_3_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_150) begin
-      if (_GEN_6779) begin
+    end else if (_T_194) begin
+      if (_GEN_7456) begin
         rb_entries_3_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_3_request_operands_2_mode <= _GEN_525;
+        rb_entries_3_request_operands_2_mode <= _GEN_1203;
       end
     end else begin
-      rb_entries_3_request_operands_2_mode <= _GEN_525;
+      rb_entries_3_request_operands_2_mode <= _GEN_1203;
     end
     if (reset) begin
       rb_entries_3_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_3_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_3_request_inFetch_0 <= 1'h0;
+    end else if (_T_127) begin
+      rb_entries_3_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_3_request_inFetch_0 <= _T_381[9];
+      rb_entries_3_request_inFetch_0 <= _T_425[9];
     end
     if (reset) begin
       rb_entries_3_request_inFetch_1 <= 1'h0;
+    end else if (_T_127) begin
+      rb_entries_3_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_3_request_inFetch_1 <= _T_381[10];
+      rb_entries_3_request_inFetch_1 <= _T_425[10];
     end
     if (reset) begin
       rb_entries_3_request_inFetch_2 <= 1'h0;
+    end else if (_T_127) begin
+      rb_entries_3_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_3_request_inFetch_2 <= _T_381[11];
+      rb_entries_3_request_inFetch_2 <= _T_425[11];
     end
     if (reset) begin
       rb_entries_3_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h3 == result_idx) begin
         rb_entries_3_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_3_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h3 == result_idx) begin
         rb_entries_3_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_3_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h3 == result_idx) begin
         rb_entries_3_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_3_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h3 == result_idx) begin
         rb_entries_3_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_3_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h3 == result_idx) begin
         rb_entries_3_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_3_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h3 == result_idx) begin
         rb_entries_3_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_3_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h3 == result_idx) begin
         rb_entries_3_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h3 == value) begin
+        if (3'h3 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_3_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h3 == value) begin
+      if (3'h3 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_3_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       rb_entries_4_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_4_completed <= _GEN_1170;
+    end else if (_T_160) begin
+      rb_entries_4_completed <= _GEN_1848;
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_4_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_4_valid <= _GEN_254;
+      rb_entries_4_valid <= _GEN_972;
     end
     if (reset) begin
       rb_entries_4_dispatched <= 1'h0;
+    end else if (_T_133) begin
+      rb_entries_4_dispatched <= 1'h0;
     end else begin
-      rb_entries_4_dispatched <= _T_101;
+      rb_entries_4_dispatched <= _T_137;
     end
     if (reset) begin
       rb_entries_4_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_4_written <= _GEN_857;
+      rb_entries_4_written <= _GEN_1527;
     end else if (wbCountOn) begin
-      rb_entries_4_written <= _GEN_840;
+      rb_entries_4_written <= _GEN_1510;
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_4_wr_addr <= 48'h0;
+      rb_entries_4_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
-        rb_entries_4_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_4_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_4_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_213) begin
-        if (_T_214) begin
+      if (_T_257) begin
+        if (_T_258) begin
           rb_entries_4_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_153) begin
-          if (_GEN_7263) begin
+        end else if (_T_197) begin
+          if (_GEN_7940) begin
             if (3'h7 == rb_entries_4_request_operands_0_value[2:0]) begin
               rb_entries_4_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_4_request_operands_0_value[2:0]) begin
@@ -6548,17 +6788,17 @@ end // initial
               rb_entries_4_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h4 == value) begin
+            if (3'h4 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_4_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_153) begin
-        if (_GEN_7263) begin
+      end else if (_T_197) begin
+        if (_GEN_7940) begin
           if (3'h7 == rb_entries_4_request_operands_0_value[2:0]) begin
             rb_entries_4_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_4_request_operands_0_value[2:0]) begin
@@ -6577,17 +6817,17 @@ end // initial
             rb_entries_4_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_153) begin
-      if (_GEN_7263) begin
+    end else if (_T_197) begin
+      if (_GEN_7940) begin
         if (3'h7 == rb_entries_4_request_operands_0_value[2:0]) begin
           rb_entries_4_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_4_request_operands_0_value[2:0]) begin
@@ -6606,60 +6846,60 @@ end // initial
           rb_entries_4_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_4_request_operands_0_value <= _GEN_502;
+        rb_entries_4_request_operands_0_value <= _GEN_1164;
       end
     end else begin
-      rb_entries_4_request_operands_0_value <= _GEN_502;
+      rb_entries_4_request_operands_0_value <= _GEN_1164;
     end
     if (reset) begin
       rb_entries_4_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_213) begin
-        if (_T_214) begin
+      if (_T_257) begin
+        if (_T_258) begin
           rb_entries_4_request_operands_0_mode <= 2'h0;
-        end else if (_T_153) begin
-          if (_GEN_7263) begin
+        end else if (_T_197) begin
+          if (_GEN_7940) begin
             rb_entries_4_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h4 == value) begin
+            if (3'h4 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_4_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_153) begin
-        if (_GEN_7263) begin
+      end else if (_T_197) begin
+        if (_GEN_7940) begin
           rb_entries_4_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_153) begin
-      if (_GEN_7263) begin
+    end else if (_T_197) begin
+      if (_GEN_7940) begin
         rb_entries_4_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_4_request_operands_0_mode <= _GEN_494;
+        rb_entries_4_request_operands_0_mode <= _GEN_1172;
       end
     end else begin
-      rb_entries_4_request_operands_0_mode <= _GEN_494;
+      rb_entries_4_request_operands_0_mode <= _GEN_1172;
     end
     if (reset) begin
       rb_entries_4_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_215) begin
-        if (_T_216) begin
+      if (_T_259) begin
+        if (_T_260) begin
           rb_entries_4_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_156) begin
-          if (_GEN_7747) begin
+        end else if (_T_200) begin
+          if (_GEN_8424) begin
             if (3'h7 == rb_entries_4_request_operands_1_value[2:0]) begin
               rb_entries_4_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_4_request_operands_1_value[2:0]) begin
@@ -6678,17 +6918,17 @@ end // initial
               rb_entries_4_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h4 == value) begin
+            if (3'h4 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_4_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_156) begin
-        if (_GEN_7747) begin
+      end else if (_T_200) begin
+        if (_GEN_8424) begin
           if (3'h7 == rb_entries_4_request_operands_1_value[2:0]) begin
             rb_entries_4_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_4_request_operands_1_value[2:0]) begin
@@ -6707,17 +6947,17 @@ end // initial
             rb_entries_4_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_156) begin
-      if (_GEN_7747) begin
+    end else if (_T_200) begin
+      if (_GEN_8424) begin
         if (3'h7 == rb_entries_4_request_operands_1_value[2:0]) begin
           rb_entries_4_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_4_request_operands_1_value[2:0]) begin
@@ -6736,60 +6976,60 @@ end // initial
           rb_entries_4_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_4_request_operands_1_value <= _GEN_518;
+        rb_entries_4_request_operands_1_value <= _GEN_1180;
       end
     end else begin
-      rb_entries_4_request_operands_1_value <= _GEN_518;
+      rb_entries_4_request_operands_1_value <= _GEN_1180;
     end
     if (reset) begin
       rb_entries_4_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_215) begin
-        if (_T_216) begin
+      if (_T_259) begin
+        if (_T_260) begin
           rb_entries_4_request_operands_1_mode <= 2'h0;
-        end else if (_T_156) begin
-          if (_GEN_7747) begin
+        end else if (_T_200) begin
+          if (_GEN_8424) begin
             rb_entries_4_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h4 == value) begin
+            if (3'h4 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_4_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_156) begin
-        if (_GEN_7747) begin
+      end else if (_T_200) begin
+        if (_GEN_8424) begin
           rb_entries_4_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_156) begin
-      if (_GEN_7747) begin
+    end else if (_T_200) begin
+      if (_GEN_8424) begin
         rb_entries_4_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_4_request_operands_1_mode <= _GEN_510;
+        rb_entries_4_request_operands_1_mode <= _GEN_1188;
       end
     end else begin
-      rb_entries_4_request_operands_1_mode <= _GEN_510;
+      rb_entries_4_request_operands_1_mode <= _GEN_1188;
     end
     if (reset) begin
       rb_entries_4_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_217) begin
-        if (_T_218) begin
+      if (_T_261) begin
+        if (_T_262) begin
           rb_entries_4_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_159) begin
-          if (_GEN_8231) begin
+        end else if (_T_203) begin
+          if (_GEN_8908) begin
             if (3'h7 == rb_entries_4_request_operands_2_value[2:0]) begin
               rb_entries_4_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_4_request_operands_2_value[2:0]) begin
@@ -6808,17 +7048,17 @@ end // initial
               rb_entries_4_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h4 == value) begin
+            if (3'h4 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_4_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_159) begin
-        if (_GEN_8231) begin
+      end else if (_T_203) begin
+        if (_GEN_8908) begin
           if (3'h7 == rb_entries_4_request_operands_2_value[2:0]) begin
             rb_entries_4_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_4_request_operands_2_value[2:0]) begin
@@ -6837,17 +7077,17 @@ end // initial
             rb_entries_4_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_159) begin
-      if (_GEN_8231) begin
+    end else if (_T_203) begin
+      if (_GEN_8908) begin
         if (3'h7 == rb_entries_4_request_operands_2_value[2:0]) begin
           rb_entries_4_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_4_request_operands_2_value[2:0]) begin
@@ -6866,231 +7106,239 @@ end // initial
           rb_entries_4_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_4_request_operands_2_value <= _GEN_534;
+        rb_entries_4_request_operands_2_value <= _GEN_1196;
       end
     end else begin
-      rb_entries_4_request_operands_2_value <= _GEN_534;
+      rb_entries_4_request_operands_2_value <= _GEN_1196;
     end
     if (reset) begin
       rb_entries_4_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_217) begin
-        if (_T_218) begin
+      if (_T_261) begin
+        if (_T_262) begin
           rb_entries_4_request_operands_2_mode <= 2'h0;
-        end else if (_T_159) begin
-          if (_GEN_8231) begin
+        end else if (_T_203) begin
+          if (_GEN_8908) begin
             rb_entries_4_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h4 == value) begin
+            if (3'h4 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_4_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_159) begin
-        if (_GEN_8231) begin
+      end else if (_T_203) begin
+        if (_GEN_8908) begin
           rb_entries_4_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h4 == value) begin
+          if (3'h4 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_4_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_159) begin
-      if (_GEN_8231) begin
+    end else if (_T_203) begin
+      if (_GEN_8908) begin
         rb_entries_4_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_4_request_operands_2_mode <= _GEN_526;
+        rb_entries_4_request_operands_2_mode <= _GEN_1204;
       end
     end else begin
-      rb_entries_4_request_operands_2_mode <= _GEN_526;
+      rb_entries_4_request_operands_2_mode <= _GEN_1204;
     end
     if (reset) begin
       rb_entries_4_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_4_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_4_request_inFetch_0 <= 1'h0;
+    end else if (_T_133) begin
+      rb_entries_4_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_4_request_inFetch_0 <= _T_381[12];
+      rb_entries_4_request_inFetch_0 <= _T_425[12];
     end
     if (reset) begin
       rb_entries_4_request_inFetch_1 <= 1'h0;
+    end else if (_T_133) begin
+      rb_entries_4_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_4_request_inFetch_1 <= _T_381[13];
+      rb_entries_4_request_inFetch_1 <= _T_425[13];
     end
     if (reset) begin
       rb_entries_4_request_inFetch_2 <= 1'h0;
+    end else if (_T_133) begin
+      rb_entries_4_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_4_request_inFetch_2 <= _T_381[14];
+      rb_entries_4_request_inFetch_2 <= _T_425[14];
     end
     if (reset) begin
       rb_entries_4_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h4 == result_idx) begin
         rb_entries_4_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_4_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h4 == result_idx) begin
         rb_entries_4_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_4_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h4 == result_idx) begin
         rb_entries_4_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_4_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h4 == result_idx) begin
         rb_entries_4_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_4_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h4 == result_idx) begin
         rb_entries_4_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_4_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h4 == result_idx) begin
         rb_entries_4_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_4_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h4 == result_idx) begin
         rb_entries_4_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h4 == value) begin
+        if (3'h4 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_4_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h4 == value) begin
+      if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       rb_entries_5_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_5_completed <= _GEN_1171;
+    end else if (_T_160) begin
+      rb_entries_5_completed <= _GEN_1849;
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_5_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_5_valid <= _GEN_255;
+      rb_entries_5_valid <= _GEN_973;
     end
     if (reset) begin
       rb_entries_5_dispatched <= 1'h0;
+    end else if (_T_139) begin
+      rb_entries_5_dispatched <= 1'h0;
     end else begin
-      rb_entries_5_dispatched <= _T_104;
+      rb_entries_5_dispatched <= _T_143;
     end
     if (reset) begin
       rb_entries_5_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_5_written <= _GEN_858;
+      rb_entries_5_written <= _GEN_1528;
     end else if (wbCountOn) begin
-      rb_entries_5_written <= _GEN_841;
+      rb_entries_5_written <= _GEN_1511;
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_5_wr_addr <= 48'h0;
+      rb_entries_5_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
-        rb_entries_5_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_5_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_5_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_219) begin
-        if (_T_220) begin
+      if (_T_263) begin
+        if (_T_264) begin
           rb_entries_5_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_162) begin
-          if (_GEN_8715) begin
+        end else if (_T_206) begin
+          if (_GEN_9392) begin
             if (3'h7 == rb_entries_5_request_operands_0_value[2:0]) begin
               rb_entries_5_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_5_request_operands_0_value[2:0]) begin
@@ -7109,17 +7357,17 @@ end // initial
               rb_entries_5_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h5 == value) begin
+            if (3'h5 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_5_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_162) begin
-        if (_GEN_8715) begin
+      end else if (_T_206) begin
+        if (_GEN_9392) begin
           if (3'h7 == rb_entries_5_request_operands_0_value[2:0]) begin
             rb_entries_5_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_5_request_operands_0_value[2:0]) begin
@@ -7138,17 +7386,17 @@ end // initial
             rb_entries_5_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_162) begin
-      if (_GEN_8715) begin
+    end else if (_T_206) begin
+      if (_GEN_9392) begin
         if (3'h7 == rb_entries_5_request_operands_0_value[2:0]) begin
           rb_entries_5_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_5_request_operands_0_value[2:0]) begin
@@ -7167,60 +7415,60 @@ end // initial
           rb_entries_5_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_5_request_operands_0_value <= _GEN_503;
+        rb_entries_5_request_operands_0_value <= _GEN_1165;
       end
     end else begin
-      rb_entries_5_request_operands_0_value <= _GEN_503;
+      rb_entries_5_request_operands_0_value <= _GEN_1165;
     end
     if (reset) begin
       rb_entries_5_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_219) begin
-        if (_T_220) begin
+      if (_T_263) begin
+        if (_T_264) begin
           rb_entries_5_request_operands_0_mode <= 2'h0;
-        end else if (_T_162) begin
-          if (_GEN_8715) begin
+        end else if (_T_206) begin
+          if (_GEN_9392) begin
             rb_entries_5_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h5 == value) begin
+            if (3'h5 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_5_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_162) begin
-        if (_GEN_8715) begin
+      end else if (_T_206) begin
+        if (_GEN_9392) begin
           rb_entries_5_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_162) begin
-      if (_GEN_8715) begin
+    end else if (_T_206) begin
+      if (_GEN_9392) begin
         rb_entries_5_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_5_request_operands_0_mode <= _GEN_495;
+        rb_entries_5_request_operands_0_mode <= _GEN_1173;
       end
     end else begin
-      rb_entries_5_request_operands_0_mode <= _GEN_495;
+      rb_entries_5_request_operands_0_mode <= _GEN_1173;
     end
     if (reset) begin
       rb_entries_5_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_221) begin
-        if (_T_222) begin
+      if (_T_265) begin
+        if (_T_266) begin
           rb_entries_5_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_165) begin
-          if (_GEN_9199) begin
+        end else if (_T_209) begin
+          if (_GEN_9876) begin
             if (3'h7 == rb_entries_5_request_operands_1_value[2:0]) begin
               rb_entries_5_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_5_request_operands_1_value[2:0]) begin
@@ -7239,17 +7487,17 @@ end // initial
               rb_entries_5_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h5 == value) begin
+            if (3'h5 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_5_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_165) begin
-        if (_GEN_9199) begin
+      end else if (_T_209) begin
+        if (_GEN_9876) begin
           if (3'h7 == rb_entries_5_request_operands_1_value[2:0]) begin
             rb_entries_5_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_5_request_operands_1_value[2:0]) begin
@@ -7268,17 +7516,17 @@ end // initial
             rb_entries_5_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_165) begin
-      if (_GEN_9199) begin
+    end else if (_T_209) begin
+      if (_GEN_9876) begin
         if (3'h7 == rb_entries_5_request_operands_1_value[2:0]) begin
           rb_entries_5_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_5_request_operands_1_value[2:0]) begin
@@ -7297,60 +7545,60 @@ end // initial
           rb_entries_5_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_5_request_operands_1_value <= _GEN_519;
+        rb_entries_5_request_operands_1_value <= _GEN_1181;
       end
     end else begin
-      rb_entries_5_request_operands_1_value <= _GEN_519;
+      rb_entries_5_request_operands_1_value <= _GEN_1181;
     end
     if (reset) begin
       rb_entries_5_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_221) begin
-        if (_T_222) begin
+      if (_T_265) begin
+        if (_T_266) begin
           rb_entries_5_request_operands_1_mode <= 2'h0;
-        end else if (_T_165) begin
-          if (_GEN_9199) begin
+        end else if (_T_209) begin
+          if (_GEN_9876) begin
             rb_entries_5_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h5 == value) begin
+            if (3'h5 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_5_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_165) begin
-        if (_GEN_9199) begin
+      end else if (_T_209) begin
+        if (_GEN_9876) begin
           rb_entries_5_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_165) begin
-      if (_GEN_9199) begin
+    end else if (_T_209) begin
+      if (_GEN_9876) begin
         rb_entries_5_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_5_request_operands_1_mode <= _GEN_511;
+        rb_entries_5_request_operands_1_mode <= _GEN_1189;
       end
     end else begin
-      rb_entries_5_request_operands_1_mode <= _GEN_511;
+      rb_entries_5_request_operands_1_mode <= _GEN_1189;
     end
     if (reset) begin
       rb_entries_5_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_223) begin
-        if (_T_224) begin
+      if (_T_267) begin
+        if (_T_268) begin
           rb_entries_5_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_168) begin
-          if (_GEN_9683) begin
+        end else if (_T_212) begin
+          if (_GEN_10360) begin
             if (3'h7 == rb_entries_5_request_operands_2_value[2:0]) begin
               rb_entries_5_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_5_request_operands_2_value[2:0]) begin
@@ -7369,17 +7617,17 @@ end // initial
               rb_entries_5_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h5 == value) begin
+            if (3'h5 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_5_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_168) begin
-        if (_GEN_9683) begin
+      end else if (_T_212) begin
+        if (_GEN_10360) begin
           if (3'h7 == rb_entries_5_request_operands_2_value[2:0]) begin
             rb_entries_5_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_5_request_operands_2_value[2:0]) begin
@@ -7398,17 +7646,17 @@ end // initial
             rb_entries_5_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_168) begin
-      if (_GEN_9683) begin
+    end else if (_T_212) begin
+      if (_GEN_10360) begin
         if (3'h7 == rb_entries_5_request_operands_2_value[2:0]) begin
           rb_entries_5_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_5_request_operands_2_value[2:0]) begin
@@ -7427,231 +7675,239 @@ end // initial
           rb_entries_5_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_5_request_operands_2_value <= _GEN_535;
+        rb_entries_5_request_operands_2_value <= _GEN_1197;
       end
     end else begin
-      rb_entries_5_request_operands_2_value <= _GEN_535;
+      rb_entries_5_request_operands_2_value <= _GEN_1197;
     end
     if (reset) begin
       rb_entries_5_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_223) begin
-        if (_T_224) begin
+      if (_T_267) begin
+        if (_T_268) begin
           rb_entries_5_request_operands_2_mode <= 2'h0;
-        end else if (_T_168) begin
-          if (_GEN_9683) begin
+        end else if (_T_212) begin
+          if (_GEN_10360) begin
             rb_entries_5_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h5 == value) begin
+            if (3'h5 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_5_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_168) begin
-        if (_GEN_9683) begin
+      end else if (_T_212) begin
+        if (_GEN_10360) begin
           rb_entries_5_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h5 == value) begin
+          if (3'h5 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_5_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_168) begin
-      if (_GEN_9683) begin
+    end else if (_T_212) begin
+      if (_GEN_10360) begin
         rb_entries_5_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_5_request_operands_2_mode <= _GEN_527;
+        rb_entries_5_request_operands_2_mode <= _GEN_1205;
       end
     end else begin
-      rb_entries_5_request_operands_2_mode <= _GEN_527;
+      rb_entries_5_request_operands_2_mode <= _GEN_1205;
     end
     if (reset) begin
       rb_entries_5_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_5_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_5_request_inFetch_0 <= 1'h0;
+    end else if (_T_139) begin
+      rb_entries_5_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_5_request_inFetch_0 <= _T_381[15];
+      rb_entries_5_request_inFetch_0 <= _T_425[15];
     end
     if (reset) begin
       rb_entries_5_request_inFetch_1 <= 1'h0;
+    end else if (_T_139) begin
+      rb_entries_5_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_5_request_inFetch_1 <= _T_381[16];
+      rb_entries_5_request_inFetch_1 <= _T_425[16];
     end
     if (reset) begin
       rb_entries_5_request_inFetch_2 <= 1'h0;
+    end else if (_T_139) begin
+      rb_entries_5_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_5_request_inFetch_2 <= _T_381[17];
+      rb_entries_5_request_inFetch_2 <= _T_425[17];
     end
     if (reset) begin
       rb_entries_5_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h5 == result_idx) begin
         rb_entries_5_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_5_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h5 == result_idx) begin
         rb_entries_5_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_5_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h5 == result_idx) begin
         rb_entries_5_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_5_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h5 == result_idx) begin
         rb_entries_5_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_5_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h5 == result_idx) begin
         rb_entries_5_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_5_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h5 == result_idx) begin
         rb_entries_5_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_5_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h5 == result_idx) begin
         rb_entries_5_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h5 == value) begin
+        if (3'h5 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_5_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h5 == value) begin
+      if (3'h5 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_5_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       rb_entries_6_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_6_completed <= _GEN_1172;
+    end else if (_T_160) begin
+      rb_entries_6_completed <= _GEN_1850;
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_6_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_6_valid <= _GEN_256;
+      rb_entries_6_valid <= _GEN_974;
     end
     if (reset) begin
       rb_entries_6_dispatched <= 1'h0;
+    end else if (_T_145) begin
+      rb_entries_6_dispatched <= 1'h0;
     end else begin
-      rb_entries_6_dispatched <= _T_107;
+      rb_entries_6_dispatched <= _T_149;
     end
     if (reset) begin
       rb_entries_6_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_6_written <= _GEN_859;
+      rb_entries_6_written <= _GEN_1529;
     end else if (wbCountOn) begin
-      rb_entries_6_written <= _GEN_842;
+      rb_entries_6_written <= _GEN_1512;
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_6_wr_addr <= 48'h0;
+      rb_entries_6_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
-        rb_entries_6_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_6_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_6_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_225) begin
-        if (_T_226) begin
+      if (_T_269) begin
+        if (_T_270) begin
           rb_entries_6_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_171) begin
-          if (_GEN_10167) begin
+        end else if (_T_215) begin
+          if (_GEN_10844) begin
             if (3'h7 == rb_entries_6_request_operands_0_value[2:0]) begin
               rb_entries_6_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_6_request_operands_0_value[2:0]) begin
@@ -7670,17 +7926,17 @@ end // initial
               rb_entries_6_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h6 == value) begin
+            if (3'h6 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_6_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_171) begin
-        if (_GEN_10167) begin
+      end else if (_T_215) begin
+        if (_GEN_10844) begin
           if (3'h7 == rb_entries_6_request_operands_0_value[2:0]) begin
             rb_entries_6_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_6_request_operands_0_value[2:0]) begin
@@ -7699,17 +7955,17 @@ end // initial
             rb_entries_6_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_171) begin
-      if (_GEN_10167) begin
+    end else if (_T_215) begin
+      if (_GEN_10844) begin
         if (3'h7 == rb_entries_6_request_operands_0_value[2:0]) begin
           rb_entries_6_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_6_request_operands_0_value[2:0]) begin
@@ -7728,60 +7984,60 @@ end // initial
           rb_entries_6_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_6_request_operands_0_value <= _GEN_504;
+        rb_entries_6_request_operands_0_value <= _GEN_1166;
       end
     end else begin
-      rb_entries_6_request_operands_0_value <= _GEN_504;
+      rb_entries_6_request_operands_0_value <= _GEN_1166;
     end
     if (reset) begin
       rb_entries_6_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_225) begin
-        if (_T_226) begin
+      if (_T_269) begin
+        if (_T_270) begin
           rb_entries_6_request_operands_0_mode <= 2'h0;
-        end else if (_T_171) begin
-          if (_GEN_10167) begin
+        end else if (_T_215) begin
+          if (_GEN_10844) begin
             rb_entries_6_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h6 == value) begin
+            if (3'h6 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_6_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_171) begin
-        if (_GEN_10167) begin
+      end else if (_T_215) begin
+        if (_GEN_10844) begin
           rb_entries_6_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_171) begin
-      if (_GEN_10167) begin
+    end else if (_T_215) begin
+      if (_GEN_10844) begin
         rb_entries_6_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_6_request_operands_0_mode <= _GEN_496;
+        rb_entries_6_request_operands_0_mode <= _GEN_1174;
       end
     end else begin
-      rb_entries_6_request_operands_0_mode <= _GEN_496;
+      rb_entries_6_request_operands_0_mode <= _GEN_1174;
     end
     if (reset) begin
       rb_entries_6_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_227) begin
-        if (_T_228) begin
+      if (_T_271) begin
+        if (_T_272) begin
           rb_entries_6_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_174) begin
-          if (_GEN_10651) begin
+        end else if (_T_218) begin
+          if (_GEN_11328) begin
             if (3'h7 == rb_entries_6_request_operands_1_value[2:0]) begin
               rb_entries_6_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_6_request_operands_1_value[2:0]) begin
@@ -7800,17 +8056,17 @@ end // initial
               rb_entries_6_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h6 == value) begin
+            if (3'h6 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_6_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_174) begin
-        if (_GEN_10651) begin
+      end else if (_T_218) begin
+        if (_GEN_11328) begin
           if (3'h7 == rb_entries_6_request_operands_1_value[2:0]) begin
             rb_entries_6_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_6_request_operands_1_value[2:0]) begin
@@ -7829,17 +8085,17 @@ end // initial
             rb_entries_6_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_174) begin
-      if (_GEN_10651) begin
+    end else if (_T_218) begin
+      if (_GEN_11328) begin
         if (3'h7 == rb_entries_6_request_operands_1_value[2:0]) begin
           rb_entries_6_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_6_request_operands_1_value[2:0]) begin
@@ -7858,60 +8114,60 @@ end // initial
           rb_entries_6_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_6_request_operands_1_value <= _GEN_520;
+        rb_entries_6_request_operands_1_value <= _GEN_1182;
       end
     end else begin
-      rb_entries_6_request_operands_1_value <= _GEN_520;
+      rb_entries_6_request_operands_1_value <= _GEN_1182;
     end
     if (reset) begin
       rb_entries_6_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_227) begin
-        if (_T_228) begin
+      if (_T_271) begin
+        if (_T_272) begin
           rb_entries_6_request_operands_1_mode <= 2'h0;
-        end else if (_T_174) begin
-          if (_GEN_10651) begin
+        end else if (_T_218) begin
+          if (_GEN_11328) begin
             rb_entries_6_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h6 == value) begin
+            if (3'h6 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_6_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_174) begin
-        if (_GEN_10651) begin
+      end else if (_T_218) begin
+        if (_GEN_11328) begin
           rb_entries_6_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_174) begin
-      if (_GEN_10651) begin
+    end else if (_T_218) begin
+      if (_GEN_11328) begin
         rb_entries_6_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_6_request_operands_1_mode <= _GEN_512;
+        rb_entries_6_request_operands_1_mode <= _GEN_1190;
       end
     end else begin
-      rb_entries_6_request_operands_1_mode <= _GEN_512;
+      rb_entries_6_request_operands_1_mode <= _GEN_1190;
     end
     if (reset) begin
       rb_entries_6_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_229) begin
-        if (_T_230) begin
+      if (_T_273) begin
+        if (_T_274) begin
           rb_entries_6_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_177) begin
-          if (_GEN_11135) begin
+        end else if (_T_221) begin
+          if (_GEN_11812) begin
             if (3'h7 == rb_entries_6_request_operands_2_value[2:0]) begin
               rb_entries_6_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_6_request_operands_2_value[2:0]) begin
@@ -7930,17 +8186,17 @@ end // initial
               rb_entries_6_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h6 == value) begin
+            if (3'h6 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_6_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_177) begin
-        if (_GEN_11135) begin
+      end else if (_T_221) begin
+        if (_GEN_11812) begin
           if (3'h7 == rb_entries_6_request_operands_2_value[2:0]) begin
             rb_entries_6_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_6_request_operands_2_value[2:0]) begin
@@ -7959,17 +8215,17 @@ end // initial
             rb_entries_6_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_177) begin
-      if (_GEN_11135) begin
+    end else if (_T_221) begin
+      if (_GEN_11812) begin
         if (3'h7 == rb_entries_6_request_operands_2_value[2:0]) begin
           rb_entries_6_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_6_request_operands_2_value[2:0]) begin
@@ -7988,231 +8244,239 @@ end // initial
           rb_entries_6_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_6_request_operands_2_value <= _GEN_536;
+        rb_entries_6_request_operands_2_value <= _GEN_1198;
       end
     end else begin
-      rb_entries_6_request_operands_2_value <= _GEN_536;
+      rb_entries_6_request_operands_2_value <= _GEN_1198;
     end
     if (reset) begin
       rb_entries_6_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_229) begin
-        if (_T_230) begin
+      if (_T_273) begin
+        if (_T_274) begin
           rb_entries_6_request_operands_2_mode <= 2'h0;
-        end else if (_T_177) begin
-          if (_GEN_11135) begin
+        end else if (_T_221) begin
+          if (_GEN_11812) begin
             rb_entries_6_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h6 == value) begin
+            if (3'h6 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_6_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_177) begin
-        if (_GEN_11135) begin
+      end else if (_T_221) begin
+        if (_GEN_11812) begin
           rb_entries_6_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h6 == value) begin
+          if (3'h6 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_6_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_177) begin
-      if (_GEN_11135) begin
+    end else if (_T_221) begin
+      if (_GEN_11812) begin
         rb_entries_6_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_6_request_operands_2_mode <= _GEN_528;
+        rb_entries_6_request_operands_2_mode <= _GEN_1206;
       end
     end else begin
-      rb_entries_6_request_operands_2_mode <= _GEN_528;
+      rb_entries_6_request_operands_2_mode <= _GEN_1206;
     end
     if (reset) begin
       rb_entries_6_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_6_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_6_request_inFetch_0 <= 1'h0;
+    end else if (_T_145) begin
+      rb_entries_6_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_6_request_inFetch_0 <= _T_381[18];
+      rb_entries_6_request_inFetch_0 <= _T_425[18];
     end
     if (reset) begin
       rb_entries_6_request_inFetch_1 <= 1'h0;
+    end else if (_T_145) begin
+      rb_entries_6_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_6_request_inFetch_1 <= _T_381[19];
+      rb_entries_6_request_inFetch_1 <= _T_425[19];
     end
     if (reset) begin
       rb_entries_6_request_inFetch_2 <= 1'h0;
+    end else if (_T_145) begin
+      rb_entries_6_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_6_request_inFetch_2 <= _T_381[20];
+      rb_entries_6_request_inFetch_2 <= _T_425[20];
     end
     if (reset) begin
       rb_entries_6_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h6 == result_idx) begin
         rb_entries_6_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_6_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h6 == result_idx) begin
         rb_entries_6_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_6_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h6 == result_idx) begin
         rb_entries_6_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_6_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h6 == result_idx) begin
         rb_entries_6_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_6_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h6 == result_idx) begin
         rb_entries_6_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_6_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h6 == result_idx) begin
         rb_entries_6_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_6_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h6 == result_idx) begin
         rb_entries_6_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h6 == value) begin
+        if (3'h6 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_6_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h6 == value) begin
+      if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       rb_entries_7_completed <= 1'h0;
-    end else if (_T_116) begin
-      rb_entries_7_completed <= _GEN_1173;
+    end else if (_T_160) begin
+      rb_entries_7_completed <= _GEN_1851;
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_completed <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_7_valid <= 1'h0;
     end else if (new_input_log) begin
-      rb_entries_7_valid <= _GEN_257;
+      rb_entries_7_valid <= _GEN_975;
     end
     if (reset) begin
       rb_entries_7_dispatched <= 1'h0;
+    end else if (_T_151) begin
+      rb_entries_7_dispatched <= 1'h0;
     end else begin
-      rb_entries_7_dispatched <= _T_110;
+      rb_entries_7_dispatched <= _T_155;
     end
     if (reset) begin
       rb_entries_7_written <= 1'h0;
     end else if (wbCountOn) begin
-      rb_entries_7_written <= _GEN_860;
+      rb_entries_7_written <= _GEN_1530;
     end else if (wbCountOn) begin
-      rb_entries_7_written <= _GEN_843;
+      rb_entries_7_written <= _GEN_1513;
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_written <= 1'h0;
       end
     end
     if (reset) begin
-      rb_entries_7_wr_addr <= 48'h0;
+      rb_entries_7_wr_addr <= 8'h0;
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
-        rb_entries_7_wr_addr <= _rb_entries_value_wr_addr;
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
+        rb_entries_7_wr_addr <= io_request_bits_wr_addr;
       end
     end
     if (reset) begin
       rb_entries_7_request_operands_0_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_231) begin
-        if (_T_232) begin
+      if (_T_275) begin
+        if (_T_276) begin
           rb_entries_7_request_operands_0_value <= io_mem_read_data;
-        end else if (_T_180) begin
-          if (_GEN_11619) begin
+        end else if (_T_224) begin
+          if (_GEN_12296) begin
             if (3'h7 == rb_entries_7_request_operands_0_value[2:0]) begin
               rb_entries_7_request_operands_0_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_7_request_operands_0_value[2:0]) begin
@@ -8231,17 +8495,17 @@ end // initial
               rb_entries_7_request_operands_0_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h7 == value) begin
+            if (3'h7 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_7_request_operands_0_value <= io_request_bits_operands_0_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
-      end else if (_T_180) begin
-        if (_GEN_11619) begin
+      end else if (_T_224) begin
+        if (_GEN_12296) begin
           if (3'h7 == rb_entries_7_request_operands_0_value[2:0]) begin
             rb_entries_7_request_operands_0_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_7_request_operands_0_value[2:0]) begin
@@ -8260,17 +8524,17 @@ end // initial
             rb_entries_7_request_operands_0_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_0_value <= io_request_bits_operands_0_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_request_operands_0_value <= io_request_bits_operands_0_value;
         end
       end
-    end else if (_T_180) begin
-      if (_GEN_11619) begin
+    end else if (_T_224) begin
+      if (_GEN_12296) begin
         if (3'h7 == rb_entries_7_request_operands_0_value[2:0]) begin
           rb_entries_7_request_operands_0_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_7_request_operands_0_value[2:0]) begin
@@ -8289,60 +8553,60 @@ end // initial
           rb_entries_7_request_operands_0_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_7_request_operands_0_value <= _GEN_505;
+        rb_entries_7_request_operands_0_value <= _GEN_1167;
       end
     end else begin
-      rb_entries_7_request_operands_0_value <= _GEN_505;
+      rb_entries_7_request_operands_0_value <= _GEN_1167;
     end
     if (reset) begin
       rb_entries_7_request_operands_0_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_231) begin
-        if (_T_232) begin
+      if (_T_275) begin
+        if (_T_276) begin
           rb_entries_7_request_operands_0_mode <= 2'h0;
-        end else if (_T_180) begin
-          if (_GEN_11619) begin
+        end else if (_T_224) begin
+          if (_GEN_12296) begin
             rb_entries_7_request_operands_0_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h7 == value) begin
+            if (3'h7 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_7_request_operands_0_mode <= io_request_bits_operands_0_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
-      end else if (_T_180) begin
-        if (_GEN_11619) begin
+      end else if (_T_224) begin
+        if (_GEN_12296) begin
           rb_entries_7_request_operands_0_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_0_mode <= io_request_bits_operands_0_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_request_operands_0_mode <= io_request_bits_operands_0_mode;
         end
       end
-    end else if (_T_180) begin
-      if (_GEN_11619) begin
+    end else if (_T_224) begin
+      if (_GEN_12296) begin
         rb_entries_7_request_operands_0_mode <= 2'h0;
       end else begin
-        rb_entries_7_request_operands_0_mode <= _GEN_497;
+        rb_entries_7_request_operands_0_mode <= _GEN_1175;
       end
     end else begin
-      rb_entries_7_request_operands_0_mode <= _GEN_497;
+      rb_entries_7_request_operands_0_mode <= _GEN_1175;
     end
     if (reset) begin
       rb_entries_7_request_operands_1_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_233) begin
-        if (_T_234) begin
+      if (_T_277) begin
+        if (_T_278) begin
           rb_entries_7_request_operands_1_value <= io_mem_read_data;
-        end else if (_T_183) begin
-          if (_GEN_12103) begin
+        end else if (_T_227) begin
+          if (_GEN_12780) begin
             if (3'h7 == rb_entries_7_request_operands_1_value[2:0]) begin
               rb_entries_7_request_operands_1_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_7_request_operands_1_value[2:0]) begin
@@ -8361,17 +8625,17 @@ end // initial
               rb_entries_7_request_operands_1_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h7 == value) begin
+            if (3'h7 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_7_request_operands_1_value <= io_request_bits_operands_1_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
-      end else if (_T_183) begin
-        if (_GEN_12103) begin
+      end else if (_T_227) begin
+        if (_GEN_12780) begin
           if (3'h7 == rb_entries_7_request_operands_1_value[2:0]) begin
             rb_entries_7_request_operands_1_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_7_request_operands_1_value[2:0]) begin
@@ -8390,17 +8654,17 @@ end // initial
             rb_entries_7_request_operands_1_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_1_value <= io_request_bits_operands_1_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_request_operands_1_value <= io_request_bits_operands_1_value;
         end
       end
-    end else if (_T_183) begin
-      if (_GEN_12103) begin
+    end else if (_T_227) begin
+      if (_GEN_12780) begin
         if (3'h7 == rb_entries_7_request_operands_1_value[2:0]) begin
           rb_entries_7_request_operands_1_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_7_request_operands_1_value[2:0]) begin
@@ -8419,60 +8683,60 @@ end // initial
           rb_entries_7_request_operands_1_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_7_request_operands_1_value <= _GEN_521;
+        rb_entries_7_request_operands_1_value <= _GEN_1183;
       end
     end else begin
-      rb_entries_7_request_operands_1_value <= _GEN_521;
+      rb_entries_7_request_operands_1_value <= _GEN_1183;
     end
     if (reset) begin
       rb_entries_7_request_operands_1_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_233) begin
-        if (_T_234) begin
+      if (_T_277) begin
+        if (_T_278) begin
           rb_entries_7_request_operands_1_mode <= 2'h0;
-        end else if (_T_183) begin
-          if (_GEN_12103) begin
+        end else if (_T_227) begin
+          if (_GEN_12780) begin
             rb_entries_7_request_operands_1_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h7 == value) begin
+            if (3'h7 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_7_request_operands_1_mode <= io_request_bits_operands_1_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
-      end else if (_T_183) begin
-        if (_GEN_12103) begin
+      end else if (_T_227) begin
+        if (_GEN_12780) begin
           rb_entries_7_request_operands_1_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_1_mode <= io_request_bits_operands_1_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_request_operands_1_mode <= io_request_bits_operands_1_mode;
         end
       end
-    end else if (_T_183) begin
-      if (_GEN_12103) begin
+    end else if (_T_227) begin
+      if (_GEN_12780) begin
         rb_entries_7_request_operands_1_mode <= 2'h0;
       end else begin
-        rb_entries_7_request_operands_1_mode <= _GEN_513;
+        rb_entries_7_request_operands_1_mode <= _GEN_1191;
       end
     end else begin
-      rb_entries_7_request_operands_1_mode <= _GEN_513;
+      rb_entries_7_request_operands_1_mode <= _GEN_1191;
     end
     if (reset) begin
       rb_entries_7_request_operands_2_value <= 32'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_235) begin
-        if (_T_236) begin
+      if (_T_279) begin
+        if (_T_280) begin
           rb_entries_7_request_operands_2_value <= io_mem_read_data;
-        end else if (_T_186) begin
-          if (_GEN_12587) begin
+        end else if (_T_230) begin
+          if (_GEN_13264) begin
             if (3'h7 == rb_entries_7_request_operands_2_value[2:0]) begin
               rb_entries_7_request_operands_2_value <= rb_entries_7_result_out;
             end else if (3'h6 == rb_entries_7_request_operands_2_value[2:0]) begin
@@ -8491,17 +8755,17 @@ end // initial
               rb_entries_7_request_operands_2_value <= rb_entries_0_result_out;
             end
           end else if (new_input_log) begin
-            if (3'h7 == value) begin
+            if (3'h7 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_7_request_operands_2_value <= io_request_bits_operands_2_value;
             end
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
-      end else if (_T_186) begin
-        if (_GEN_12587) begin
+      end else if (_T_230) begin
+        if (_GEN_13264) begin
           if (3'h7 == rb_entries_7_request_operands_2_value[2:0]) begin
             rb_entries_7_request_operands_2_value <= rb_entries_7_result_out;
           end else if (3'h6 == rb_entries_7_request_operands_2_value[2:0]) begin
@@ -8520,17 +8784,17 @@ end // initial
             rb_entries_7_request_operands_2_value <= rb_entries_0_result_out;
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_2_value <= io_request_bits_operands_2_value;
           end
         end
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_request_operands_2_value <= io_request_bits_operands_2_value;
         end
       end
-    end else if (_T_186) begin
-      if (_GEN_12587) begin
+    end else if (_T_230) begin
+      if (_GEN_13264) begin
         if (3'h7 == rb_entries_7_request_operands_2_value[2:0]) begin
           rb_entries_7_request_operands_2_value <= rb_entries_7_result_out;
         end else if (3'h6 == rb_entries_7_request_operands_2_value[2:0]) begin
@@ -8549,202 +8813,203 @@ end // initial
           rb_entries_7_request_operands_2_value <= rb_entries_0_result_out;
         end
       end else begin
-        rb_entries_7_request_operands_2_value <= _GEN_537;
+        rb_entries_7_request_operands_2_value <= _GEN_1199;
       end
     end else begin
-      rb_entries_7_request_operands_2_value <= _GEN_537;
+      rb_entries_7_request_operands_2_value <= _GEN_1199;
     end
     if (reset) begin
       rb_entries_7_request_operands_2_mode <= 2'h0;
     end else if (io_mem_read_resp_valid) begin
-      if (_T_235) begin
-        if (_T_236) begin
+      if (_T_279) begin
+        if (_T_280) begin
           rb_entries_7_request_operands_2_mode <= 2'h0;
-        end else if (_T_186) begin
-          if (_GEN_12587) begin
+        end else if (_T_230) begin
+          if (_GEN_13264) begin
             rb_entries_7_request_operands_2_mode <= 2'h0;
           end else if (new_input_log) begin
-            if (3'h7 == value) begin
+            if (3'h7 == io_request_bits_wr_addr[2:0]) begin
               rb_entries_7_request_operands_2_mode <= io_request_bits_operands_2_mode;
             end
           end
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
-      end else if (_T_186) begin
-        if (_GEN_12587) begin
+      end else if (_T_230) begin
+        if (_GEN_13264) begin
           rb_entries_7_request_operands_2_mode <= 2'h0;
         end else if (new_input_log) begin
-          if (3'h7 == value) begin
+          if (3'h7 == io_request_bits_wr_addr[2:0]) begin
             rb_entries_7_request_operands_2_mode <= io_request_bits_operands_2_mode;
           end
         end
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_request_operands_2_mode <= io_request_bits_operands_2_mode;
         end
       end
-    end else if (_T_186) begin
-      if (_GEN_12587) begin
+    end else if (_T_230) begin
+      if (_GEN_13264) begin
         rb_entries_7_request_operands_2_mode <= 2'h0;
       end else begin
-        rb_entries_7_request_operands_2_mode <= _GEN_529;
+        rb_entries_7_request_operands_2_mode <= _GEN_1207;
       end
     end else begin
-      rb_entries_7_request_operands_2_mode <= _GEN_529;
+      rb_entries_7_request_operands_2_mode <= _GEN_1207;
     end
     if (reset) begin
       rb_entries_7_request_inst <= 3'h0;
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_request_inst <= io_request_bits_inst;
       end
     end
     if (reset) begin
       rb_entries_7_request_mode <= 2'h0;
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_request_mode <= io_request_bits_mode;
       end
     end
     if (reset) begin
       rb_entries_7_request_inFetch_0 <= 1'h0;
+    end else if (_T_151) begin
+      rb_entries_7_request_inFetch_0 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_7_request_inFetch_0 <= _T_381[21];
+      rb_entries_7_request_inFetch_0 <= _T_425[21];
     end
     if (reset) begin
       rb_entries_7_request_inFetch_1 <= 1'h0;
+    end else if (_T_151) begin
+      rb_entries_7_request_inFetch_1 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_7_request_inFetch_1 <= _T_381[22];
+      rb_entries_7_request_inFetch_1 <= _T_425[22];
     end
     if (reset) begin
       rb_entries_7_request_inFetch_2 <= 1'h0;
+    end else if (_T_151) begin
+      rb_entries_7_request_inFetch_2 <= 1'h0;
     end else if (fetchArb_io_hasChosen) begin
-      rb_entries_7_request_inFetch_2 <= _T_381[23];
+      rb_entries_7_request_inFetch_2 <= _T_425[23];
     end
     if (reset) begin
       rb_entries_7_result_isZero <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h7 == result_idx) begin
         rb_entries_7_result_isZero <= _rb_entries_result_idx_result_isZero;
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_result_isZero <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_result_isZero <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_7_result_isNaR <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h7 == result_idx) begin
         rb_entries_7_result_isNaR <= _rb_entries_result_idx_result_isNaR;
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_result_isNaR <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_result_isNaR <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_7_result_out <= 32'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h7 == result_idx) begin
         rb_entries_7_result_out <= _rb_entries_result_idx_result_out;
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_result_out <= 32'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_result_out <= 32'h0;
       end
     end
     if (reset) begin
       rb_entries_7_result_lt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h7 == result_idx) begin
         rb_entries_7_result_lt <= _rb_entries_result_idx_result_lt;
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_result_lt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_result_lt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_7_result_eq <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h7 == result_idx) begin
         rb_entries_7_result_eq <= _rb_entries_result_idx_result_eq;
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_result_eq <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_result_eq <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_7_result_gt <= 1'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h7 == result_idx) begin
         rb_entries_7_result_gt <= _rb_entries_result_idx_result_gt;
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_result_gt <= 1'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_result_gt <= 1'h0;
       end
     end
     if (reset) begin
       rb_entries_7_result_exceptions <= 5'h0;
-    end else if (_T_116) begin
+    end else if (_T_160) begin
       if (3'h7 == result_idx) begin
         rb_entries_7_result_exceptions <= _rb_entries_result_idx_result_exceptions;
       end else if (new_input_log) begin
-        if (3'h7 == value) begin
+        if (3'h7 == io_request_bits_wr_addr[2:0]) begin
           rb_entries_7_result_exceptions <= 5'h0;
         end
       end
     end else if (new_input_log) begin
-      if (3'h7 == value) begin
+      if (3'h7 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_7_result_exceptions <= 5'h0;
       end
     end
     if (reset) begin
       value <= 3'h0;
-    end else if (new_input_log) begin
-      value <= _T_4;
-    end
-    if (reset) begin
-      value_1 <= 3'h0;
     end else if (wbCountOn) begin
-      value_1 <= _T_14;
+      value <= _T_35;
     end
     `ifndef SYNTHESIS
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 180:23]
+        if (new_input_log & _T_11) begin
+          $fwrite(32'h80000002,"written new entry\n"); // @[POSIT_Locality.scala 24:23]
         end
     `ifdef PRINTF_COND
       end
@@ -8754,8 +9019,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 181:23]
+        if (new_input_log & _T_11) begin
+          $fwrite(32'h80000002,"op%d: mode: %d value: %d\n",1'h0,io_request_bits_operands_0_mode,io_request_bits_operands_0_value); // @[POSIT_Locality.scala 32:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8765,8 +9030,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 182:23]
+        if (new_input_log & _T_11) begin
+          $fwrite(32'h80000002,"op%d: mode: %d value: %d\n",1'h1,io_request_bits_operands_1_mode,io_request_bits_operands_1_value); // @[POSIT_Locality.scala 32:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8776,8 +9041,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 183:23]
+        if (new_input_log & _T_11) begin
+          $fwrite(32'h80000002,"op%d: mode: %d value: %d\n",2'h2,io_request_bits_operands_2_mode,io_request_bits_operands_2_value); // @[POSIT_Locality.scala 32:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8787,8 +9052,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 184:23]
+        if (_T_466 & _T_11) begin
+          $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 184:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8798,8 +9063,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 185:23]
+        if (_T_466 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 185:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8809,8 +9074,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 186:23]
+        if (_T_466 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 186:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8820,8 +9085,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 187:23]
+        if (_T_466 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 187:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8831,8 +9096,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 189:31]
+        if (_T_466 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 188:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8842,8 +9107,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 190:31]
+        if (_T_466 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 189:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8853,8 +9118,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 191:31]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t-mem_write:\n"); // @[POSIT_Locality.scala 192:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8864,8 +9129,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 189:31]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_mem_write_valid); // @[POSIT_Locality.scala 193:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8875,8 +9140,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 190:31]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_mem_write_ready); // @[POSIT_Locality.scala 194:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8886,8 +9151,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 191:31]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 195:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8897,8 +9162,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 189:31]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_mem_write_bits_wr_addr); // @[POSIT_Locality.scala 196:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8908,8 +9173,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 190:31]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-result: \n"); // @[POSIT_Locality.scala 197:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8919,8 +9184,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 191:31]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-isZero: %b\n",io_mem_write_bits_result_isZero); // @[POSIT_Locality.scala 198:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8930,8 +9195,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t-mem_write:\n"); // @[POSIT_Locality.scala 194:23]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-isNaR: %b\n",io_mem_write_bits_result_isNaR); // @[POSIT_Locality.scala 199:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8941,8 +9206,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_mem_write_valid); // @[POSIT_Locality.scala 195:23]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-lt: %b\n",io_mem_write_bits_result_lt); // @[POSIT_Locality.scala 200:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8952,8 +9217,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_mem_write_ready); // @[POSIT_Locality.scala 196:23]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-eq: %b\n",io_mem_write_bits_result_eq); // @[POSIT_Locality.scala 201:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8963,8 +9228,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 197:23]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-gt: %b\n",io_mem_write_bits_result_gt); // @[POSIT_Locality.scala 202:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8974,8 +9239,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_mem_write_bits_wr_addr); // @[POSIT_Locality.scala 198:23]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-exceptions: %x\n",io_mem_write_bits_result_exceptions); // @[POSIT_Locality.scala 203:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8985,8 +9250,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t-result: \n"); // @[POSIT_Locality.scala 199:23]
+        if (io_mem_write_valid & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-out: %b\n",io_mem_write_bits_result_out); // @[POSIT_Locality.scala 204:31]
         end
     `ifdef PRINTF_COND
       end
@@ -8996,8 +9261,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-isZero: %b\n",io_mem_write_bits_result_isZero); // @[POSIT_Locality.scala 200:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 208:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9007,8 +9272,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-isNaR: %b\n",io_mem_write_bits_result_isNaR); // @[POSIT_Locality.scala 201:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 209:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9018,8 +9283,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-lt: %b\n",io_mem_write_bits_result_lt); // @[POSIT_Locality.scala 202:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 210:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9029,8 +9294,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-eq: %b\n",io_mem_write_bits_result_eq); // @[POSIT_Locality.scala 203:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 211:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9040,8 +9305,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-gt: %b\n",io_mem_write_bits_result_gt); // @[POSIT_Locality.scala 204:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 212:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9051,8 +9316,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-exceptions: %x\n",io_mem_write_bits_result_exceptions); // @[POSIT_Locality.scala 205:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 213:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9062,8 +9327,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t\t\t-out: %x\n",io_mem_write_bits_result_out); // @[POSIT_Locality.scala 206:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 214:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9073,8 +9338,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 208:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 215:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9084,8 +9349,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 209:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 217:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9095,8 +9360,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 210:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 218:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9106,8 +9371,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 211:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 219:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9117,8 +9382,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 212:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 217:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9128,8 +9393,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 213:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 218:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9139,8 +9404,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t-fetchArb:\n"); // @[POSIT_Locality.scala 215:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 219:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9150,8 +9415,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-validity:%b\n",fetchArb_io_validity); // @[POSIT_Locality.scala 216:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 217:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9161,8 +9426,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-priority:%x\n",fetchArb_io_priority); // @[POSIT_Locality.scala 217:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 218:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9172,8 +9437,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-chosen:%x\n",fetchArb_io_chosen); // @[POSIT_Locality.scala 218:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 219:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9183,8 +9448,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",fetchArb_io_hasChosen); // @[POSIT_Locality.scala 219:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t-fetchArb:\n"); // @[POSIT_Locality.scala 222:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9194,8 +9459,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t-dispatchArb\n"); // @[POSIT_Locality.scala 221:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-validity:%b\n",fetchArb_io_validity); // @[POSIT_Locality.scala 223:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9205,8 +9470,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-validity:%b\n",dispatchArb_io_validity); // @[POSIT_Locality.scala 222:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-priority:%x\n",fetchArb_io_priority); // @[POSIT_Locality.scala 224:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9216,8 +9481,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-priority:%x\n",dispatchArb_io_priority); // @[POSIT_Locality.scala 223:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-chosen:%x\n",fetchArb_io_chosen); // @[POSIT_Locality.scala 225:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9227,8 +9492,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-chosen:%x\n",dispatchArb_io_chosen); // @[POSIT_Locality.scala 224:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",fetchArb_io_hasChosen); // @[POSIT_Locality.scala 226:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9238,8 +9503,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",dispatchArb_io_hasChosen); // @[POSIT_Locality.scala 225:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t-dispatchArb\n"); // @[POSIT_Locality.scala 228:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9249,8 +9514,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 227:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-validity:%b\n",dispatchArb_io_validity); // @[POSIT_Locality.scala 229:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9260,8 +9525,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 228:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-priority:%x\n",dispatchArb_io_priority); // @[POSIT_Locality.scala 230:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9271,8 +9536,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,rb_entries_0_valid,rb_entries_0_dispatched,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,rb_entries_0_request_inFetch_0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,rb_entries_0_request_inFetch_1,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,rb_entries_0_request_inFetch_2,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-chosen:%x\n",dispatchArb_io_chosen); // @[POSIT_Locality.scala 231:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9282,8 +9547,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,rb_entries_1_valid,rb_entries_1_dispatched,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,rb_entries_1_request_inFetch_0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,rb_entries_1_request_inFetch_1,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,rb_entries_1_request_inFetch_2,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",dispatchArb_io_hasChosen); // @[POSIT_Locality.scala 232:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9293,8 +9558,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,rb_entries_2_valid,rb_entries_2_dispatched,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,rb_entries_2_request_inFetch_0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,rb_entries_2_request_inFetch_1,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,rb_entries_2_request_inFetch_2,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 234:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9304,8 +9569,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,rb_entries_3_valid,rb_entries_3_dispatched,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,rb_entries_3_request_inFetch_0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,rb_entries_3_request_inFetch_1,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,rb_entries_3_request_inFetch_2,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 235:31]
         end
     `ifdef PRINTF_COND
       end
@@ -9315,8 +9580,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h4,rb_entries_4_completed,rb_entries_4_valid,rb_entries_4_dispatched,rb_entries_4_written,rb_entries_4_wr_addr,rb_entries_4_request_inst,rb_entries_4_request_mode,rb_entries_4_request_operands_0_value,rb_entries_4_request_operands_0_mode,rb_entries_4_request_inFetch_0,rb_entries_4_request_operands_1_value,rb_entries_4_request_operands_1_mode,rb_entries_4_request_inFetch_1,rb_entries_4_request_operands_2_value,rb_entries_4_request_operands_2_mode,rb_entries_4_request_inFetch_2,rb_entries_4_result_isZero,rb_entries_4_result_isNaR,rb_entries_4_result_out,rb_entries_4_result_lt,rb_entries_4_result_eq,rb_entries_4_result_gt,rb_entries_4_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,rb_entries_0_valid,rb_entries_0_dispatched,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,rb_entries_0_request_inFetch_0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,rb_entries_0_request_inFetch_1,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,rb_entries_0_request_inFetch_2,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9326,8 +9591,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h5,rb_entries_5_completed,rb_entries_5_valid,rb_entries_5_dispatched,rb_entries_5_written,rb_entries_5_wr_addr,rb_entries_5_request_inst,rb_entries_5_request_mode,rb_entries_5_request_operands_0_value,rb_entries_5_request_operands_0_mode,rb_entries_5_request_inFetch_0,rb_entries_5_request_operands_1_value,rb_entries_5_request_operands_1_mode,rb_entries_5_request_inFetch_1,rb_entries_5_request_operands_2_value,rb_entries_5_request_operands_2_mode,rb_entries_5_request_inFetch_2,rb_entries_5_result_isZero,rb_entries_5_result_isNaR,rb_entries_5_result_out,rb_entries_5_result_lt,rb_entries_5_result_eq,rb_entries_5_result_gt,rb_entries_5_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,rb_entries_1_valid,rb_entries_1_dispatched,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,rb_entries_1_request_inFetch_0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,rb_entries_1_request_inFetch_1,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,rb_entries_1_request_inFetch_2,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9337,8 +9602,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h6,rb_entries_6_completed,rb_entries_6_valid,rb_entries_6_dispatched,rb_entries_6_written,rb_entries_6_wr_addr,rb_entries_6_request_inst,rb_entries_6_request_mode,rb_entries_6_request_operands_0_value,rb_entries_6_request_operands_0_mode,rb_entries_6_request_inFetch_0,rb_entries_6_request_operands_1_value,rb_entries_6_request_operands_1_mode,rb_entries_6_request_inFetch_1,rb_entries_6_request_operands_2_value,rb_entries_6_request_operands_2_mode,rb_entries_6_request_inFetch_2,rb_entries_6_result_isZero,rb_entries_6_result_isNaR,rb_entries_6_result_out,rb_entries_6_result_lt,rb_entries_6_result_eq,rb_entries_6_result_gt,rb_entries_6_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,rb_entries_2_valid,rb_entries_2_dispatched,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,rb_entries_2_request_inFetch_0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,rb_entries_2_request_inFetch_1,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,rb_entries_2_request_inFetch_2,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9348,8 +9613,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h7,rb_entries_7_completed,rb_entries_7_valid,rb_entries_7_dispatched,rb_entries_7_written,rb_entries_7_wr_addr,rb_entries_7_request_inst,rb_entries_7_request_mode,rb_entries_7_request_operands_0_value,rb_entries_7_request_operands_0_mode,rb_entries_7_request_inFetch_0,rb_entries_7_request_operands_1_value,rb_entries_7_request_operands_1_mode,rb_entries_7_request_inFetch_1,rb_entries_7_request_operands_2_value,rb_entries_7_request_operands_2_mode,rb_entries_7_request_inFetch_2,rb_entries_7_result_isZero,rb_entries_7_result_isNaR,rb_entries_7_result_out,rb_entries_7_result_lt,rb_entries_7_result_eq,rb_entries_7_result_gt,rb_entries_7_result_exceptions); // @[POSIT_Locality.scala 235:31]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,rb_entries_3_valid,rb_entries_3_dispatched,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,rb_entries_3_request_inFetch_0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,rb_entries_3_request_inFetch_1,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,rb_entries_3_request_inFetch_2,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9359,8 +9624,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 241:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h4,rb_entries_4_completed,rb_entries_4_valid,rb_entries_4_dispatched,rb_entries_4_written,rb_entries_4_wr_addr,rb_entries_4_request_inst,rb_entries_4_request_mode,rb_entries_4_request_operands_0_value,rb_entries_4_request_operands_0_mode,rb_entries_4_request_inFetch_0,rb_entries_4_request_operands_1_value,rb_entries_4_request_operands_1_mode,rb_entries_4_request_inFetch_1,rb_entries_4_request_operands_2_value,rb_entries_4_request_operands_2_mode,rb_entries_4_request_inFetch_2,rb_entries_4_result_isZero,rb_entries_4_result_isNaR,rb_entries_4_result_out,rb_entries_4_result_lt,rb_entries_4_result_eq,rb_entries_4_result_gt,rb_entries_4_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9370,8 +9635,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 245:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h5,rb_entries_5_completed,rb_entries_5_valid,rb_entries_5_dispatched,rb_entries_5_written,rb_entries_5_wr_addr,rb_entries_5_request_inst,rb_entries_5_request_mode,rb_entries_5_request_operands_0_value,rb_entries_5_request_operands_0_mode,rb_entries_5_request_inFetch_0,rb_entries_5_request_operands_1_value,rb_entries_5_request_operands_1_mode,rb_entries_5_request_inFetch_1,rb_entries_5_request_operands_2_value,rb_entries_5_request_operands_2_mode,rb_entries_5_request_inFetch_2,rb_entries_5_result_isZero,rb_entries_5_result_isNaR,rb_entries_5_result_out,rb_entries_5_result_lt,rb_entries_5_result_eq,rb_entries_5_result_gt,rb_entries_5_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9381,8 +9646,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t %b | %b | %x | %x | %x | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 246:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h6,rb_entries_6_completed,rb_entries_6_valid,rb_entries_6_dispatched,rb_entries_6_written,rb_entries_6_wr_addr,rb_entries_6_request_inst,rb_entries_6_request_mode,rb_entries_6_request_operands_0_value,rb_entries_6_request_operands_0_mode,rb_entries_6_request_inFetch_0,rb_entries_6_request_operands_1_value,rb_entries_6_request_operands_1_mode,rb_entries_6_request_inFetch_1,rb_entries_6_request_operands_2_value,rb_entries_6_request_operands_2_mode,rb_entries_6_request_inFetch_2,rb_entries_6_result_isZero,rb_entries_6_result_isNaR,rb_entries_6_result_out,rb_entries_6_result_lt,rb_entries_6_result_eq,rb_entries_6_result_gt,rb_entries_6_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9392,8 +9657,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 247:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h7,rb_entries_7_completed,rb_entries_7_valid,rb_entries_7_dispatched,rb_entries_7_written,rb_entries_7_wr_addr,rb_entries_7_request_inst,rb_entries_7_request_mode,rb_entries_7_request_operands_0_value,rb_entries_7_request_operands_0_mode,rb_entries_7_request_inFetch_0,rb_entries_7_request_operands_1_value,rb_entries_7_request_operands_1_mode,rb_entries_7_request_inFetch_1,rb_entries_7_request_operands_2_value,rb_entries_7_request_operands_2_mode,rb_entries_7_request_inFetch_2,rb_entries_7_result_isZero,rb_entries_7_result_isNaR,rb_entries_7_result_out,rb_entries_7_result_lt,rb_entries_7_result_eq,rb_entries_7_result_gt,rb_entries_7_result_exceptions); // @[POSIT_Locality.scala 242:39]
         end
     `ifdef PRINTF_COND
       end
@@ -9403,8 +9668,52 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_407) begin
-          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 249:23]
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 248:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 252:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %b | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 253:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 254:31]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_506 & _T_11) begin
+          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 256:31]
         end
     `ifdef PRINTF_COND
       end

@@ -6,7 +6,7 @@ import chisel3.util._
 
 class PositTopMemWrite() extends Bundle{
 	val result = new PositLocalityTopResult
-	val wr_addr = UInt(48.W)
+	val wr_addr = UInt(8.W)
 }
 
 class RequestOperand extends Bundle{
