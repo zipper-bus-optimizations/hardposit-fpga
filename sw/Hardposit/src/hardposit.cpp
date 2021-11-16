@@ -32,6 +32,12 @@ static Hardposit_cmp* result_track_cmp[NUM_ENTRIES];
 
 static std::vector<uint8_t> dependency[NUM_ENTRIES];
 
+void close_accel(){
+	accel->reset();
+	accel->close();
+	req->release();
+	result->release();
+}
 void init_accel(){
 	if(!accel){
 		properties::ptr_t filter = properties::get();
@@ -47,10 +53,11 @@ void init_accel(){
 		}
 		token::ptr_t tok = tokens[0];
 		accel = handle::open(tok, FPGA_OPEN_SHARED);
+		accel->reset();
 		req = shared_buffer::allocate(accel, NUM_ENTRIES*READ_GRANULATIRY);
 		result = shared_buffer::allocate(accel, NUM_ENTRIES*WRITE_GRANULATIRY);
-	  	std::fill_n(req->c_type(), NUM_ENTRIES*READ_GRANULATIRY, 0);
-	  	std::fill_n(result->c_type(), NUM_ENTRIES*WRITE_GRANULATIRY, 0);
+	  std::fill_n(req->c_type(), NUM_ENTRIES*READ_GRANULATIRY, 0);
+	  std::fill_n(result->c_type(), NUM_ENTRIES*WRITE_GRANULATIRY, 0);
 
 		// open accelerator and map MMIO
 		accel->reset();
@@ -62,6 +69,7 @@ void init_accel(){
 		uint64_t write_setup = 0;
 		write_setup += ((result->io_address())>>6);
 		write_setup += (WRITE_GRANULATIRY << 42);
+	  __sync_synchronize();
 		accel->write_csr64(0, read_setup);
 		accel->write_csr64(8, write_setup);
 	}
@@ -77,20 +85,10 @@ void Hardposit::print_val(){
 }
 
 uint32_t Hardposit::get_val(){
-	if(!this->valid){
-		// std::cout<<"pointer to read"<<std::hex<< this->ptr<<std::endl;
-		std::cout<<"addr: "<<(int)this->ptr<<std::endl;
-		while(!this->ptr->flags){ 
-		}
-		if(this->ptr->flags){
-			std::cout <<"flags are up"<<std::endl;
-		}else{
-			std::cout <<"flags are down"<<std::endl;
-		}
+	if(!this->valid && this->ptr!=nullptr){
+		while(!this->ptr->flags){}
 		this->valid = true;
 		std::memcpy(&this->val, &this->ptr->result, sizeof(uint32_t));
-		this->ptr->flags = 0;
-		this->ptr->result = 0;
 		result_track[this->location] = nullptr;
 	}
 	return this->val;
@@ -127,56 +125,68 @@ Hardposit::Hardposit(double in_val){
 	this->counter = 0;
 }
 Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode){
-	std::cout<< "compute:"<<global_counter<<std::endl;
 	Operand ops[3];
 	Hardposit ret;
 	uint8_t result_q_pointer = global_counter % NUM_ENTRIES;
+	/*with reuse*/
 
-	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
-		ops[0].addr = this->location;
-		ops[0].addr_mode= 1;
-		dependency[this->location].push_back(result_q_pointer);
-	}else{
-		ops[0].addr = req_q_pointer;
-		ops[0].addr_mode= 2;
-		uint32_t res = this->get_val();
-		// std::cout<< "op0 value:"<<res <<std::endl;
-		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	}
+	// if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
+	// 	ops[0].addr = this->location;
+	// 	ops[0].addr_mode= 1;
+	// 	dependency[this->location].push_back(result_q_pointer);
+	// }else{
+	// 	ops[0].addr = req_q_pointer;
+	// 	ops[0].addr_mode= 2;
+	// 	uint32_t res = this->get_val();
+	// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
+	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	// }
 
-	if(obj1.ptr && (global_counter-obj1.counter) < FPGA_ENTRIES ){
-		ops[1].addr = obj1.location;
-		ops[1].addr_mode= 1;
-		dependency[obj1.location].push_back(result_q_pointer);
-	}else{
-		ops[1].addr = req_q_pointer;
-		ops[1].addr_mode= 2;
-		uint32_t res = obj1.get_val();
-		// std::cout<< "op1 value:"<<res <<std::endl;
-		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	// if(obj1.ptr && (global_counter-obj1.counter) < FPGA_ENTRIES ){
+	// 	ops[1].addr = obj1.location;
+	// 	ops[1].addr_mode= 1;
+	// 	dependency[obj1.location].push_back(result_q_pointer);
+	// }else{
+	// 	ops[1].addr = req_q_pointer;
+	// 	ops[1].addr_mode= 2;
+	// 	uint32_t res = obj1.get_val();
+	// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
+	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	// }
 
-	}
+	/*no reuse*/
+
+	ops[0].addr = req_q_pointer;
+	ops[0].addr_mode= 2;
+	uint32_t retv = this->get_val();
+	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));
+	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	ops[1].addr = req_q_pointer;
+	ops[1].addr_mode= 2;
+	retv = obj1.get_val();
+	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));		
+	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+
 	if(inst == Inst::FMA){
-		if(obj2.ptr && (global_counter -obj2.counter) < FPGA_ENTRIES ){
-			ops[2].addr = obj2.location;
-			ops[2].addr_mode= 1;
-			dependency[obj2.location].push_back(result_q_pointer);
-		}else{
+		// if(obj2.ptr && (global_counter -obj2.counter) < FPGA_ENTRIES ){
+		// 	ops[2].addr = obj2.location;
+		// 	ops[2].addr_mode= 1;
+		// 	dependency[obj2.location].push_back(result_q_pointer);
+		// }else{
+		// 	ops[2].addr = req_q_pointer;
+		// 	ops[2].addr_mode= 2;
+		// 	uint32_t res = obj2.get_val();
+		// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
+		// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		// }
 			ops[2].addr = req_q_pointer;
 			ops[2].addr_mode= 2;
 			uint32_t res = obj2.get_val();
 			mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
 			req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-			req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-		}
 	}else{
 		ops[2].addr_mode= 0;
 	}
-	std::cout <<"arth "<<"glbl_ctr:"<<(int)global_counter<<" this_cntr:"<<(int)this->counter<<" obj1_ctnr:"<<(int)obj1.counter<<" obj2_cntr:"<<(int)obj2.counter<<std::endl;
-	std::cout <<"arth "<<"location: "<<(int)result_q_pointer<<" ops0: "<<(int)ops[0].addr<<" ops0 mode:"<<(int)ops[0].addr_mode <<" ops1: "<<(int)ops[1].addr<<" ops1 mode:"<<(int)ops[1].addr_mode <<std::endl;
-
 
 	Hardposit* res = result_track[result_q_pointer] ;
 	if( res != nullptr){
@@ -185,32 +195,17 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 		}
 	}
 
-	if(global_counter == 2503){
-		std::cout << "res: "<<(int)res<<std::endl;
-		if( res!= nullptr){
-			std::cout << "res valid: "<<(int)res->valid<<std::endl;
-			if(!res->valid){
-				std::cout << "get val: "<<std::endl;
-				res->get_val();
-			}
-		}
-	}
-
 	Hardposit_cmp* res_cmp = result_track_cmp[result_q_pointer] ;
-	if( res_cmp!= nullptr){
+	if( res_cmp != nullptr){
 		if(!res_cmp->valid){
 			res_cmp->get_val();
 		}
 	}
-	std::cout <<"dependency: ";
 
 	for(auto& i : dependency[result_q_pointer]){
-		std::cout <<(int)i<<" ";
 		res = result_track[i];
 		if( res!= nullptr){
-			std::cout <<"res not null"<<std::endl;
 			if(!res->valid){
-				std::cout <<"fetching" << std::endl;
 				res->get_val();
 			}
 		}
@@ -221,7 +216,6 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 			}
 		}
 	}
-	std::cout<<"dependency end" << std::endl;
 	dependency[result_q_pointer].clear();
 
 	ret.valid = false;
@@ -230,31 +224,19 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	ret.counter = global_counter;
 	ret.location = result_q_pointer;
 	uint64_t write_req = 0;
-	// std::cout <<"result pointer : "<<(int)result_q_pointer<<std::endl;
-	// std::cout <<"result pointer : "<<ret.ptr <<std::endl;
 
 	write_req += result_q_pointer;
-	// std::cout <<"write_req :"<<std::bitset<64>(write_req) <<std::endl;
-	// std::cout <<"op0:"<<(int)ops[0].addr<<" mode:"<<(int)ops[0].addr_mode<<std::endl;
-	// std::cout <<"op1:"<<(int)ops[1].addr<<" mode:"<<(int)ops[1].addr_mode<<std::endl;
-	// std::cout <<"op2:"<<(int)ops[2].addr<<" mode:"<<(int)ops[2].addr_mode<<std::endl;
+
 
 	mempcpy((uint8_t*)&write_req+1, ops, 3*sizeof(Operand));
-	// std::cout <<"write_req :"<<std::bitset<64>(write_req) <<std::endl;
 	uint8_t insmod =  inst + (mode << 3);
 	write_req += ((uint64_t)insmod) << 56;
-	// std::cout <<"inst mode: "<<(int) insmod<<std::endl;
-	// std::cout <<"inst " <<inst <<"mode: "<<mode<<std::endl;
-	// std::cout <<"write_req :"<<std::bitset<64>(write_req) <<std::endl;
+
 	global_counter ++;
 	ret.ptr->flags = 0;
-	if(ret.ptr->flags){
-		std::cout <<"flags are already up"<<std::endl;
-	}else{
-		std::cout <<"flags are already down"<<std::endl;
-	}
-	std::cout<<"addr: "<<(int)ret.ptr<<std::endl;
+
 	result_track[result_q_pointer] = &ret;
+  __sync_synchronize();
 	accel->write_csr64(16, write_req);
 	return ret;
 }
@@ -321,35 +303,49 @@ int Hardposit::toInt(){
 }
 // compare
 Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode){
-	std::cout<< "compute:"<<global_counter<<std::endl;
 	uint8_t result_q_pointer = global_counter % NUM_ENTRIES;
 	Operand ops[2];
 	Hardposit_cmp ret;
-	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
-		ops[0].addr = this->location;
-		ops[0].addr_mode= 1;
-		dependency[this->location].push_back(result_q_pointer);
-	}else{
-		ops[0].addr = req_q_pointer;
-		ops[0].addr_mode= 2;
-		uint32_t res = this->get_val();
-		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	}
 
-	if(obj.ptr && (global_counter-obj.counter) < FPGA_ENTRIES ){
-		ops[1].addr = obj.location;
-		ops[1].addr_mode= 1;
-		dependency[obj.location].push_back(result_q_pointer);
-	}else{
-		ops[1].addr = req_q_pointer;
-		ops[1].addr_mode= 2;
-		uint32_t res = obj.get_val();
-		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &res, sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	}
-	std::cout <<"cmp "<<"glbl_ctr: "<<(int)global_counter<<" this_cntr: "<<(int)this->counter<<" obj_ctnr: "<<(int)obj.counter<<std::endl;
-	std::cout <<"cmp "<<"location: "<<(int)result_q_pointer<<" ops0: "<<(int)ops[0].addr<<" ops0 mode:"<<(int)ops[0].addr_mode <<" ops1: "<<(int)ops[1].addr<<" ops1 mode:"<<(int)ops[1].addr_mode <<std::endl;
+	/*with reuse*/
+
+	// if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
+	// 	ops[0].addr = this->location;
+	// 	ops[0].addr_mode= 1;
+	// 	dependency[this->location].push_back(result_q_pointer);
+	// }else{
+	// 	ops[0].addr = req_q_pointer;
+	// 	ops[0].addr_mode= 2;
+	// 	uint32_t res = this->get_val();
+	// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
+	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	// }
+
+	// if(obj.ptr && (global_counter-obj.counter) < FPGA_ENTRIES ){
+	// 	ops[1].addr = obj.location;
+	// 	ops[1].addr_mode= 1;
+	// 	dependency[obj.location].push_back(result_q_pointer);
+	// }else{
+	// 	ops[1].addr = req_q_pointer;
+	// 	ops[1].addr_mode= 2;
+	// 	uint32_t res = obj.get_val();
+	// 	mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &res, sizeof(uint32_t));
+	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	// }
+
+/*no reuse*/
+
+	ops[0].addr = req_q_pointer;
+	ops[0].addr_mode= 2;
+	uint32_t retv = this->get_val();
+	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));
+	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	ops[1].addr = req_q_pointer;
+	ops[1].addr_mode= 2;
+	retv = obj.get_val();
+	mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &retv, sizeof(uint32_t));
+	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+/*no reuse*/
 
 	ops[2].addr_mode= 0;
 	Hardposit* res = result_track[result_q_pointer] ;
@@ -366,10 +362,8 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 			res_cmp->get_val();
 		}
 	}
-	std::cout <<"dependency: ";
 
 	for(auto& i : dependency[result_q_pointer]){
-		std::cout <<(int)i<<" ";
 		res = result_track[i];
 		if( res!= nullptr){
 			if(!res->valid){
@@ -383,29 +377,20 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 			}
 		}
 	}
-	std::cout<<std::endl;
 	ret.valid = false;
 	dependency[result_q_pointer].clear();
 	ret.ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULATIRY);
 	ret.counter = global_counter;
 	ret.location = result_q_pointer;
 	uint64_t write_req = 0;
-	// std::cout <<"result pointer : "<<(int)result_q_pointer<<std::endl;
-	// std::cout <<"result pointer : "<<ret.ptr <<std::endl;
 
 	write_req += result_q_pointer;
-	// std::cout <<"write_req :"<<std::bitset<64>(write_req) <<std::endl;
-	// std::cout <<"op0:"<<(int)ops[0].addr<<" mode:"<<(int)ops[0].addr_mode<<std::endl;
-	// std::cout <<"op1:"<<(int)ops[1].addr<<" mode:"<<(int)ops[1].addr_mode<<std::endl;
-	// std::cout <<"op2:"<<(int)ops[2].addr<<" mode:"<<(int)ops[2].addr_mode<<std::endl;
+
 
 	mempcpy((uint8_t*)&write_req+1, ops, 3*sizeof(Operand));
-	// std::cout <<"write_req :"<<std::bitset<64>(write_req) <<std::endl;
 	uint8_t insmod =  inst + (mode << 3);
 	write_req += ((uint64_t)insmod) << 56;
-	// std::cout <<"inst mode: "<<(int) insmod<<std::endl;
-	// std::cout <<"inst " <<inst <<"mode: "<<mode<<std::endl;
-	// std::cout <<"write_req :"<<std::bitset<64>(write_req) <<std::endl;
+
 	global_counter ++;
 	ret.ptr->flags = 0;
 	result_track_cmp[result_q_pointer] = &ret;
@@ -439,7 +424,7 @@ void Hardposit_cmp::print_val(){
 	std::cout << "Hardposit_cmp: " << std::hex<< this->get_val() << std::endl;
 }
 bool Hardposit_cmp::get_val(){
-	if(!this->valid){
+	if(!this->valid && this->ptr!=nullptr){
 		while(!this->ptr->flags){}
 		this->valid = true;
 		switch (this->type){
@@ -455,8 +440,6 @@ bool Hardposit_cmp::get_val(){
 				break;
 		}
 		result_track_cmp[this->location] = nullptr;
-		this->ptr->flags = 0;
-		this->ptr->result = 0;
 	}
 	return this->val;
 }

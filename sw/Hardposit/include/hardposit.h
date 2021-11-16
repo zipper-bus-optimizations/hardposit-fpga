@@ -13,6 +13,7 @@
 
 using namespace opae::fpga::types;
 
+void close_accel();
 void init_accel();
 enum CmpType {NONE, LT, EQ, GT};
 enum Inst{NOOP, ADDSUB, CMP, FMA, MUL, SQRTDIV};

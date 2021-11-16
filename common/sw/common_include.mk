@@ -2,8 +2,8 @@
 ## Common sw build rules
 ##
 
-COPT     ?= -g -O2
-CPPFLAGS ?= -std=gnu++11 -g
+COPT     ?=  -O3
+CPPFLAGS ?= -std=gnu++11 
 CXX      ?= g++
 LDFLAGS  ?=
 

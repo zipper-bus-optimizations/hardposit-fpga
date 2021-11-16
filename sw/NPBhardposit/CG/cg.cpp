@@ -332,6 +332,7 @@ int main(int argc, char **argv) {
 			mflops, "          floating point", 
 			verified, NPBVERSION, COMPILETIME,
 			CS1, CS2, CS3, CS4, CS5, CS6, CS7);
+	close_accel();
 }
 
 /*--------------------------------------------------------------------

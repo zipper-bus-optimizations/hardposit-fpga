@@ -96,15 +96,15 @@ C_INC = -I../common -I../../SoftPosit/source/include -I../../Hardposit/include
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
 #---------------------------------------------------------------------------
-CFLAGS	= -O3 -g -Wall -Wextra -ffp-contract=off -ffloat-store -Wno-cpp -fPIC  $(LDFLAGS) #-fexcess-precision=standard
+CFLAGS	= -O3  -Wall -Wextra -ffp-contract=off -ffloat-store -Wno-cpp -fPIC  $(LDFLAGS) #-fexcess-precision=standard
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 
 # size usually go here. 
 #---------------------------------------------------------------------------
-CLINKFLAGSFPGA = -O3 -g -Wall -Wextra -ffp-contract=off -ffloat-store  $(LDFLAGS)
+CLINKFLAGSFPGA = -O3  -Wall -Wextra -ffp-contract=off -ffloat-store  $(LDFLAGS)
 #-fexcess-precision=standard
-CLINKFLAGSASE = -O3 -g -Wall -Wextra -ffp-contract=off -ffloat-store   $(LDFLAGS)
+CLINKFLAGSASE = -O3  -Wall -Wextra -ffp-contract=off -ffloat-store   $(LDFLAGS)
 
 CLINK_LIBFPGA = $(FPGA_LIBS) /homes/chshibo/hardposit-chisel3/sw/Hardposit/lib/libhardpositfpga.a /homes/chshibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a 
 CLINK_LIBASE =  $(ASE_LIBS) /homes/chshibo/hardposit-chisel3/sw/Hardposit/lib/libhardpositase.a /homes/chshibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a

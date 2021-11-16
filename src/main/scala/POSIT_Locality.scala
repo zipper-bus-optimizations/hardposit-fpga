@@ -40,7 +40,7 @@ class POSIT_Locality(debug: Boolean) extends Module {
 	// wb logic
 	val wbCountOn = Wire(Bool())
 	val (wbCntrVal, _) = Counter(wbCountOn, Params.NumRBEntries)
-	when(io.mem_write.ready && rb.entries(wbCntrVal).completed){
+	when(io.mem_write.ready && rb.entries(wbCntrVal).completed && (~rb.entries(wbCntrVal).written)){
 		wbCountOn := true.B
 		rb.entries(wbCntrVal).written := true.B
 	}.otherwise{
@@ -48,14 +48,10 @@ class POSIT_Locality(debug: Boolean) extends Module {
 	}
 
 	// Connect the output
-	io.mem_write.valid := rb.entries(wbCntrVal).completed
+	io.mem_write.valid := rb.entries(wbCntrVal).completed && (~rb.entries(wbCntrVal).written)
 	io.mem_write.bits.wr_addr := rb.entries(wbCntrVal).wr_addr
 	io.mem_write.bits.result <> rb.entries(wbCntrVal).result
 
-	// When the output has been written
-	when(wbCountOn){
-		rb.entries(wbCntrVal).written := true.B
-	}
 
 
 	val dispatchArb = Module(new DispatchArbiter(Params.NumRBEntries))

@@ -8,12 +8,12 @@ c  in this directory. Do not modify it by hand.
 #define	NITER_DEFAULT	60
 #define	DT_DEFAULT	0.010
 #define	CONVERTDOUBLE	FALSE
-#define COMPILETIME "25 Oct 2021"
+#define COMPILETIME "09 Nov 2021"
 #define NPBVERSION "3.0 structured"
 #define CS1 "g++ -std=gnu++11"
 #define CS2 "g++"
 #define CS3 "-lm -lquadmath -lrt"
 #define CS4 "-I../common -I../../SoftPosit/source/includ..."
-#define CS5 "-O3 -g -Wall -Wextra -ffp-contract=off -ffl..."
+#define CS5 "-O3  -Wall -Wextra -ffp-contract=off -ffloa..."
 #define CS6 "(none)"
 #define CS7 "randdp"

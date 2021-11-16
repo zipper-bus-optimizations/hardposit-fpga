@@ -20,3 +20,4 @@ sw/build_sim/
 */bin/*.B
 *.o
 *.a
+sw/NPBhardposit/bin/*
