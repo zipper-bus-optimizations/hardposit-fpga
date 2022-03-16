@@ -32,6 +32,18 @@ static Hardposit_cmp* result_track_cmp[NUM_ENTRIES];
 
 static std::vector<uint8_t> dependency[NUM_ENTRIES];
 
+void poll_performance(){
+	memset((void*)result->c_type(), 0, sizeof(Performance_array));
+	accel->write_csr64(16, 1);
+	Performance_array perf;
+	while(!perf.valid){
+		mempcpy(((void*)result->c_type() + sizeof(uint32_t)*req_q_pointer), &perf, sizeof(perf));
+	}
+	for(int i =0; i< 10; i++){
+		std::cout << "10 to the "<<i<<": "<<perf.mem_req_cycles[i]<<std::endl;
+	}
+}
+
 void close_accel(){
 	accel->reset();
 	accel->close();
@@ -129,33 +141,35 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	Hardposit ret;
 	uint8_t result_q_pointer = global_counter % NUM_ENTRIES;
 	/*with reuse*/
+	#ifdef REUSE
+	std::cout<<"REUSE defined"<<std::endl;
+	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
+		ops[0].addr = this->location;
+		ops[0].addr_mode= 1;
+		dependency[this->location].push_back(result_q_pointer);
+	}else{
+		ops[0].addr = req_q_pointer;
+		ops[0].addr_mode= 2;
+		uint32_t res = this->get_val();
+		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
+		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	}
 
-	// if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
-	// 	ops[0].addr = this->location;
-	// 	ops[0].addr_mode= 1;
-	// 	dependency[this->location].push_back(result_q_pointer);
-	// }else{
-	// 	ops[0].addr = req_q_pointer;
-	// 	ops[0].addr_mode= 2;
-	// 	uint32_t res = this->get_val();
-	// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
-	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	// }
-
-	// if(obj1.ptr && (global_counter-obj1.counter) < FPGA_ENTRIES ){
-	// 	ops[1].addr = obj1.location;
-	// 	ops[1].addr_mode= 1;
-	// 	dependency[obj1.location].push_back(result_q_pointer);
-	// }else{
-	// 	ops[1].addr = req_q_pointer;
-	// 	ops[1].addr_mode= 2;
-	// 	uint32_t res = obj1.get_val();
-	// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
-	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	// }
-
+	if(obj1.ptr && (global_counter-obj1.counter) < FPGA_ENTRIES ){
+		ops[1].addr = obj1.location;
+		ops[1].addr_mode= 1;
+		dependency[obj1.location].push_back(result_q_pointer);
+	}else{
+		ops[1].addr = req_q_pointer;
+		ops[1].addr_mode= 2;
+		uint32_t res = obj1.get_val();
+		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
+		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	}
+	#endif
 	/*no reuse*/
-
+	#ifdef NOREUSE
+	std::cout<<"NOREUSE defined"<<std::endl;
 	ops[0].addr = req_q_pointer;
 	ops[0].addr_mode= 2;
 	uint32_t retv = this->get_val();
@@ -166,24 +180,33 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	retv = obj1.get_val();
 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));		
 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	#endif
 
 	if(inst == Inst::FMA){
-		// if(obj2.ptr && (global_counter -obj2.counter) < FPGA_ENTRIES ){
-		// 	ops[2].addr = obj2.location;
-		// 	ops[2].addr_mode= 1;
-		// 	dependency[obj2.location].push_back(result_q_pointer);
-		// }else{
-		// 	ops[2].addr = req_q_pointer;
-		// 	ops[2].addr_mode= 2;
-		// 	uint32_t res = obj2.get_val();
-		// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
-		// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-		// }
+		/*with reuse*/
+		#ifdef REUSE
+		std::cout<<"REUSE defined"<<std::endl;
+		if(obj2.ptr && (global_counter -obj2.counter) < FPGA_ENTRIES ){
+			ops[2].addr = obj2.location;
+			ops[2].addr_mode= 1;
+			dependency[obj2.location].push_back(result_q_pointer);
+		}else{
 			ops[2].addr = req_q_pointer;
 			ops[2].addr_mode= 2;
 			uint32_t res = obj2.get_val();
 			mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
 			req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		}
+		#endif
+		/*no reuse*/
+		#ifdef NOREUSE
+		std::cout<<"NOREUSE defined"<<std::endl;
+		ops[2].addr = req_q_pointer;
+		ops[2].addr_mode= 2;
+		uint32_t res = obj2.get_val();
+		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
+		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		#endif
 	}else{
 		ops[2].addr_mode= 0;
 	}
@@ -308,33 +331,35 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 	Hardposit_cmp ret;
 
 	/*with reuse*/
+	#ifdef REUSE
+	std::cout<<"REUSE defined"<<std::endl;
+	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
+		ops[0].addr = this->location;
+		ops[0].addr_mode= 1;
+		dependency[this->location].push_back(result_q_pointer);
+	}else{
+		ops[0].addr = req_q_pointer;
+		ops[0].addr_mode= 2;
+		uint32_t res = this->get_val();
+		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
+		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	}
 
-	// if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
-	// 	ops[0].addr = this->location;
-	// 	ops[0].addr_mode= 1;
-	// 	dependency[this->location].push_back(result_q_pointer);
-	// }else{
-	// 	ops[0].addr = req_q_pointer;
-	// 	ops[0].addr_mode= 2;
-	// 	uint32_t res = this->get_val();
-	// 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
-	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	// }
-
-	// if(obj.ptr && (global_counter-obj.counter) < FPGA_ENTRIES ){
-	// 	ops[1].addr = obj.location;
-	// 	ops[1].addr_mode= 1;
-	// 	dependency[obj.location].push_back(result_q_pointer);
-	// }else{
-	// 	ops[1].addr = req_q_pointer;
-	// 	ops[1].addr_mode= 2;
-	// 	uint32_t res = obj.get_val();
-	// 	mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &res, sizeof(uint32_t));
-	// 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	// }
-
-/*no reuse*/
-
+	if(obj.ptr && (global_counter-obj.counter) < FPGA_ENTRIES ){
+		ops[1].addr = obj.location;
+		ops[1].addr_mode= 1;
+		dependency[obj.location].push_back(result_q_pointer);
+	}else{
+		ops[1].addr = req_q_pointer;
+		ops[1].addr_mode= 2;
+		uint32_t res = obj.get_val();
+		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &res, sizeof(uint32_t));
+		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	}
+	#endif
+	/*no reuse*/
+	#ifdef NOREUSE
+	std::cout<<"NOREUSE defined"<<std::endl;
 	ops[0].addr = req_q_pointer;
 	ops[0].addr_mode= 2;
 	uint32_t retv = this->get_val();
@@ -345,7 +370,7 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 	retv = obj.get_val();
 	mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &retv, sizeof(uint32_t));
 	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-/*no reuse*/
+	#endif
 
 	ops[2].addr_mode= 0;
 	Hardposit* res = result_track[result_q_pointer] ;

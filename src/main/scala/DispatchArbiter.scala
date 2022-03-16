@@ -30,9 +30,9 @@ class DispatchArbiter(numBits: Int) extends Module{
     when (afterPriority(i)) {
       afterPriorityChosen := i.asUInt
     }
-	when(beforePriority(i)){	
-		beforePriorityChosen := i.asUInt
-	}
+		when(beforePriority(i)){	
+			beforePriorityChosen := i.asUInt
+		}
   }
 	val afterPriorityExist = afterPriority.exists( (x:Bool)=>x)
 	val beforePriorityExist = beforePriority.exists((x:Bool)=>x)

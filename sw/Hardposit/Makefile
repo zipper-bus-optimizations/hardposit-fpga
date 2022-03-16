@@ -13,19 +13,31 @@ FPGA_LIB = libhardpositfpga
 ASE_LIB = libhardpositase
 AFU_JSON_INFO = include/afu_json_info.h
 
-all: fpga ase ;
+all: all_reuse all_noreuse;
+
+all_reuse: fpga ase ;
+
+all_noreuse: fpga_noreuse ase_noreuse ;
 
 fpga: $(AFU_JSON_INFO) $(LIB_DIR)/$(FPGA_LIB).a ;
 
 ase: $(AFU_JSON_INFO) $(LIB_DIR)/$(ASE_LIB).a ;
 
+fpga_noreuse: $(AFU_JSON_INFO) $(LIB_DIR)/$(FPGA_LIB)_noreuse.a ;
+
+ase_noreuse: $(AFU_JSON_INFO) $(LIB_DIR)/$(ASE_LIB)_noreuse.a ;
 
 $(LIB_DIR)/$(FPGA_LIB).a: $(OBJ_DIR)/$(FPGA_LIB).o
 	ar crf $@ $^ 
 
-$(OBJ_DIR)/$(FPGA_LIB).o:  $(SRCS) 
-	$(CXX) -c  $^ -o $@ $(CPPFLAGS) $(LDFLAGS) $(FPGA_LIBS) -lrt
+$(LIB_DIR)/$(FPGA_LIB)_noreuse.a: $(OBJ_DIR)/$(FPGA_LIB)_noreuse.o
+	ar crf $@ $^ 
 
+$(OBJ_DIR)/$(FPGA_LIB).o:  $(SRCS) 
+	$(CXX) -c  $^ -o $@ $(CPPFLAGS) -D REUSE $(LDFLAGS) $(FPGA_LIBS) -lrt
+
+$(OBJ_DIR)/$(FPGA_LIB)_noreuse.o:  $(SRCS) 
+	$(CXX) -c  $^ -o $@ $(CPPFLAGS) -D NOREUSE $(LDFLAGS) $(FPGA_LIBS) -lrt
 
 # AFU info from JSON file, including AFU UUID
 $(AFU_JSON_INFO): ../../hw/bdx-rtl.json
@@ -34,8 +46,14 @@ $(AFU_JSON_INFO): ../../hw/bdx-rtl.json
 $(LIB_DIR)/$(ASE_LIB).a: $(OBJ_DIR)/$(ASE_LIB).o
 	ar crf $@ $^ 
 
+$(LIB_DIR)/$(ASE_LIB)_noreuse.a: $(OBJ_DIR)/$(ASE_LIB)_noreuse.o
+	ar crf $@ $^ 
+
 $(OBJ_DIR)/$(ASE_LIB).o: $(SRCS) 
-	$(CXX) -c  $^ $(CPPFLAGS) $(LDFLAGS) $(ASE_LIBS) -lrt -o $@
+	$(CXX) -c  $^ $(CPPFLAGS) -D REUSE $(LDFLAGS) $(ASE_LIBS) -lrt -o $@
+
+$(OBJ_DIR)/$(ASE_LIB)_noreuse.o: $(SRCS) 
+	$(CXX) -c  $^ $(CPPFLAGS) -D NOREUSE $(LDFLAGS) $(ASE_LIBS) -lrt -o $@
 
 .PHONY: clean
 
