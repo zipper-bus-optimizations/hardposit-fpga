@@ -154,6 +154,9 @@ module ofs_plat_afu
       else if(is_csr_write && mmio_req_hdr.address == 4) begin
         n_read_meta_data = 1;
       end
+      else begin
+        n_read_meta_data = 0;
+      end
     end
     always_ff @(posedge clk) begin
       if(!reset_n) begin
