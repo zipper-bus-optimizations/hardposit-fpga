@@ -186,6 +186,18 @@ int main(int argc, char **argv) {
 	close_accel();
 }
 
+
+// int main(int argc, char **argv) {
+//   init_accel();
+
+// 	int niter, step, n3;
+// 	int nthreads = 1;
+// 	double navg, mflops;
+// 	Hardposit a = Hardposit(1) + Hardposit(2);
+// 	poll_performance();
+// 	close_accel();
+// }
+
 /*--------------------------------------------------------------------
   c-------------------------------------------------------------------*/
 

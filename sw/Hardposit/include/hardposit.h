@@ -29,7 +29,8 @@ struct Result{
 };
 
 struct Performance_array{
-	uint32_t mem_req_cycles[10]= {0};
+	uint64_t total_cycles = 0;
+	uint32_t mem_req_cycles[12]= {0};
 	bool valid = 0;
 };
 class Hardposit_cmp{

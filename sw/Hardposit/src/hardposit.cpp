@@ -33,15 +33,24 @@ static Hardposit_cmp* result_track_cmp[NUM_ENTRIES];
 static std::vector<uint8_t> dependency[NUM_ENTRIES];
 
 void poll_performance(){
-	memset((void*)result->c_type(), 0, sizeof(Performance_array));
-	accel->write_csr64(16, 1);
-	Performance_array perf;
-	while(!perf.valid){
-		mempcpy(((void*)result->c_type() + sizeof(uint32_t)*req_q_pointer), &perf, sizeof(perf));
-	}
-	for(int i =0; i< 10; i++){
-		std::cout << "10 to the "<<i<<": "<<perf.mem_req_cycles[i]<<std::endl;
-	}
+	memset(((void*)result->c_type())+(NUM_ENTRIES*WRITE_GRANULATIRY), 0, sizeof(Performance_array));
+	accel->write_csr64(24, NUM_ENTRIES);
+	volatile Performance_array* perf = (Performance_array*)(((void*)result->c_type())+(NUM_ENTRIES*WRITE_GRANULATIRY));
+	while(!perf->valid){}
+	std::cout <<"Total req: "<< perf->total_cycles<<std::endl;
+	std::cout <<"[0, 10)"<< perf->mem_req_cycles[0] <<std::endl;
+	std::cout <<"[10, 50)"<< perf->mem_req_cycles[1] <<std::endl;
+	std::cout <<"[50, 100)"<< perf->mem_req_cycles[2] <<std::endl;
+	std::cout <<"[100, 200)"<< perf->mem_req_cycles[3] <<std::endl;
+	std::cout <<"[200, 300)"<< perf->mem_req_cycles[4] <<std::endl;
+	std::cout <<"[300, 400)"<< perf->mem_req_cycles[5] <<std::endl;
+	std::cout <<"[400, 500)"<< perf->mem_req_cycles[6] <<std::endl;
+	std::cout <<"[500, 600)"<< perf->mem_req_cycles[7] <<std::endl;
+	std::cout <<"[600, 700)"<< perf->mem_req_cycles[8] <<std::endl;
+	std::cout <<"[700, 800)"<< perf->mem_req_cycles[9] <<std::endl;
+	std::cout <<"[800, 900)"<< perf->mem_req_cycles[10] <<std::endl;
+	std::cout <<"[900, 1000)"<< perf->mem_req_cycles[11] <<std::endl;
+	std::cout <<"[1000, )"<< perf->mem_req_cycles[12] <<std::endl;
 }
 
 void close_accel(){
@@ -67,9 +76,9 @@ void init_accel(){
 		accel = handle::open(tok, FPGA_OPEN_SHARED);
 		accel->reset();
 		req = shared_buffer::allocate(accel, NUM_ENTRIES*READ_GRANULATIRY);
-		result = shared_buffer::allocate(accel, NUM_ENTRIES*WRITE_GRANULATIRY);
+		result = shared_buffer::allocate(accel,(NUM_ENTRIES+1)*WRITE_GRANULATIRY);
 	  std::fill_n(req->c_type(), NUM_ENTRIES*READ_GRANULATIRY, 0);
-	  std::fill_n(result->c_type(), NUM_ENTRIES*WRITE_GRANULATIRY, 0);
+	  std::fill_n(result->c_type(), (NUM_ENTRIES+1)*WRITE_GRANULATIRY, 0);
 
 		// open accelerator and map MMIO
 		accel->reset();
@@ -142,7 +151,6 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	uint8_t result_q_pointer = global_counter % NUM_ENTRIES;
 	/*with reuse*/
 	#ifdef REUSE
-	std::cout<<"REUSE defined"<<std::endl;
 	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
 		ops[0].addr = this->location;
 		ops[0].addr_mode= 1;
@@ -169,7 +177,6 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	#endif
 	/*no reuse*/
 	#ifdef NOREUSE
-	std::cout<<"NOREUSE defined"<<std::endl;
 	ops[0].addr = req_q_pointer;
 	ops[0].addr_mode= 2;
 	uint32_t retv = this->get_val();
@@ -185,7 +192,6 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	if(inst == Inst::FMA){
 		/*with reuse*/
 		#ifdef REUSE
-		std::cout<<"REUSE defined"<<std::endl;
 		if(obj2.ptr && (global_counter -obj2.counter) < FPGA_ENTRIES ){
 			ops[2].addr = obj2.location;
 			ops[2].addr_mode= 1;
@@ -200,7 +206,6 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 		#endif
 		/*no reuse*/
 		#ifdef NOREUSE
-		std::cout<<"NOREUSE defined"<<std::endl;
 		ops[2].addr = req_q_pointer;
 		ops[2].addr_mode= 2;
 		uint32_t res = obj2.get_val();
@@ -332,7 +337,6 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 
 	/*with reuse*/
 	#ifdef REUSE
-	std::cout<<"REUSE defined"<<std::endl;
 	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
 		ops[0].addr = this->location;
 		ops[0].addr_mode= 1;
@@ -359,7 +363,6 @@ Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode)
 	#endif
 	/*no reuse*/
 	#ifdef NOREUSE
-	std::cout<<"NOREUSE defined"<<std::endl;
 	ops[0].addr = req_q_pointer;
 	ops[0].addr_mode= 2;
 	uint32_t retv = this->get_val();
