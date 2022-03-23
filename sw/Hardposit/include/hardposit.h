@@ -28,6 +28,11 @@ struct Result{
 	uint32_t flags = 0;
 };
 
+struct Performance_array{
+	uint64_t total_cycles = 0;
+	uint32_t mem_req_cycles[12]= {0};
+	bool valid = 0;
+};
 class Hardposit_cmp{
 	public: 
 		bool val;
@@ -118,4 +123,6 @@ inline Hardposit operator*(Hardposit b, float a){
 inline Hardposit sqrt(Hardposit& a){
 	return a.sqrt();
 }
+
+void poll_performance();
 #endif

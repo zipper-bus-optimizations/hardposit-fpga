@@ -19,14 +19,19 @@ include ../sys/make.common
 # explicit in all the lines below (even though dependence is indirect). 
 
 # applu.incl: npbparams.h
-${PROGRAM}: config ${OBJS} ${PROGRAM}.fpga ${PROGRAM}.ase ;
-
+${PROGRAM}: config ${OBJS} ${PROGRAM}.fpga ${PROGRAM}.ase ${PROGRAM}_NOREUSE.fpga ${PROGRAM}_NOREUSE.ase;
 
 ${PROGRAM}.fpga: config ${OBJS}
 	${CLINK} ${CPPFLAGS} ${CLINKFLAGSFPGA} -o $@  ${OBJS} $(CLINK_LIBFPGA) ${C_LIB} 
 
 ${PROGRAM}.ase: config ${OBJS}
 	${CLINK} ${CPPFLAGS} ${CLINKFLAGSASE} -o $@ ${OBJS} $(CLINK_LIBASE) ${C_LIB} 
+
+${PROGRAM}_NOREUSE.fpga: config ${OBJS}
+	${CLINK} ${CPPFLAGS} ${CLINKFLAGSFPGA} -o $@  ${OBJS} $(CLINK_LIBFPGA_NOREUSE) ${C_LIB} 
+
+${PROGRAM}_NOREUSE.ase: config ${OBJS}
+	${CLINK} ${CPPFLAGS} ${CLINKFLAGSASE} -o $@ ${OBJS} $(CLINK_LIBASE_NOREUSE) ${C_LIB} 
 
 
 lu.o:		lu.cpp applu.h npbparams.h

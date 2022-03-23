@@ -76,6 +76,16 @@ module ofs_plat_afu
     logic reset_n;
     assign reset_n = host_ccip.reset_n;
 
+    // a register to record the number of req
+    logic[63:0] total_mem_req;
+
+    // number of cycles spent in waiting for memory request
+    /* perf_cycle_array[i] = 10^i cycles*/
+    logic[31:0] perf_cycle_array[11:0];
+    
+
+    // an array to track outstanding memory read access
+    logic [31:0] perf_cycle_cnt[3:0];
 
     // ====================================================================
     //
@@ -135,30 +145,50 @@ module ofs_plat_afu
 
     t_ccip_mmioData mmio_write_data;
     assign mmio_write_data = host_ccip.sRx.c0.data[CCIP_MMIODATA_WIDTH-1:0];
+    logic read_meta_data, n_read_meta_data;
+    logic[7:0] meta_data_offset;
+    always_comb begin
+      if(read_meta_data) begin
+        n_read_meta_data = 0;
+      end
+      else if(is_csr_write && mmio_req_hdr.address == 6) begin
+        n_read_meta_data = 1;
+      end
+      else begin
+        n_read_meta_data = 0;
+      end
+    end
     always_ff @(posedge clk) begin
       if(!reset_n) begin
         req_base_address <=  'b0;
         resp_base_address <=  'b0;
         req_granularity <=  'b0;
         resp_granularity <=  'b0;
+        read_meta_data <= 0;
+        meta_data_offset <= 0;
       end
-      else if(is_csr_write)begin
-        $fwrite(32'h80000002,"mmio addr:%x", mmio_req_hdr.address);
-        case (mmio_req_hdr.address)
-          0: 
-            begin
-              $fwrite(32'h80000002,"Writing to read granulatiry");
-              req_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
-              req_granularity <=  mmio_write_data[ CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH];
+      else begin
+        read_meta_data <= n_read_meta_data;
+        if(is_csr_write)begin
+          $fwrite(32'h80000002,"mmio addr:%x\n", mmio_req_hdr.address);
+          case (mmio_req_hdr.address)
+            0: 
+              begin
+                $fwrite(32'h80000002,"Writing to read granulatiry\n");
+                req_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
+                req_granularity <=  mmio_write_data[ CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH];
+              end
+
+            2: begin
+                $fwrite(32'h80000002,"Writing to write granulatiry\n");
+              resp_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
+              resp_granularity <=  mmio_write_data[CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH]; 
             end
-
-          2: begin
-              $fwrite(32'h80000002,"Writing to write granulatiry");
-            resp_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
-            resp_granularity <=  mmio_write_data[CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH]; 
-          end
-
-        endcase
+            6: begin
+              meta_data_offset <= mmio_write_data[7:0];
+            end
+          endcase
+        end
       end
     end
 
@@ -290,21 +320,6 @@ module ofs_plat_afu
     logic[41:0] rd_mem_hdr_addr;
     assign rd_mem_hdr_addr = req_base_address + ((req_granularity*mem_read_req_addr)>>6);
 
-    // always_ff @(negedge clk) begin
-    //   if(req_valid) begin
-    //     $fwrite(32'h80000002,"req_valid = true\n");
-    //     $fwrite(32'h80000002,"data: %b\n",mmio_write_data);
-    //     $fwrite(32'h80000002,"operand0 val: %b\n", operands_value[0]);
-    //     $fwrite(32'h80000002,"operand0 mode: %b\n", operands_mode[0]);
-    //     $fwrite(32'h80000002,"operand1 val: %b\n", operands_value[1]);
-    //     $fwrite(32'h80000002,"operand1 mode: %b\n", operands_mode[1]);
-    //     $fwrite(32'h80000002,"operand2 val: %b\n", operands_value[2]);
-    //     $fwrite(32'h80000002,"operand2 mode: %b\n", operands_mode[2]);
-    //     $fwrite(32'h80000002,"inst: %b\n", inst);
-    //     $fwrite(32'h80000002,"mode: %b\n", mode);
-    //     $fwrite(32'h80000002,"wr_addr: %b\n", wr_addr);
-    //   end
-    // end
     always_ff @( posedge clk ) begin
       if(!reset_n) begin
         host_ccip.sTx.c0.hdr <=  CCIP_C0TX_HDR_WIDTH'(0);
@@ -317,17 +332,90 @@ module ofs_plat_afu
         host_ccip.sTx.c0.hdr.cl_len <=  eCL_LEN_1;
         host_ccip.sTx.c0.hdr.vc_sel <=  eVC_VA;
         host_ccip.sTx.c0.valid <= mem_read_req_valid;
-        // if(mem_read_req_valid) begin
-        //   $fwrite(32'h80000002,"c1 read--- address:%x\n",rd_mem_hdr_addr);
-        //   $fwrite(32'h80000002,"req_granularity: %x\n",req_granularity);
-        //   $fwrite(32'h80000002,"mem_read_req_addr: %x\n",mem_read_req_addr);
-        //   $fwrite(32'h80000002,"offset: %x\n",((req_granularity*mem_read_req_addr)>>6));
-        // end 
-        // if(mem_read_resp_valid) begin
-        //   $fwrite(32'h80000002,"resp data: %b\n",host_ccip.sRx.c0.data);
-        // end
       end
     end
+  generate
+    genvar i;
+    for(i =0; i < 4; i ++) begin
+      always_ff @(posedge clk) begin
+        if(!reset_n) begin
+          perf_cycle_cnt[i] <= 0;
+        end
+        else begin
+          if(mem_read_req_valid && i == mem_read_req_addr) begin
+            perf_cycle_cnt[i] <= 1;
+          end 
+          else if(mem_read_resp_valid && i == mem_read_resp_tag) begin
+            perf_cycle_cnt[i] <= 0;
+          end
+          else if(perf_cycle_cnt[i] > 0) begin
+            perf_cycle_cnt[i] <= perf_cycle_cnt[i] + 1;
+          end 
+        end
+      end
+    end
+  endgenerate
+
+  always_ff @( posedge clk ) begin
+    if(!reset_n) begin
+      perf_cycle_array[0] <= 0;
+      perf_cycle_array[1] <= 0;
+      perf_cycle_array[2] <= 0;
+      perf_cycle_array[3] <= 0;
+      perf_cycle_array[4] <= 0;
+      perf_cycle_array[5] <= 0;
+      perf_cycle_array[6] <= 0;
+      perf_cycle_array[7] <= 0;
+      perf_cycle_array[8] <= 0;
+      perf_cycle_array[9] <= 0;
+      perf_cycle_array[10] <= 0;
+      perf_cycle_array[11] <= 0;
+      total_mem_req <= 0;
+    end
+    else begin
+      if(mem_read_resp_valid) begin
+        if(perf_cycle_cnt[mem_read_resp_tag] < 10) begin
+          perf_cycle_array[0] = perf_cycle_array[0] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 10 && perf_cycle_cnt[mem_read_resp_tag] < 50) begin
+          perf_cycle_array[1] = perf_cycle_array[1] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 50 && perf_cycle_cnt[mem_read_resp_tag] < 100) begin
+          perf_cycle_array[2] = perf_cycle_array[2] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 100 && perf_cycle_cnt[mem_read_resp_tag] < 200) begin
+          perf_cycle_array[3] = perf_cycle_array[3] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 200 && perf_cycle_cnt[mem_read_resp_tag] < 300) begin
+          perf_cycle_array[4] = perf_cycle_array[4] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 300 && perf_cycle_cnt[mem_read_resp_tag] < 400) begin
+          perf_cycle_array[5] = perf_cycle_array[5] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 400 && perf_cycle_cnt[mem_read_resp_tag] < 500) begin
+          perf_cycle_array[6] = perf_cycle_array[6] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 500 && perf_cycle_cnt[mem_read_resp_tag] < 600) begin
+          perf_cycle_array[7] = perf_cycle_array[7] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 600 && perf_cycle_cnt[mem_read_resp_tag] < 700) begin
+          perf_cycle_array[8] = perf_cycle_array[8] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 800 && perf_cycle_cnt[mem_read_resp_tag] < 900) begin
+          perf_cycle_array[9] = perf_cycle_array[9] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 900 && perf_cycle_cnt[mem_read_resp_tag] < 1000) begin
+          perf_cycle_array[10] = perf_cycle_array[10] + 1;
+        end
+        if(perf_cycle_cnt[mem_read_resp_tag] >= 1000) begin
+          perf_cycle_array[11] = perf_cycle_array[11] + 1;
+        end
+      end
+      if(mem_read_req_valid) begin
+        total_mem_req <= total_mem_req + 1;
+      end
+    end
+  end
 
     logic[41:0] wr_mem_hdr_addr;
     logic[11:0] wr_byte_offset;
@@ -340,12 +428,7 @@ module ofs_plat_afu
         host_ccip.sTx.c1.valid <=  'b0;
         host_ccip.sTx.c1.data <=  t_ccip_clData'(0);
       end
-      else begin
-        // if(mem_write_req_valid) begin
-        // $fwrite(32'h80000002,"resp_granularity: %x\n",resp_granularity);
-        // $fwrite(32'h80000002,"wr_byte_offset : %x\n",wr_byte_offset);
-        // $fwrite(32'h80000002,"resp_base_address: %x\n",resp_base_address);
-        // end
+      else if(!read_meta_data) begin
         host_ccip.sTx.c1.hdr.byte_len <=  0;
         host_ccip.sTx.c1.hdr.byte_start <=  0;
         host_ccip.sTx.c1.hdr.mode <=  eMOD_CL;
@@ -359,13 +442,29 @@ module ofs_plat_afu
                         mem_write_bits_result_lt, mem_write_bits_result_eq, 
                         mem_write_bits_result_gt, mem_write_bits_result_out};
         host_ccip.sTx.c1.valid <=  mem_write_req_valid;
-        if(mem_write_req_valid) begin
-          $fwrite(32'h80000002,"c1 write--- address:%x\b",wr_mem_hdr_addr);
-        //   $fwrite(32'h80000002,"c1 write--- payload:%x",{3'b0, mem_write_bits_result_isZero, mem_write_bits_result_isNaR,
-        //                 mem_write_bits_result_lt, mem_write_bits_result_eq, 
-        //                 mem_write_bits_result_gt, mem_write_bits_result_out});
-        end
+
       end
+      else begin
+        $fwrite(32'h80000002,"@@@@ meta result being written:%x\n",resp_base_address+meta_data_offset);
+        host_ccip.sTx.c1.hdr.byte_len <=  0;
+        host_ccip.sTx.c1.hdr.byte_start <=  0;
+        host_ccip.sTx.c1.hdr.mode <=  eMOD_CL;
+        host_ccip.sTx.c1.hdr.vc_sel <=  eVC_VA;
+        host_ccip.sTx.c1.hdr.sop <=  'b1;
+        host_ccip.sTx.c1.hdr.cl_len <=  eCL_LEN_1;
+        host_ccip.sTx.c1.hdr.req_type <=  eREQ_WRPUSH_I;
+        host_ccip.sTx.c1.hdr.address <=  resp_base_address + meta_data_offset;
+        host_ccip.sTx.c1.hdr.mdata <= 'b0;
+        host_ccip.sTx.c1.data <=  {8'b1, perf_cycle_array[11],perf_cycle_array[10], perf_cycle_array[9], 
+          perf_cycle_array[8], perf_cycle_array[7], 
+          perf_cycle_array[6], perf_cycle_array[5], 
+          perf_cycle_array[4], perf_cycle_array[3], 
+          perf_cycle_array[2], perf_cycle_array[1], perf_cycle_array[0], total_mem_req};
+        host_ccip.sTx.c1.valid <=  read_meta_data;
+      end
+        if(host_ccip.sTx.c1.valid) begin
+          $fwrite(32'h80000002,"c1 write--- address:%x \n data:%x\n",host_ccip.sTx.c1.hdr.address, host_ccip.sTx.c1.data);
+        end
     end
 
 

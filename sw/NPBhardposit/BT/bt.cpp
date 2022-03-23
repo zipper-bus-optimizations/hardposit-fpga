@@ -182,8 +182,21 @@ int main(int argc, char **argv) {
 			tmax, mflops, "          floating point", 
 			verified, NPBVERSION,COMPILETIME, CS1, CS2, CS3, CS4, CS5, 
 			CS6, "(none)");
+	poll_performance();
 	close_accel();
 }
+
+
+// int main(int argc, char **argv) {
+//   init_accel();
+
+// 	int niter, step, n3;
+// 	int nthreads = 1;
+// 	double navg, mflops;
+// 	Hardposit a = Hardposit(1) + Hardposit(2);
+// 	poll_performance();
+// 	close_accel();
+// }
 
 /*--------------------------------------------------------------------
   c-------------------------------------------------------------------*/
