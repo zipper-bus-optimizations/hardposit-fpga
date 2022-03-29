@@ -250,32 +250,12 @@ module ofs_plat_afu
     // for mem read
     logic mem_read_req_valid;
     logic[7:0] mem_read_req_addr;
-    logic[32:0] mem_read_req_data;
+    logic[CCIP_CLDATA_WIDTH-1:0] mem_read_req_data;
     logic mem_read_resp_valid;
     logic[7:0] mem_read_resp_tag;
     assign mem_read_resp_valid = host_ccip.sRx.c0.rspValid && (!host_ccip.sRx.c0.mmioRdValid);
     assign mem_read_resp_tag = host_ccip.sRx.c0.hdr.mdata[7:0];
-    always_comb begin
-      case (mem_read_resp_tag[3:0])
-        4'd0: mem_read_req_data = host_ccip.sRx.c0.data[31:0];
-        4'd1: mem_read_req_data = host_ccip.sRx.c0.data[63:32];
-        4'd2: mem_read_req_data = host_ccip.sRx.c0.data[95:64];
-        4'd3: mem_read_req_data = host_ccip.sRx.c0.data[127:96];
-        4'd4: mem_read_req_data = host_ccip.sRx.c0.data[159:128];
-        4'd5: mem_read_req_data = host_ccip.sRx.c0.data[191:160];
-        4'd6: mem_read_req_data = host_ccip.sRx.c0.data[224:192];
-        4'd7: mem_read_req_data = host_ccip.sRx.c0.data[255:224];
-        4'd8: mem_read_req_data = host_ccip.sRx.c0.data[287:256];
-        4'd9: mem_read_req_data = host_ccip.sRx.c0.data[319:288];
-        4'd10: mem_read_req_data = host_ccip.sRx.c0.data[351:320];
-        4'd11: mem_read_req_data = host_ccip.sRx.c0.data[383:352];
-        4'd12: mem_read_req_data = host_ccip.sRx.c0.data[415:384];
-        4'd13: mem_read_req_data = host_ccip.sRx.c0.data[447:416];
-        4'd14: mem_read_req_data = host_ccip.sRx.c0.data[479:448];
-        4'd15: mem_read_req_data = host_ccip.sRx.c0.data[511:480];
-        default: mem_read_req_data = host_ccip.sRx.c0.data[31:0];
-      endcase
-    end
+    assign mem_read_req_data = host_ccip.sRx.c0.data;
 
     logic mem_write_req_valid;
     logic[7:0] mem_write_bits_wr_addr;

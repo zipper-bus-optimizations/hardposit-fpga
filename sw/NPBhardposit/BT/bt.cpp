@@ -423,7 +423,7 @@ static void exact_rhs(void) {
 					ue[i][m] = dtemp[m];
 				}
 
-				dtpp = 1.0 / dtemp[0];
+				dtpp = hp32(1.0) / dtemp[0];
 
 				for (m = 1; m <= 4; m++) {
 					buf[i][m] = dtpp * dtemp[m];
@@ -432,7 +432,7 @@ static void exact_rhs(void) {
 				cuf[i]   = buf[i][1] * buf[i][1];
 				buf[i][0] = cuf[i] + buf[i][2] * buf[i][2] + 
 					buf[i][3] * buf[i][3];
-				q[i] = 0.5*(buf[i][1]*ue[i][1] + buf[i][2]*ue[i][2] +
+				q[i] = hp32(0.5)*(buf[i][1]*ue[i][1] + buf[i][2]*ue[i][2] +
 						buf[i][3]*ue[i][3]);
 			}
 
@@ -442,31 +442,31 @@ static void exact_rhs(void) {
 
 				forcing[i][j][k][0] = forcing[i][j][k][0] -
 					tx2*(ue[ip1][1]-ue[im1][1])+
-					dx1tx1*(ue[ip1][0]-2.0*ue[i][0]+ue[im1][0]);
+					dx1tx1*(ue[ip1][0]-hp32(2.0)*ue[i][0]+ue[im1][0]);
 
 				forcing[i][j][k][1] = forcing[i][j][k][1] -
 					tx2 * ((ue[ip1][1]*buf[ip1][1]+c2*(ue[ip1][4]-q[ip1]))-
 							(ue[im1][1]*buf[im1][1]+c2*(ue[im1][4]-q[im1])))+
-					xxcon1*(buf[ip1][1]-2.0*buf[i][1]+buf[im1][1])+
-					dx2tx1*( ue[ip1][1]-2.0* ue[i][1]+ ue[im1][1]);
+					xxcon1*(buf[ip1][1]-hp32(2.0)*buf[i][1]+buf[im1][1])+
+					dx2tx1*( ue[ip1][1]-hp32(2.0)* ue[i][1]+ ue[im1][1]);
 
 				forcing[i][j][k][2] = forcing[i][j][k][2] -
 					tx2 * (ue[ip1][2]*buf[ip1][1]-ue[im1][2]*buf[im1][1])+
-					xxcon2*(buf[ip1][2]-2.0*buf[i][2]+buf[im1][2])+
-					dx3tx1*( ue[ip1][2]-2.0* ue[i][2]+ ue[im1][2]);
+					xxcon2*(buf[ip1][2]-hp32(2.0)*buf[i][2]+buf[im1][2])+
+					dx3tx1*( ue[ip1][2]-hp32(2.0)* ue[i][2]+ ue[im1][2]);
 
 				forcing[i][j][k][3] = forcing[i][j][k][3] -
 					tx2*(ue[ip1][3]*buf[ip1][1]-ue[im1][3]*buf[im1][1])+
-					xxcon2*(buf[ip1][3]-2.0*buf[i][3]+buf[im1][3])+
-					dx4tx1*( ue[ip1][3]-2.0* ue[i][3]+ ue[im1][3]);
+					xxcon2*(buf[ip1][3]-hp32(2.0)*buf[i][3]+buf[im1][3])+
+					dx4tx1*( ue[ip1][3]-hp32(2.0)* ue[i][3]+ ue[im1][3]);
 
 				forcing[i][j][k][4] = forcing[i][j][k][4] -
 					tx2*(buf[ip1][1]*(c1*ue[ip1][4]-c2*q[ip1])-
 							buf[im1][1]*(c1*ue[im1][4]-c2*q[im1]))+
-					0.5*xxcon3*(buf[ip1][0]-2.0*buf[i][0]+buf[im1][0])+
-					xxcon4*(cuf[ip1]-2.0*cuf[i]+cuf[im1])+
-					xxcon5*(buf[ip1][4]-2.0*buf[i][4]+buf[im1][4])+
-					dx5tx1*( ue[ip1][4]-2.0* ue[i][4]+ ue[im1][4]);
+					hp32(0.5)*xxcon3*(buf[ip1][0]-hp32(2.0)*buf[i][0]+buf[im1][0])+
+					xxcon4*(cuf[ip1]-hp32(2.0)*cuf[i]+cuf[im1])+
+					xxcon5*(buf[ip1][4]-hp32(2.0)*buf[i][4]+buf[im1][4])+
+					dx5tx1*( ue[ip1][4]-hp32(2.0)* ue[i][4]+ ue[im1][4]);
 			}
 
 			/*--------------------------------------------------------------------
@@ -476,29 +476,29 @@ static void exact_rhs(void) {
 			for (m = 0; m < 5; m++) {
 				i = 1;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(5.0*ue[i][m] - 4.0*ue[i+1][m] +ue[i+2][m]);
+					(hp32(5.0)*ue[i][m] - hp32(4.0)*ue[i+1][m] +ue[i+2][m]);
 				i = 2;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(-4.0*ue[i-1][m] + 6.0*ue[i][m] -
-					 4.0*ue[i+1][m] +     ue[i+2][m]);
+					(hp32(-4.0)*ue[i-1][m] + hp32(6.0)*ue[i][m] -
+					 hp32(4.0)*ue[i+1][m] +     ue[i+2][m]);
 			}
 
 			for (m = 0; m < 5; m++) {
 				for (i = 1*3; i <= grid_points[0]-3*1-1; i++) {
 					forcing[i][j][k][m] = forcing[i][j][k][m] - dssp*
-						(ue[i-2][m] - 4.0*ue[i-1][m] +
-						 6.0*ue[i][m] - 4.0*ue[i+1][m] + ue[i+2][m]);
+						(ue[i-2][m] - hp32(4.0)*ue[i-1][m] +
+						 hp32(6.0)*ue[i][m] - hp32(4.0)*ue[i+1][m] + ue[i+2][m]);
 				}
 			}
 
 			for (m = 0; m < 5; m++) {
 				i = grid_points[0]-3;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(ue[i-2][m] - 4.0*ue[i-1][m] +
-					 6.0*ue[i][m] - 4.0*ue[i+1][m]);
+					(ue[i-2][m] - hp32(4.0)*ue[i-1][m] +
+					 hp32(6.0)*ue[i][m] - hp32(4.0)*ue[i+1][m]);
 				i = grid_points[0]-2;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(ue[i-2][m] - 4.0*ue[i-1][m] + 5.0*ue[i][m]);
+					(ue[i-2][m] - hp32(4.0)*ue[i-1][m] + hp32(5.0)*ue[i][m]);
 			}
 
 		}
@@ -521,7 +521,7 @@ static void exact_rhs(void) {
 					ue[j][m] = dtemp[m];
 				}
 
-				dtpp = 1.0/dtemp[0];
+				dtpp = hp32(1.0)/dtemp[0];
 
 				for (m = 1; m <= 4; m++) {
 					buf[j][m] = dtpp * dtemp[m];
@@ -530,7 +530,7 @@ static void exact_rhs(void) {
 				cuf[j]   = buf[j][2] * buf[j][2];
 				buf[j][0] = cuf[j] + buf[j][1] * buf[j][1] + 
 					buf[j][3] * buf[j][3];
-				q[j] = 0.5*(buf[j][1]*ue[j][1] + buf[j][2]*ue[j][2] +
+				q[j] = hp32(0.5)*(buf[j][1]*ue[j][1] + buf[j][2]*ue[j][2] +
 						buf[j][3]*ue[j][3]);
 			}
 
@@ -540,32 +540,32 @@ static void exact_rhs(void) {
 
 				forcing[i][j][k][0] = forcing[i][j][k][0] -
 					ty2*( ue[jp1][2]-ue[jm1][2] )+
-					dy1ty1*(ue[jp1][0]-2.0*ue[j][0]+ue[jm1][0]);
+					dy1ty1*(ue[jp1][0]-hp32(2.0)*ue[j][0]+ue[jm1][0]);
 
 				forcing[i][j][k][1] = forcing[i][j][k][1] -
 					ty2*(ue[jp1][1]*buf[jp1][2]-ue[jm1][1]*buf[jm1][2])+
-					yycon2*(buf[jp1][1]-2.0*buf[j][1]+buf[jm1][1])+
-					dy2ty1*( ue[jp1][1]-2.0* ue[j][1]+ ue[jm1][1]);
+					yycon2*(buf[jp1][1]-hp32(2.0)*buf[j][1]+buf[jm1][1])+
+					dy2ty1*( ue[jp1][1]-hp32(2.0)* ue[j][1]+ ue[jm1][1]);
 
 				forcing[i][j][k][2] = forcing[i][j][k][2] -
 					ty2*((ue[jp1][2]*buf[jp1][2]+c2*(ue[jp1][4]-q[jp1]))-
 							(ue[jm1][2]*buf[jm1][2]+c2*(ue[jm1][4]-q[jm1])))+
-					yycon1*(buf[jp1][2]-2.0*buf[j][2]+buf[jm1][2])+
-					dy3ty1*( ue[jp1][2]-2.0*ue[j][2] +ue[jm1][2]);
+					yycon1*(buf[jp1][2]-hp32(2.0)*buf[j][2]+buf[jm1][2])+
+					dy3ty1*( ue[jp1][2]-hp32(2.0)*ue[j][2] +ue[jm1][2]);
 
 				forcing[i][j][k][3] = forcing[i][j][k][3] -
 					ty2*(ue[jp1][3]*buf[jp1][2]-ue[jm1][3]*buf[jm1][2])+
-					yycon2*(buf[jp1][3]-2.0*buf[j][3]+buf[jm1][3])+
-					dy4ty1*( ue[jp1][3]-2.0*ue[j][3]+ ue[jm1][3]);
+					yycon2*(buf[jp1][3]-hp32(2.0)*buf[j][3]+buf[jm1][3])+
+					dy4ty1*( ue[jp1][3]-hp32(2.0)*ue[j][3]+ ue[jm1][3]);
 
 				forcing[i][j][k][4] = forcing[i][j][k][4] -
 					ty2*(buf[jp1][2]*(c1*ue[jp1][4]-c2*q[jp1])-
 							buf[jm1][2]*(c1*ue[jm1][4]-c2*q[jm1]))+
-					0.5*yycon3*(buf[jp1][0]-2.0*buf[j][0]+
+					hp32(0.5)*yycon3*(buf[jp1][0]-hp32(2.0)*buf[j][0]+
 							buf[jm1][0])+
-					yycon4*(cuf[jp1]-2.0*cuf[j]+cuf[jm1])+
-					yycon5*(buf[jp1][4]-2.0*buf[j][4]+buf[jm1][4])+
-					dy5ty1*(ue[jp1][4]-2.0*ue[j][4]+ue[jm1][4]);
+					yycon4*(cuf[jp1]-hp32(2.0)*cuf[j]+cuf[jm1])+
+					yycon5*(buf[jp1][4]-hp32(2.0)*buf[j][4]+buf[jm1][4])+
+					dy5ty1*(ue[jp1][4]-hp32(2.0)*ue[j][4]+ue[jm1][4]);
 			}
 
 			/*--------------------------------------------------------------------
@@ -574,29 +574,29 @@ static void exact_rhs(void) {
 			for (m = 0; m < 5; m++) {
 				j = 1;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(5.0*ue[j][m] - 4.0*ue[j+1][m] +ue[j+2][m]);
+					(hp32(5.0)*ue[j][m] - hp32(4.0)*ue[j+1][m] +ue[j+2][m]);
 				j = 2;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(-4.0*ue[j-1][m] + 6.0*ue[j][m] -
-					 4.0*ue[j+1][m] +       ue[j+2][m]);
+					(hp32(-4.0)*ue[j-1][m] + hp32(6.0)*ue[j][m] -
+					 hp32(4.0)*ue[j+1][m] +       ue[j+2][m]);
 			}
 
 			for (m = 0; m < 5; m++) {
 				for (j = 1*3; j <= grid_points[1]-3*1-1; j++) {
 					forcing[i][j][k][m] = forcing[i][j][k][m] - dssp*
-						(ue[j-2][m] - 4.0*ue[j-1][m] +
-						 6.0*ue[j][m] - 4.0*ue[j+1][m] + ue[j+2][m]);
+						(ue[j-2][m] - hp32(4.0)*ue[j-1][m] +
+						 hp32(6.0)*ue[j][m] - hp32(4.0)*ue[j+1][m] + ue[j+2][m]);
 				}
 			}
 
 			for (m = 0; m < 5; m++) {
 				j = grid_points[1]-3;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(ue[j-2][m] - 4.0*ue[j-1][m] +
-					 6.0*ue[j][m] - 4.0*ue[j+1][m]);
+					(ue[j-2][m] - hp32(4.0)*ue[j-1][m] +
+					 hp32(6.0)*ue[j][m] - hp32(4.0)*ue[j+1][m]);
 				j = grid_points[1]-2;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(ue[j-2][m] - 4.0*ue[j-1][m] + 5.0*ue[j][m]);
+					(ue[j-2][m] - hp32(4.0)*ue[j-1][m] + hp32(5.0)*ue[j][m]);
 			}
 
 		}
@@ -620,7 +620,7 @@ static void exact_rhs(void) {
 					ue[k][m] = dtemp[m];
 				}
 
-				dtpp = 1.0/dtemp[0];
+				dtpp = hp32(1.0)/dtemp[0];
 
 				for (m = 1; m <= 4; m++) {
 					buf[k][m] = dtpp * dtemp[m];
@@ -629,7 +629,7 @@ static void exact_rhs(void) {
 				cuf[k]   = buf[k][3] * buf[k][3];
 				buf[k][0] = cuf[k] + buf[k][1] * buf[k][1] + 
 					buf[k][2] * buf[k][2];
-				q[k] = 0.5*(buf[k][1]*ue[k][1] + buf[k][2]*ue[k][2] +
+				q[k] = hp32(0.5)*(buf[k][1]*ue[k][1] + buf[k][2]*ue[k][2] +
 						buf[k][3]*ue[k][3]);
 			}
 
@@ -639,32 +639,32 @@ static void exact_rhs(void) {
 
 				forcing[i][j][k][0] = forcing[i][j][k][0] -
 					tz2*( ue[kp1][3]-ue[km1][3] )+
-					dz1tz1*(ue[kp1][0]-2.0*ue[k][0]+ue[km1][0]);
+					dz1tz1*(ue[kp1][0]-hp32(2.0)*ue[k][0]+ue[km1][0]);
 
 				forcing[i][j][k][1] = forcing[i][j][k][1] -
 					tz2 * (ue[kp1][1]*buf[kp1][3]-ue[km1][1]*buf[km1][3])+
-					zzcon2*(buf[kp1][1]-2.0*buf[k][1]+buf[km1][1])+
-					dz2tz1*( ue[kp1][1]-2.0* ue[k][1]+ ue[km1][1]);
+					zzcon2*(buf[kp1][1]-hp32(2.0)*buf[k][1]+buf[km1][1])+
+					dz2tz1*( ue[kp1][1]-hp32(2.0)* ue[k][1]+ ue[km1][1]);
 
 				forcing[i][j][k][2] = forcing[i][j][k][2] -
 					tz2 * (ue[kp1][2]*buf[kp1][3]-ue[km1][2]*buf[km1][3])+
-					zzcon2*(buf[kp1][2]-2.0*buf[k][2]+buf[km1][2])+
-					dz3tz1*(ue[kp1][2]-2.0*ue[k][2]+ue[km1][2]);
+					zzcon2*(buf[kp1][2]-hp32(2.0)*buf[k][2]+buf[km1][2])+
+					dz3tz1*(ue[kp1][2]-hp32(2.0)*ue[k][2]+ue[km1][2]);
 
 				forcing[i][j][k][3] = forcing[i][j][k][3] -
 					tz2 * ((ue[kp1][3]*buf[kp1][3]+c2*(ue[kp1][4]-q[kp1]))-
 							(ue[km1][3]*buf[km1][3]+c2*(ue[km1][4]-q[km1])))+
-					zzcon1*(buf[kp1][3]-2.0*buf[k][3]+buf[km1][3])+
-					dz4tz1*( ue[kp1][3]-2.0*ue[k][3] +ue[km1][3]);
+					zzcon1*(buf[kp1][3]-hp32(2.0)*buf[k][3]+buf[km1][3])+
+					dz4tz1*( ue[kp1][3]-hp32(2.0)*ue[k][3] +ue[km1][3]);
 
 				forcing[i][j][k][4] = forcing[i][j][k][4] -
 					tz2 * (buf[kp1][3]*(c1*ue[kp1][4]-c2*q[kp1])-
 							buf[km1][3]*(c1*ue[km1][4]-c2*q[km1]))+
-					0.5*zzcon3*(buf[kp1][0]-2.0*buf[k][0]
+					hp32(0.5)*zzcon3*(buf[kp1][0]-hp32(2.0)*buf[k][0]
 							+buf[km1][0])+
-					zzcon4*(cuf[kp1]-2.0*cuf[k]+cuf[km1])+
-					zzcon5*(buf[kp1][4]-2.0*buf[k][4]+buf[km1][4])+
-					dz5tz1*( ue[kp1][4]-2.0*ue[k][4]+ ue[km1][4]);
+					zzcon4*(cuf[kp1]-hp32(2.0)*cuf[k]+cuf[km1])+
+					zzcon5*(buf[kp1][4]-hp32(2.0)*buf[k][4]+buf[km1][4])+
+					dz5tz1*( ue[kp1][4]-hp32(2.0)*ue[k][4]+ ue[km1][4]);
 			}
 
 			/*--------------------------------------------------------------------
@@ -673,29 +673,29 @@ static void exact_rhs(void) {
 			for (m = 0; m < 5; m++) {
 				k = 1;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(5.0*ue[k][m] - 4.0*ue[k+1][m] +ue[k+2][m]);
+					(hp32(5.0)*ue[k][m] - hp32(4.0)*ue[k+1][m] +ue[k+2][m]);
 				k = 2;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(-4.0*ue[k-1][m] + 6.0*ue[k][m] -
-					 4.0*ue[k+1][m] +       ue[k+2][m]);
+					(hp32(-4.0)*ue[k-1][m] + hp32(6.0)*ue[k][m] -
+					 hp32(4.0)*ue[k+1][m] +       ue[k+2][m]);
 			}
 
 			for (m = 0; m < 5; m++) {
 				for (k = 1*3; k <= grid_points[2]-3*1-1; k++) {
 					forcing[i][j][k][m] = forcing[i][j][k][m] - dssp*
-						(ue[k-2][m] - 4.0*ue[k-1][m] +
-						 6.0*ue[k][m] - 4.0*ue[k+1][m] + ue[k+2][m]);
+						(ue[k-2][m] - hp32(4.0)*ue[k-1][m] +
+						 hp32(6.0)*ue[k][m] - hp32(4.0)*ue[k+1][m] + ue[k+2][m]);
 				}
 			}
 
 			for (m = 0; m < 5; m++) {
 				k = grid_points[2]-3;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(ue[k-2][m] - 4.0*ue[k-1][m] +
-					 6.0*ue[k][m] - 4.0*ue[k+1][m]);
+					(ue[k-2][m] - hp32(4.0)*ue[k-1][m] +
+					 hp32(6.0)*ue[k][m] - hp32(4.0)*ue[k+1][m]);
 				k = grid_points[2]-2;
 				forcing[i][j][k][m] = forcing[i][j][k][m] - dssp *
-					(ue[k-2][m] - 4.0*ue[k-1][m] + 5.0*ue[k][m]);
+					(ue[k-2][m] - hp32(4.0)*ue[k-1][m] + hp32(5.0)*ue[k][m]);
 			}
 
 		}
@@ -708,7 +708,7 @@ static void exact_rhs(void) {
 		for (j = 1; j < grid_points[1]-1; j++) {
 			for (k = 1; k < grid_points[2]-1; k++) {
 				for (m = 0; m < 5; m++) {
-					forcing[i][j][k][m] = -1.0 * forcing[i][j][k][m];
+					forcing[i][j][k][m] = hp32(-1.0) * forcing[i][j][k][m];
 				}
 			}
 		}
@@ -825,11 +825,11 @@ static void initialize(void) {
 
 				for (m = 0; m < 5; m++) {
 					Pxi   = xi   * Pface[1][0][m] + 
-						(1.0-xi)   * Pface[0][0][m];
+						(hp32(1.0)-xi)   * Pface[0][0][m];
 					Peta  = eta  * Pface[1][1][m] + 
-						(1.0-eta)  * Pface[0][1][m];
+						(hp32(1.0)-eta)  * Pface[0][1][m];
 					Pzeta = zeta * Pface[1][2][m] + 
-						(1.0-zeta) * Pface[0][2][m];
+						(hp32(1.0)-zeta) * Pface[0][2][m];
 
 					u[i][j][k][m] = Pxi + Peta + Pzeta - 
 						Pxi*Peta - Pxi*Pzeta - Peta*Pzeta + 
@@ -1001,7 +1001,7 @@ static void lhsx(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (i = 0; i < grid_points[0]; i++) {
 
-				tmp1 = 1.0 / u[i][j][k][0];
+				tmp1 = hp32(1.0) / u[i][j][k][0];
 				tmp2 = tmp1 * tmp1;
 				tmp3 = tmp1 * tmp2;
 				/*--------------------------------------------------------------------
@@ -1015,10 +1015,10 @@ static void lhsx(void) {
 
 				fjac[ i][ j][ k][1][0] = -(u[i][j][k][1] * tmp2 * 
 						u[i][j][k][1])
-					+ c2 * 0.50 * (u[i][j][k][1] * u[i][j][k][1]
+					+ c2 * hp32(0.50) * (u[i][j][k][1] * u[i][j][k][1]
 							+ u[i][j][k][2] * u[i][j][k][2]
 							+ u[i][j][k][3] * u[i][j][k][3] ) * tmp2;
-				fjac[i][j][k][1][1] = ( 2.0 - c2 )
+				fjac[i][j][k][1][1] = ( hp32(2.0) - c2 )
 					* ( u[i][j][k][1] / u[i][j][k][0] );
 				fjac[i][j][k][1][2] = - c2 * ( u[i][j][k][2] * tmp1 );
 				fjac[i][j][k][1][3] = - c2 * ( u[i][j][k][3] * tmp1 );
@@ -1042,8 +1042,8 @@ static void lhsx(void) {
 						- c1 * ( u[i][j][k][4] * tmp1 ) )
 					* ( u[i][j][k][1] * tmp1 );
 				fjac[i][j][k][4][1] = c1 *  u[i][j][k][4] * tmp1 
-					- 0.50 * c2
-					* (  3.0*u[i][j][k][1]*u[i][j][k][1]
+					- hp32(0.50) * c2
+					* (  hp32(3.0)*u[i][j][k][1]*u[i][j][k][1]
 							+ u[i][j][k][2]*u[i][j][k][2]
 							+ u[i][j][k][3]*u[i][j][k][3] ) * tmp2;
 				fjac[i][j][k][4][2] = - c2 * ( u[i][j][k][2]*u[i][j][k][1] )
@@ -1157,45 +1157,45 @@ static void lhsx(void) {
 					- tmp1 * njac[i-1][j][k][4][4]
 					- tmp1 * dx5;
 
-				lhs[i][j][k][BB][0][0] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][0][0]
-					+ tmp1 * 2.0 * dx1;
-				lhs[i][j][k][BB][0][1] = tmp1 * 2.0 * njac[i][j][k][0][1];
-				lhs[i][j][k][BB][0][2] = tmp1 * 2.0 * njac[i][j][k][0][2];
-				lhs[i][j][k][BB][0][3] = tmp1 * 2.0 * njac[i][j][k][0][3];
-				lhs[i][j][k][BB][0][4] = tmp1 * 2.0 * njac[i][j][k][0][4];
+				lhs[i][j][k][BB][0][0] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][0][0]
+					+ tmp1 * hp32(2.0) * dx1;
+				lhs[i][j][k][BB][0][1] = tmp1 * hp32(2.0) * njac[i][j][k][0][1];
+				lhs[i][j][k][BB][0][2] = tmp1 * hp32(2.0) * njac[i][j][k][0][2];
+				lhs[i][j][k][BB][0][3] = tmp1 * hp32(2.0) * njac[i][j][k][0][3];
+				lhs[i][j][k][BB][0][4] = tmp1 * hp32(2.0) * njac[i][j][k][0][4];
 
-				lhs[i][j][k][BB][1][0] = tmp1 * 2.0 * njac[i][j][k][1][0];
-				lhs[i][j][k][BB][1][1] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][1][1]
-					+ tmp1 * 2.0 * dx2;
-				lhs[i][j][k][BB][1][2] = tmp1 * 2.0 * njac[i][j][k][1][2];
-				lhs[i][j][k][BB][1][3] = tmp1 * 2.0 * njac[i][j][k][1][3];
-				lhs[i][j][k][BB][1][4] = tmp1 * 2.0 * njac[i][j][k][1][4];
+				lhs[i][j][k][BB][1][0] = tmp1 * hp32(2.0) * njac[i][j][k][1][0];
+				lhs[i][j][k][BB][1][1] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][1][1]
+					+ tmp1 * hp32(2.0) * dx2;
+				lhs[i][j][k][BB][1][2] = tmp1 * hp32(2.0) * njac[i][j][k][1][2];
+				lhs[i][j][k][BB][1][3] = tmp1 * hp32(2.0) * njac[i][j][k][1][3];
+				lhs[i][j][k][BB][1][4] = tmp1 * hp32(2.0) * njac[i][j][k][1][4];
 
-				lhs[i][j][k][BB][2][0] = tmp1 * 2.0 * njac[i][j][k][2][0];
-				lhs[i][j][k][BB][2][1] = tmp1 * 2.0 * njac[i][j][k][2][1];
-				lhs[i][j][k][BB][2][2] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][2][2]
-					+ tmp1 * 2.0 * dx3;
-				lhs[i][j][k][BB][2][3] = tmp1 * 2.0 * njac[i][j][k][2][3];
-				lhs[i][j][k][BB][2][4] = tmp1 * 2.0 * njac[i][j][k][2][4];
+				lhs[i][j][k][BB][2][0] = tmp1 * hp32(2.0) * njac[i][j][k][2][0];
+				lhs[i][j][k][BB][2][1] = tmp1 * hp32(2.0) * njac[i][j][k][2][1];
+				lhs[i][j][k][BB][2][2] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][2][2]
+					+ tmp1 * hp32(2.0) * dx3;
+				lhs[i][j][k][BB][2][3] = tmp1 * hp32(2.0) * njac[i][j][k][2][3];
+				lhs[i][j][k][BB][2][4] = tmp1 * hp32(2.0) * njac[i][j][k][2][4];
 
-				lhs[i][j][k][BB][3][0] = tmp1 * 2.0 * njac[i][j][k][3][0];
-				lhs[i][j][k][BB][3][1] = tmp1 * 2.0 * njac[i][j][k][3][1];
-				lhs[i][j][k][BB][3][2] = tmp1 * 2.0 * njac[i][j][k][3][2];
-				lhs[i][j][k][BB][3][3] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][3][3]
-					+ tmp1 * 2.0 * dx4;
-				lhs[i][j][k][BB][3][4] = tmp1 * 2.0 * njac[i][j][k][3][4];
+				lhs[i][j][k][BB][3][0] = tmp1 * hp32(2.0) * njac[i][j][k][3][0];
+				lhs[i][j][k][BB][3][1] = tmp1 * hp32(2.0) * njac[i][j][k][3][1];
+				lhs[i][j][k][BB][3][2] = tmp1 * hp32(2.0) * njac[i][j][k][3][2];
+				lhs[i][j][k][BB][3][3] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][3][3]
+					+ tmp1 * hp32(2.0) * dx4;
+				lhs[i][j][k][BB][3][4] = tmp1 * hp32(2.0) * njac[i][j][k][3][4];
 
-				lhs[i][j][k][BB][4][0] = tmp1 * 2.0 * njac[i][j][k][4][0];
-				lhs[i][j][k][BB][4][1] = tmp1 * 2.0 * njac[i][j][k][4][1];
-				lhs[i][j][k][BB][4][2] = tmp1 * 2.0 * njac[i][j][k][4][2];
-				lhs[i][j][k][BB][4][3] = tmp1 * 2.0 * njac[i][j][k][4][3];
-				lhs[i][j][k][BB][4][4] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][4][4]
-					+ tmp1 * 2.0 * dx5;
+				lhs[i][j][k][BB][4][0] = tmp1 * hp32(2.0) * njac[i][j][k][4][0];
+				lhs[i][j][k][BB][4][1] = tmp1 * hp32(2.0) * njac[i][j][k][4][1];
+				lhs[i][j][k][BB][4][2] = tmp1 * hp32(2.0) * njac[i][j][k][4][2];
+				lhs[i][j][k][BB][4][3] = tmp1 * hp32(2.0) * njac[i][j][k][4][3];
+				lhs[i][j][k][BB][4][4] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][4][4]
+					+ tmp1 * hp32(2.0) * dx5;
 
 				lhs[i][j][k][CC][0][0] =  tmp2 * fjac[i+1][j][k][0][0]
 					- tmp1 * njac[i+1][j][k][0][0]
@@ -1284,7 +1284,7 @@ static void lhsy(void) {
 		for (j = 0; j < grid_points[1]; j++) {
 			for (k = 1; k < grid_points[2]-1; k++) {
 
-				tmp1 = 1.0 / u[i][j][k][0];
+				tmp1 = hp32(1.0) / u[i][j][k][0];
 				tmp2 = tmp1 * tmp1;
 				tmp3 = tmp1 * tmp2;
 
@@ -1302,12 +1302,12 @@ static void lhsy(void) {
 				fjac[i][j][k][1][4] = 0.0;
 
 				fjac[i][j][k][2][0] = - ( u[i][j][k][2]*u[i][j][k][2]*tmp2)
-					+ 0.50 * c2 * ( (  u[i][j][k][1] * u[i][j][k][1]
+					+ hp32(0.50) * c2 * ( (  u[i][j][k][1] * u[i][j][k][1]
 								+ u[i][j][k][2] * u[i][j][k][2]
 								+ u[i][j][k][3] * u[i][j][k][3] )
 							* tmp2 );
 				fjac[i][j][k][2][1] = - c2 *  u[i][j][k][1] * tmp1;
-				fjac[i][j][k][2][2] = ( 2.0 - c2 )
+				fjac[i][j][k][2][2] = ( hp32(2.0) - c2 )
 					*  u[i][j][k][2] * tmp1;
 				fjac[i][j][k][2][3] = - c2 * u[i][j][k][3] * tmp1;
 				fjac[i][j][k][2][4] = c2;
@@ -1328,9 +1328,9 @@ static void lhsy(void) {
 				fjac[i][j][k][4][1] = - c2 * u[i][j][k][1]*u[i][j][k][2] 
 					* tmp2;
 				fjac[i][j][k][4][2] = c1 * u[i][j][k][4] * tmp1 
-					- 0.50 * c2 
+					- hp32(0.50) * c2 
 					* ( (  u[i][j][k][1]*u[i][j][k][1]
-								+ 3.0 * u[i][j][k][2]*u[i][j][k][2]
+								+ hp32(3.0) * u[i][j][k][2]*u[i][j][k][2]
 								+ u[i][j][k][3]*u[i][j][k][3] )
 							* tmp2 );
 				fjac[i][j][k][4][3] = - c2 * ( u[i][j][k][2]*u[i][j][k][3] )
@@ -1448,45 +1448,45 @@ static void lhsy(void) {
 					- tmp1 * njac[i][j-1][k][4][4]
 					- tmp1 * dy5;
 
-				lhs[i][j][k][BB][0][0] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][0][0]
-					+ tmp1 * 2.0 * dy1;
-				lhs[i][j][k][BB][0][1] = tmp1 * 2.0 * njac[i][j][k][0][1];
-				lhs[i][j][k][BB][0][2] = tmp1 * 2.0 * njac[i][j][k][0][2];
-				lhs[i][j][k][BB][0][3] = tmp1 * 2.0 * njac[i][j][k][0][3];
-				lhs[i][j][k][BB][0][4] = tmp1 * 2.0 * njac[i][j][k][0][4];
+				lhs[i][j][k][BB][0][0] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][0][0]
+					+ tmp1 * hp32(2.0) * dy1;
+				lhs[i][j][k][BB][0][1] = tmp1 * hp32(2.0) * njac[i][j][k][0][1];
+				lhs[i][j][k][BB][0][2] = tmp1 * hp32(2.0) * njac[i][j][k][0][2];
+				lhs[i][j][k][BB][0][3] = tmp1 * hp32(2.0) * njac[i][j][k][0][3];
+				lhs[i][j][k][BB][0][4] = tmp1 * hp32(2.0) * njac[i][j][k][0][4];
 
-				lhs[i][j][k][BB][1][0] = tmp1 * 2.0 * njac[i][j][k][1][0];
-				lhs[i][j][k][BB][1][1] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][1][1]
-					+ tmp1 * 2.0 * dy2;
-				lhs[i][j][k][BB][1][2] = tmp1 * 2.0 * njac[i][j][k][1][2];
-				lhs[i][j][k][BB][1][3] = tmp1 * 2.0 * njac[i][j][k][1][3];
-				lhs[i][j][k][BB][1][4] = tmp1 * 2.0 * njac[i][j][k][1][4];
+				lhs[i][j][k][BB][1][0] = tmp1 * hp32(2.0) * njac[i][j][k][1][0];
+				lhs[i][j][k][BB][1][1] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][1][1]
+					+ tmp1 * hp32(2.0) * dy2;
+				lhs[i][j][k][BB][1][2] = tmp1 * hp32(2.0) * njac[i][j][k][1][2];
+				lhs[i][j][k][BB][1][3] = tmp1 * hp32(2.0) * njac[i][j][k][1][3];
+				lhs[i][j][k][BB][1][4] = tmp1 * hp32(2.0) * njac[i][j][k][1][4];
 
-				lhs[i][j][k][BB][2][0] = tmp1 * 2.0 * njac[i][j][k][2][0];
-				lhs[i][j][k][BB][2][1] = tmp1 * 2.0 * njac[i][j][k][2][1];
-				lhs[i][j][k][BB][2][2] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][2][2]
-					+ tmp1 * 2.0 * dy3;
-				lhs[i][j][k][BB][2][3] = tmp1 * 2.0 * njac[i][j][k][2][3];
-				lhs[i][j][k][BB][2][4] = tmp1 * 2.0 * njac[i][j][k][2][4];
+				lhs[i][j][k][BB][2][0] = tmp1 * hp32(2.0) * njac[i][j][k][2][0];
+				lhs[i][j][k][BB][2][1] = tmp1 * hp32(2.0) * njac[i][j][k][2][1];
+				lhs[i][j][k][BB][2][2] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][2][2]
+					+ tmp1 * hp32(2.0) * dy3;
+				lhs[i][j][k][BB][2][3] = tmp1 * hp32(2.0) * njac[i][j][k][2][3];
+				lhs[i][j][k][BB][2][4] = tmp1 * hp32(2.0) * njac[i][j][k][2][4];
 
-				lhs[i][j][k][BB][3][0] = tmp1 * 2.0 * njac[i][j][k][3][0];
-				lhs[i][j][k][BB][3][1] = tmp1 * 2.0 * njac[i][j][k][3][1];
-				lhs[i][j][k][BB][3][2] = tmp1 * 2.0 * njac[i][j][k][3][2];
-				lhs[i][j][k][BB][3][3] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][3][3]
-					+ tmp1 * 2.0 * dy4;
-				lhs[i][j][k][BB][3][4] = tmp1 * 2.0 * njac[i][j][k][3][4];
+				lhs[i][j][k][BB][3][0] = tmp1 * hp32(2.0) * njac[i][j][k][3][0];
+				lhs[i][j][k][BB][3][1] = tmp1 * hp32(2.0) * njac[i][j][k][3][1];
+				lhs[i][j][k][BB][3][2] = tmp1 * hp32(2.0) * njac[i][j][k][3][2];
+				lhs[i][j][k][BB][3][3] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][3][3]
+					+ tmp1 * hp32(2.0) * dy4;
+				lhs[i][j][k][BB][3][4] = tmp1 * hp32(2.0) * njac[i][j][k][3][4];
 
-				lhs[i][j][k][BB][4][0] = tmp1 * 2.0 * njac[i][j][k][4][0];
-				lhs[i][j][k][BB][4][1] = tmp1 * 2.0 * njac[i][j][k][4][1];
-				lhs[i][j][k][BB][4][2] = tmp1 * 2.0 * njac[i][j][k][4][2];
-				lhs[i][j][k][BB][4][3] = tmp1 * 2.0 * njac[i][j][k][4][3];
-				lhs[i][j][k][BB][4][4] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][4][4] 
-					+ tmp1 * 2.0 * dy5;
+				lhs[i][j][k][BB][4][0] = tmp1 * hp32(2.0) * njac[i][j][k][4][0];
+				lhs[i][j][k][BB][4][1] = tmp1 * hp32(2.0) * njac[i][j][k][4][1];
+				lhs[i][j][k][BB][4][2] = tmp1 * hp32(2.0) * njac[i][j][k][4][2];
+				lhs[i][j][k][BB][4][3] = tmp1 * hp32(2.0) * njac[i][j][k][4][3];
+				lhs[i][j][k][BB][4][4] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][4][4] 
+					+ tmp1 * hp32(2.0) * dy5;
 
 				lhs[i][j][k][CC][0][0] =  tmp2 * fjac[i][j+1][k][0][0]
 					- tmp1 * njac[i][j+1][k][0][0]
@@ -1576,7 +1576,7 @@ static void lhsz(void) {
 		for (j = 1; j < grid_points[1]-1; j++) {
 			for (k = 0; k < grid_points[2]; k++) {
 
-				tmp1 = 1.0 / u[i][j][k][0];
+				tmp1 = hp32(1.0) / u[i][j][k][0];
 				tmp2 = tmp1 * tmp1;
 				tmp3 = tmp1 * tmp2;
 
@@ -1601,12 +1601,12 @@ static void lhsz(void) {
 				fjac[i][j][k][2][4] = 0.0;
 
 				fjac[i][j][k][3][0] = - (u[i][j][k][3]*u[i][j][k][3] * tmp2 ) 
-					+ 0.50 * c2 * ( (  u[i][j][k][1] * u[i][j][k][1]
+					+ hp32(0.50) * c2 * ( (  u[i][j][k][1] * u[i][j][k][1]
 								+ u[i][j][k][2] * u[i][j][k][2]
 								+ u[i][j][k][3] * u[i][j][k][3] ) * tmp2 );
 				fjac[i][j][k][3][1] = - c2 *  u[i][j][k][1] * tmp1;
 				fjac[i][j][k][3][2] = - c2 *  u[i][j][k][2] * tmp1;
-				fjac[i][j][k][3][3] = ( 2.0 - c2 )
+				fjac[i][j][k][3][3] = ( hp32(2.0) - c2 )
 					*  u[i][j][k][3] * tmp1;
 				fjac[i][j][k][3][4] = c2;
 
@@ -1621,10 +1621,10 @@ static void lhsz(void) {
 				fjac[i][j][k][4][2] = - c2 * ( u[i][j][k][2]*u[i][j][k][3] )
 					* tmp2;
 				fjac[i][j][k][4][3] = c1 * ( u[i][j][k][4] * tmp1 )
-					- 0.50 * c2
+					- hp32(0.50) * c2
 					* ( (  u[i][j][k][1]*u[i][j][k][1]
 								+ u[i][j][k][2]*u[i][j][k][2]
-								+ 3.0*u[i][j][k][3]*u[i][j][k][3] )
+								+ hp32(3.0)*u[i][j][k][3]*u[i][j][k][3] )
 							* tmp2 );
 				fjac[i][j][k][4][4] = c1 * u[i][j][k][3] * tmp1;
 
@@ -1739,45 +1739,45 @@ static void lhsz(void) {
 					- tmp1 * njac[i][j][k-1][4][4]
 					- tmp1 * dz5;
 
-				lhs[i][j][k][BB][0][0] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][0][0]
-					+ tmp1 * 2.0 * dz1;
-				lhs[i][j][k][BB][0][1] = tmp1 * 2.0 * njac[i][j][k][0][1];
-				lhs[i][j][k][BB][0][2] = tmp1 * 2.0 * njac[i][j][k][0][2];
-				lhs[i][j][k][BB][0][3] = tmp1 * 2.0 * njac[i][j][k][0][3];
-				lhs[i][j][k][BB][0][4] = tmp1 * 2.0 * njac[i][j][k][0][4];
+				lhs[i][j][k][BB][0][0] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][0][0]
+					+ tmp1 * hp32(2.0) * dz1;
+				lhs[i][j][k][BB][0][1] = tmp1 * hp32(2.0) * njac[i][j][k][0][1];
+				lhs[i][j][k][BB][0][2] = tmp1 * hp32(2.0) * njac[i][j][k][0][2];
+				lhs[i][j][k][BB][0][3] = tmp1 * hp32(2.0) * njac[i][j][k][0][3];
+				lhs[i][j][k][BB][0][4] = tmp1 * hp32(2.0) * njac[i][j][k][0][4];
 
-				lhs[i][j][k][BB][1][0] = tmp1 * 2.0 * njac[i][j][k][1][0];
-				lhs[i][j][k][BB][1][1] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][1][1]
-					+ tmp1 * 2.0 * dz2;
-				lhs[i][j][k][BB][1][2] = tmp1 * 2.0 * njac[i][j][k][1][2];
-				lhs[i][j][k][BB][1][3] = tmp1 * 2.0 * njac[i][j][k][1][3];
-				lhs[i][j][k][BB][1][4] = tmp1 * 2.0 * njac[i][j][k][1][4];
+				lhs[i][j][k][BB][1][0] = tmp1 * hp32(2.0) * njac[i][j][k][1][0];
+				lhs[i][j][k][BB][1][1] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][1][1]
+					+ tmp1 * hp32(2.0) * dz2;
+				lhs[i][j][k][BB][1][2] = tmp1 * hp32(2.0) * njac[i][j][k][1][2];
+				lhs[i][j][k][BB][1][3] = tmp1 * hp32(2.0) * njac[i][j][k][1][3];
+				lhs[i][j][k][BB][1][4] = tmp1 * hp32(2.0) * njac[i][j][k][1][4];
 
-				lhs[i][j][k][BB][2][0] = tmp1 * 2.0 * njac[i][j][k][2][0];
-				lhs[i][j][k][BB][2][1] = tmp1 * 2.0 * njac[i][j][k][2][1];
-				lhs[i][j][k][BB][2][2] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][2][2]
-					+ tmp1 * 2.0 * dz3;
-				lhs[i][j][k][BB][2][3] = tmp1 * 2.0 * njac[i][j][k][2][3];
-				lhs[i][j][k][BB][2][4] = tmp1 * 2.0 * njac[i][j][k][2][4];
+				lhs[i][j][k][BB][2][0] = tmp1 * hp32(2.0) * njac[i][j][k][2][0];
+				lhs[i][j][k][BB][2][1] = tmp1 * hp32(2.0) * njac[i][j][k][2][1];
+				lhs[i][j][k][BB][2][2] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][2][2]
+					+ tmp1 * hp32(2.0) * dz3;
+				lhs[i][j][k][BB][2][3] = tmp1 * hp32(2.0) * njac[i][j][k][2][3];
+				lhs[i][j][k][BB][2][4] = tmp1 * hp32(2.0) * njac[i][j][k][2][4];
 
-				lhs[i][j][k][BB][3][0] = tmp1 * 2.0 * njac[i][j][k][3][0];
-				lhs[i][j][k][BB][3][1] = tmp1 * 2.0 * njac[i][j][k][3][1];
-				lhs[i][j][k][BB][3][2] = tmp1 * 2.0 * njac[i][j][k][3][2];
-				lhs[i][j][k][BB][3][3] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][3][3]
-					+ tmp1 * 2.0 * dz4;
-				lhs[i][j][k][BB][3][4] = tmp1 * 2.0 * njac[i][j][k][3][4];
+				lhs[i][j][k][BB][3][0] = tmp1 * hp32(2.0) * njac[i][j][k][3][0];
+				lhs[i][j][k][BB][3][1] = tmp1 * hp32(2.0) * njac[i][j][k][3][1];
+				lhs[i][j][k][BB][3][2] = tmp1 * hp32(2.0) * njac[i][j][k][3][2];
+				lhs[i][j][k][BB][3][3] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][3][3]
+					+ tmp1 * hp32(2.0) * dz4;
+				lhs[i][j][k][BB][3][4] = tmp1 * hp32(2.0) * njac[i][j][k][3][4];
 
-				lhs[i][j][k][BB][4][0] = tmp1 * 2.0 * njac[i][j][k][4][0];
-				lhs[i][j][k][BB][4][1] = tmp1 * 2.0 * njac[i][j][k][4][1];
-				lhs[i][j][k][BB][4][2] = tmp1 * 2.0 * njac[i][j][k][4][2];
-				lhs[i][j][k][BB][4][3] = tmp1 * 2.0 * njac[i][j][k][4][3];
-				lhs[i][j][k][BB][4][4] = 1.0
-					+ tmp1 * 2.0 * njac[i][j][k][4][4]
-					+ tmp1 * 2.0 * dz5;
+				lhs[i][j][k][BB][4][0] = tmp1 * hp32(2.0) * njac[i][j][k][4][0];
+				lhs[i][j][k][BB][4][1] = tmp1 * hp32(2.0) * njac[i][j][k][4][1];
+				lhs[i][j][k][BB][4][2] = tmp1 * hp32(2.0) * njac[i][j][k][4][2];
+				lhs[i][j][k][BB][4][3] = tmp1 * hp32(2.0) * njac[i][j][k][4][3];
+				lhs[i][j][k][BB][4][4] = hp32(1.0)
+					+ tmp1 * hp32(2.0) * njac[i][j][k][4][4]
+					+ tmp1 * hp32(2.0) * dz5;
 
 				lhs[i][j][k][CC][0][0] =  tmp2 * fjac[i][j][k+1][0][0]
 					- tmp1 * njac[i][j][k+1][0][0]
@@ -1859,12 +1859,12 @@ static void compute_rhs(void) {
 	for (i = 0; i < grid_points[0]; i++) {
 		for (j = 0; j < grid_points[1]; j++) {
 			for (k = 0; k < grid_points[2]; k++) {
-				rho_inv = 1.0/u[i][j][k][0];
+				rho_inv = hp32(1.0)/u[i][j][k][0];
 				rho_i[i][j][k] = rho_inv;
 				us[i][j][k] = u[i][j][k][1] * rho_inv;
 				vs[i][j][k] = u[i][j][k][2] * rho_inv;
 				ws[i][j][k] = u[i][j][k][3] * rho_inv;
-				square[i][j][k] = 0.5 * (u[i][j][k][1]*u[i][j][k][1] + 
+				square[i][j][k] = hp32(0.5) * (u[i][j][k][1]*u[i][j][k][1] + 
 						u[i][j][k][2]*u[i][j][k][2] +
 						u[i][j][k][3]*u[i][j][k][3] ) * rho_inv;
 				qs[i][j][k] = square[i][j][k] * rho_inv;
@@ -1899,14 +1899,14 @@ static void compute_rhs(void) {
 				um1  = us[i-1][j][k];
 
 				rhs[i][j][k][0] = rhs[i][j][k][0] + dx1tx1 * 
-					(u[i+1][j][k][0] - 2.0*u[i][j][k][0] + 
+					(u[i+1][j][k][0] - hp32(2.0)*u[i][j][k][0] + 
 					 u[i-1][j][k][0]) -
 					tx2 * (u[i+1][j][k][1] - u[i-1][j][k][1]);
 
 				rhs[i][j][k][1] = rhs[i][j][k][1] + dx2tx1 * 
-					(u[i+1][j][k][1] - 2.0*u[i][j][k][1] + 
+					(u[i+1][j][k][1] - hp32(2.0)*u[i][j][k][1] + 
 					 u[i-1][j][k][1]) +
-					xxcon2*con43 * (up1 - 2.0*uijk + um1) -
+					xxcon2*con43 * (up1 - hp32(2.0)*uijk + um1) -
 					tx2 * (u[i+1][j][k][1]*up1 - 
 							u[i-1][j][k][1]*um1 +
 							(u[i+1][j][k][4]- square[i+1][j][k]-
@@ -1914,30 +1914,30 @@ static void compute_rhs(void) {
 							c2);
 
 				rhs[i][j][k][2] = rhs[i][j][k][2] + dx3tx1 * 
-					(u[i+1][j][k][2] - 2.0*u[i][j][k][2] +
+					(u[i+1][j][k][2] - hp32(2.0)*u[i][j][k][2] +
 					 u[i-1][j][k][2]) +
-					xxcon2 * (vs[i+1][j][k] - 2.0*vs[i][j][k] +
+					xxcon2 * (vs[i+1][j][k] - hp32(2.0)*vs[i][j][k] +
 							vs[i-1][j][k]) -
 					tx2 * (u[i+1][j][k][2]*up1 - 
 							u[i-1][j][k][2]*um1);
 
 				rhs[i][j][k][3] = rhs[i][j][k][3] + dx4tx1 * 
-					(u[i+1][j][k][3] - 2.0*u[i][j][k][3] +
+					(u[i+1][j][k][3] - hp32(2.0)*u[i][j][k][3] +
 					 u[i-1][j][k][3]) +
-					xxcon2 * (ws[i+1][j][k] - 2.0*ws[i][j][k] +
+					xxcon2 * (ws[i+1][j][k] - hp32(2.0)*ws[i][j][k] +
 							ws[i-1][j][k]) -
 					tx2 * (u[i+1][j][k][3]*up1 - 
 							u[i-1][j][k][3]*um1);
 
 				rhs[i][j][k][4] = rhs[i][j][k][4] + dx5tx1 * 
-					(u[i+1][j][k][4] - 2.0*u[i][j][k][4] +
+					(u[i+1][j][k][4] - hp32(2.0)*u[i][j][k][4] +
 					 u[i-1][j][k][4]) +
-					xxcon3 * (qs[i+1][j][k] - 2.0*qs[i][j][k] +
+					xxcon3 * (qs[i+1][j][k] - hp32(2.0)*qs[i][j][k] +
 							qs[i-1][j][k]) +
-					xxcon4 * (up1*up1 -       2.0*uijk*uijk + 
+					xxcon4 * (up1*up1 -       hp32(2.0)*uijk*uijk + 
 							um1*um1) +
 					xxcon5 * (u[i+1][j][k][4]*rho_i[i+1][j][k] - 
-							2.0*u[i][j][k][4]*rho_i[i][j][k] +
+							hp32(2.0)*u[i][j][k][4]*rho_i[i][j][k] +
 							u[i-1][j][k][4]*rho_i[i-1][j][k]) -
 					tx2 * ( (c1*u[i+1][j][k][4] - 
 								c2*square[i+1][j][k])*up1 -
@@ -1955,7 +1955,7 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m]- dssp * 
-					( 5.0*u[i][j][k][m] - 4.0*u[i+1][j][k][m] +
+					( hp32(5.0)*u[i][j][k][m] - hp32(4.0)*u[i+1][j][k][m] +
 					  u[i+2][j][k][m]);
 			}
 		}
@@ -1966,8 +1966,8 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp * 
-					(-4.0*u[i-1][j][k][m] + 6.0*u[i][j][k][m] -
-					 4.0*u[i+1][j][k][m] + u[i+2][j][k][m]);
+					(hp32(-4.0)*u[i-1][j][k][m] + hp32(6.0)*u[i][j][k][m] -
+					 hp32(4.0)*u[i+1][j][k][m] + u[i+2][j][k][m]);
 			}
 		}
 	}
@@ -1977,8 +1977,8 @@ static void compute_rhs(void) {
 			for (k = 1; k < grid_points[2]-1; k++) {
 				for (m = 0; m < 5; m++) {
 					rhs[i][j][k][m] = rhs[i][j][k][m] - dssp * 
-						(  u[i-2][j][k][m] - 4.0*u[i-1][j][k][m] + 
-						   6.0*u[i][j][k][m] - 4.0*u[i+1][j][k][m] + 
+						(  u[i-2][j][k][m] - hp32(4.0)*u[i-1][j][k][m] + 
+						   hp32(6.0)*u[i][j][k][m] - hp32(4.0)*u[i+1][j][k][m] + 
 						   u[i+2][j][k][m] );
 				}
 			}
@@ -1990,8 +1990,8 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp *
-					( u[i-2][j][k][m] - 4.0*u[i-1][j][k][m] + 
-					  6.0*u[i][j][k][m] - 4.0*u[i+1][j][k][m] );
+					( u[i-2][j][k][m] - hp32(4.0)*u[i-1][j][k][m] + 
+					  hp32(6.0)*u[i][j][k][m] - hp32(4.0)*u[i+1][j][k][m] );
 			}
 		}
 	}
@@ -2001,8 +2001,8 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp *
-					( u[i-2][j][k][m] - 4.*u[i-1][j][k][m] +
-					  5.0*u[i][j][k][m] );
+					( u[i-2][j][k][m] - hp32(4.0)*u[i-1][j][k][m] +
+					  hp32(5.0)*u[i][j][k][m] );
 			}
 		}
 	}
@@ -2017,41 +2017,41 @@ static void compute_rhs(void) {
 				vp1  = vs[i][j+1][k];
 				vm1  = vs[i][j-1][k];
 				rhs[i][j][k][0] = rhs[i][j][k][0] + dy1ty1 * 
-					(u[i][j+1][k][0] - 2.0*u[i][j][k][0] + 
+					(u[i][j+1][k][0] - hp32(2.0)*u[i][j][k][0] + 
 					 u[i][j-1][k][0]) -
 					ty2 * (u[i][j+1][k][2] - u[i][j-1][k][2]);
 				rhs[i][j][k][1] = rhs[i][j][k][1] + dy2ty1 * 
-					(u[i][j+1][k][1] - 2.0*u[i][j][k][1] + 
+					(u[i][j+1][k][1] - hp32(2.0)*u[i][j][k][1] + 
 					 u[i][j-1][k][1]) +
-					yycon2 * (us[i][j+1][k] - 2.0*us[i][j][k] + 
+					yycon2 * (us[i][j+1][k] - hp32(2.0)*us[i][j][k] + 
 							us[i][j-1][k]) -
 					ty2 * (u[i][j+1][k][1]*vp1 - 
 							u[i][j-1][k][1]*vm1);
 				rhs[i][j][k][2] = rhs[i][j][k][2] + dy3ty1 * 
-					(u[i][j+1][k][2] - 2.0*u[i][j][k][2] + 
+					(u[i][j+1][k][2] - hp32(2.0)*u[i][j][k][2] + 
 					 u[i][j-1][k][2]) +
-					yycon2*con43 * (vp1 - 2.0*vijk + vm1) -
+					yycon2*con43 * (vp1 - hp32(2.0)*vijk + vm1) -
 					ty2 * (u[i][j+1][k][2]*vp1 - 
 							u[i][j-1][k][2]*vm1 +
 							(u[i][j+1][k][4] - square[i][j+1][k] - 
 							 u[i][j-1][k][4] + square[i][j-1][k])
 							*c2);
 				rhs[i][j][k][3] = rhs[i][j][k][3] + dy4ty1 * 
-					(u[i][j+1][k][3] - 2.0*u[i][j][k][3] + 
+					(u[i][j+1][k][3] - hp32(2.0)*u[i][j][k][3] + 
 					 u[i][j-1][k][3]) +
-					yycon2 * (ws[i][j+1][k] - 2.0*ws[i][j][k] + 
+					yycon2 * (ws[i][j+1][k] - hp32(2.0)*ws[i][j][k] + 
 							ws[i][j-1][k]) -
 					ty2 * (u[i][j+1][k][3]*vp1 - 
 							u[i][j-1][k][3]*vm1);
 				rhs[i][j][k][4] = rhs[i][j][k][4] + dy5ty1 * 
-					(u[i][j+1][k][4] - 2.0*u[i][j][k][4] + 
+					(u[i][j+1][k][4] - hp32(2.0)*u[i][j][k][4] + 
 					 u[i][j-1][k][4]) +
-					yycon3 * (qs[i][j+1][k] - 2.0*qs[i][j][k] + 
+					yycon3 * (qs[i][j+1][k] - hp32(2.0)*qs[i][j][k] + 
 							qs[i][j-1][k]) +
-					yycon4 * (vp1*vp1       - 2.0*vijk*vijk + 
+					yycon4 * (vp1*vp1       - hp32(2.0)*vijk*vijk + 
 							vm1*vm1) +
 					yycon5 * (u[i][j+1][k][4]*rho_i[i][j+1][k] - 
-							2.0*u[i][j][k][4]*rho_i[i][j][k] +
+							hp32(2.0)*u[i][j][k][4]*rho_i[i][j][k] +
 							u[i][j-1][k][4]*rho_i[i][j-1][k]) -
 					ty2 * ((c1*u[i][j+1][k][4] - 
 								c2*square[i][j+1][k]) * vp1 -
@@ -2069,7 +2069,7 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m]- dssp * 
-					( 5.0*u[i][j][k][m] - 4.0*u[i][j+1][k][m] +
+					( hp32(5.0)*u[i][j][k][m] - hp32(4.0)*u[i][j+1][k][m] +
 					  u[i][j+2][k][m]);
 			}
 		}
@@ -2080,8 +2080,8 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp * 
-					(-4.0*u[i][j-1][k][m] + 6.0*u[i][j][k][m] -
-					 4.0*u[i][j+1][k][m] + u[i][j+2][k][m]);
+					(hp32(-4.0)*u[i][j-1][k][m] + hp32(6.0)*u[i][j][k][m] -
+					 hp32(4.0)*u[i][j+1][k][m] + u[i][j+2][k][m]);
 			}
 		}
 	}
@@ -2091,8 +2091,8 @@ static void compute_rhs(void) {
 			for (k = 1; k < grid_points[2]-1; k++) {
 				for (m = 0; m < 5; m++) {
 					rhs[i][j][k][m] = rhs[i][j][k][m] - dssp * 
-						(  u[i][j-2][k][m] - 4.0*u[i][j-1][k][m] + 
-						   6.0*u[i][j][k][m] - 4.0*u[i][j+1][k][m] + 
+						(  u[i][j-2][k][m] - hp32(4.0)*u[i][j-1][k][m] + 
+						   hp32(6.0)*u[i][j][k][m] - hp32(4.0)*u[i][j+1][k][m] + 
 						   u[i][j+2][k][m] );
 				}
 			}
@@ -2104,8 +2104,8 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp *
-					( u[i][j-2][k][m] - 4.0*u[i][j-1][k][m] + 
-					  6.0*u[i][j][k][m] - 4.0*u[i][j+1][k][m] );
+					( u[i][j-2][k][m] - hp32(4.0)*u[i][j-1][k][m] + 
+					  hp32(6.0)*u[i][j][k][m] - hp32(4.0)*u[i][j+1][k][m] );
 			}
 		}
 	}
@@ -2115,8 +2115,8 @@ static void compute_rhs(void) {
 		for (k = 1; k < grid_points[2]-1; k++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp *
-					( u[i][j-2][k][m] - 4.*u[i][j-1][k][m] +
-					  5.*u[i][j][k][m] );
+					( u[i][j-2][k][m] - hp32(4.0)*u[i][j-1][k][m] +
+					  hp32(5.0)*u[i][j][k][m] );
 			}
 		}
 	}
@@ -2132,41 +2132,41 @@ static void compute_rhs(void) {
 				wm1  = ws[i][j][k-1];
 
 				rhs[i][j][k][0] = rhs[i][j][k][0] + dz1tz1 * 
-					(u[i][j][k+1][0] - 2.0*u[i][j][k][0] + 
+					(u[i][j][k+1][0] - hp32(2.0)*u[i][j][k][0] + 
 					 u[i][j][k-1][0]) -
 					tz2 * (u[i][j][k+1][3] - u[i][j][k-1][3]);
 				rhs[i][j][k][1] = rhs[i][j][k][1] + dz2tz1 * 
-					(u[i][j][k+1][1] - 2.0*u[i][j][k][1] + 
+					(u[i][j][k+1][1] - hp32(2.0)*u[i][j][k][1] + 
 					 u[i][j][k-1][1]) +
-					zzcon2 * (us[i][j][k+1] - 2.0*us[i][j][k] + 
+					zzcon2 * (us[i][j][k+1] - hp32(2.0)*us[i][j][k] + 
 							us[i][j][k-1]) -
 					tz2 * (u[i][j][k+1][1]*wp1 - 
 							u[i][j][k-1][1]*wm1);
 				rhs[i][j][k][2] = rhs[i][j][k][2] + dz3tz1 * 
-					(u[i][j][k+1][2] - 2.0*u[i][j][k][2] + 
+					(u[i][j][k+1][2] - hp32(2.0)*u[i][j][k][2] + 
 					 u[i][j][k-1][2]) +
-					zzcon2 * (vs[i][j][k+1] - 2.0*vs[i][j][k] + 
+					zzcon2 * (vs[i][j][k+1] - hp32(2.0)*vs[i][j][k] + 
 							vs[i][j][k-1]) -
 					tz2 * (u[i][j][k+1][2]*wp1 - 
 							u[i][j][k-1][2]*wm1);
 				rhs[i][j][k][3] = rhs[i][j][k][3] + dz4tz1 * 
-					(u[i][j][k+1][3] - 2.0*u[i][j][k][3] + 
+					(u[i][j][k+1][3] - hp32(2.0)*u[i][j][k][3] + 
 					 u[i][j][k-1][3]) +
-					zzcon2*con43 * (wp1 - 2.0*wijk + wm1) -
+					zzcon2*con43 * (wp1 - hp32(2.0)*wijk + wm1) -
 					tz2 * (u[i][j][k+1][3]*wp1 - 
 							u[i][j][k-1][3]*wm1 +
 							(u[i][j][k+1][4] - square[i][j][k+1] - 
 							 u[i][j][k-1][4] + square[i][j][k-1])
 							*c2);
 				rhs[i][j][k][4] = rhs[i][j][k][4] + dz5tz1 * 
-					(u[i][j][k+1][4] - 2.0*u[i][j][k][4] + 
+					(u[i][j][k+1][4] - hp32(2.0)*u[i][j][k][4] + 
 					 u[i][j][k-1][4]) +
-					zzcon3 * (qs[i][j][k+1] - 2.0*qs[i][j][k] + 
+					zzcon3 * (qs[i][j][k+1] - hp32(2.0)*qs[i][j][k] + 
 							qs[i][j][k-1]) +
-					zzcon4 * (wp1*wp1 - 2.0*wijk*wijk + 
+					zzcon4 * (wp1*wp1 - hp32(2.0)*wijk*wijk + 
 							wm1*wm1) +
 					zzcon5 * (u[i][j][k+1][4]*rho_i[i][j][k+1] - 
-							2.0*u[i][j][k][4]*rho_i[i][j][k] +
+							hp32(2.0)*u[i][j][k][4]*rho_i[i][j][k] +
 							u[i][j][k-1][4]*rho_i[i][j][k-1]) -
 					tz2 * ( (c1*u[i][j][k+1][4] - 
 								c2*square[i][j][k+1])*wp1 -
@@ -2184,7 +2184,7 @@ static void compute_rhs(void) {
 		for (j = 1; j < grid_points[1]-1; j++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m]- dssp * 
-					( 5.0*u[i][j][k][m] - 4.0*u[i][j][k+1][m] +
+					( hp32(5.0)*u[i][j][k][m] - hp32(4.0)*u[i][j][k+1][m] +
 					  u[i][j][k+2][m]);
 			}
 		}
@@ -2195,8 +2195,8 @@ static void compute_rhs(void) {
 		for (j = 1; j < grid_points[1]-1; j++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp * 
-					(-4.0*u[i][j][k-1][m] + 6.0*u[i][j][k][m] -
-					 4.0*u[i][j][k+1][m] + u[i][j][k+2][m]);
+					(hp32(-4.0)*u[i][j][k-1][m] + hp32(6.0)*u[i][j][k][m] -
+					 hp32(4.0)*u[i][j][k+1][m] + u[i][j][k+2][m]);
 			}
 		}
 	}
@@ -2206,8 +2206,8 @@ static void compute_rhs(void) {
 			for (k = 3; k < grid_points[2]-3; k++) {
 				for (m = 0; m < 5; m++) {
 					rhs[i][j][k][m] = rhs[i][j][k][m] - dssp * 
-						(  u[i][j][k-2][m] - 4.0*u[i][j][k-1][m] + 
-						   6.0*u[i][j][k][m] - 4.0*u[i][j][k+1][m] + 
+						(  u[i][j][k-2][m] - hp32(4.0)*u[i][j][k-1][m] + 
+						   hp32(6.0)*u[i][j][k][m] - hp32(4.0)*u[i][j][k+1][m] + 
 						   u[i][j][k+2][m] );
 				}
 			}
@@ -2219,8 +2219,8 @@ static void compute_rhs(void) {
 		for (j = 1; j < grid_points[1]-1; j++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp *
-					( u[i][j][k-2][m] - 4.0*u[i][j][k-1][m] + 
-					  6.0*u[i][j][k][m] - 4.0*u[i][j][k+1][m] );
+					( u[i][j][k-2][m] - hp32(4.0)*u[i][j][k-1][m] + 
+					  hp32(6.0)*u[i][j][k][m] - hp32(4.0)*u[i][j][k+1][m] );
 			}
 		}
 	}
@@ -2230,8 +2230,8 @@ static void compute_rhs(void) {
 		for (j = 1; j < grid_points[1]-1; j++) {
 			for (m = 0; m < 5; m++) {
 				rhs[i][j][k][m] = rhs[i][j][k][m] - dssp *
-					( u[i][j][k-2][m] - 4.0*u[i][j][k-1][m] +
-					  5.0*u[i][j][k][m] );
+					( u[i][j][k-2][m] - hp32(4.0)*u[i][j][k-1][m] +
+					  hp32(5.0)*u[i][j][k][m] );
 			}
 		}
 	}
@@ -2331,28 +2331,28 @@ static void set_constants(void) {
 	c4 = 1.0;
 	c5 = 1.4;
 
-	dnxm1 = 1.0 / hp32(grid_points[0]-1);
-	dnym1 = 1.0 / hp32(grid_points[1]-1);
-	dnzm1 = 1.0 / hp32(grid_points[2]-1);
+	dnxm1 = hp32(1.0) / hp32(grid_points[0]-1);
+	dnym1 = hp32(1.0) / hp32(grid_points[1]-1);
+	dnzm1 = hp32(1.0) / hp32(grid_points[2]-1);
 
 	c1c2 = c1 * c2;
 	c1c5 = c1 * c5;
 	c3c4 = c3 * c4;
 	c1345 = c1c5 * c3c4;
 
-	conz1 = (1.0-c1c5);
+	conz1 = (hp32(1.0)-c1c5);
 
-	tx1 = 1.0 / (dnxm1 * dnxm1);
-	tx2 = 1.0 / (2.0 * dnxm1);
-	tx3 = 1.0 / dnxm1;
+	tx1 = hp32(1.0) / (dnxm1 * dnxm1);
+	tx2 = hp32(1.0) / (hp32(2.0) * dnxm1);
+	tx3 = hp32(1.0) / dnxm1;
 
-	ty1 = 1.0 / (dnym1 * dnym1);
-	ty2 = 1.0 / (2.0 * dnym1);
-	ty3 = 1.0 / dnym1;
+	ty1 = hp32(1.0) / (dnym1 * dnym1);
+	ty2 = hp32(1.0) / (hp32(2.0) * dnym1);
+	ty3 = hp32(1.0) / dnym1;
 
-	tz1 = 1.0 / (dnzm1 * dnzm1);
-	tz2 = 1.0 / (2.0 * dnzm1);
-	tz3 = 1.0 / dnzm1;
+	tz1 = hp32(1.0) / (dnzm1 * dnzm1);
+	tz2 = hp32(1.0) / (hp32(2.0) * dnzm1);
+	tz3 = hp32(1.0) / dnzm1;
 
 	dx1 = 0.75;
 	dx2 = 0.75;
@@ -2376,10 +2376,10 @@ static void set_constants(void) {
 	dymax = max(dy2, dy4);
 	dzmax = max(dz2, dz3);
 
-	dssp = 0.25 * max(dx1, max(dy1, dz1) );
+	dssp = hp32(0.25) * max(dx1, max(dy1, dz1) );
 
-	c4dssp = 4.0 * dssp;
-	c5dssp = 5.0 * dssp;
+	c4dssp = hp32(4.0) * dssp;
+	c5dssp = hp32(5.0) * dssp;
 
 	dttx1 = dt*tx1;
 	dttx2 = dt*tx2;
@@ -2388,16 +2388,16 @@ static void set_constants(void) {
 	dttz1 = dt*tz1;
 	dttz2 = dt*tz2;
 
-	c2dttx1 = 2.0*dttx1;
-	c2dtty1 = 2.0*dtty1;
-	c2dttz1 = 2.0*dttz1;
+	c2dttx1 = hp32(2.0)*dttx1;
+	c2dtty1 = hp32(2.0)*dtty1;
+	c2dttz1 = hp32(2.0)*dttz1;
 
 	dtdssp = dt*dssp;
 
 	comz1  = dtdssp;
-	comz4  = 4.0*dtdssp;
-	comz5  = 5.0*dtdssp;
-	comz6  = 6.0*dtdssp;
+	comz4  = hp32(4.0)*dtdssp;
+	comz5  = hp32(5.0)*dtdssp;
+	comz6  = hp32(6.0)*dtdssp;
 
 	c3c4tx3 = c3c4*tx3;
 	c3c4ty3 = c3c4*ty3;
@@ -2951,7 +2951,7 @@ static void binvcrhs(Hardposit lhs[5][5], Hardposit c[5][5], Hardposit r[5]) {
 	  c     
 	  c-------------------------------------------------------------------*/
 
-	pivot = 1.00/lhs[0][0];
+	pivot = hp32(1.00)/lhs[0][0];
 	lhs[0][1] = lhs[0][1]*pivot;
 	lhs[0][2] = lhs[0][2]*pivot;
 	lhs[0][3] = lhs[0][3]*pivot;
@@ -3012,7 +3012,7 @@ static void binvcrhs(Hardposit lhs[5][5], Hardposit c[5][5], Hardposit r[5]) {
 	r[4]   = r[4]   - coeff*r[0];
 
 
-	pivot = 1.00/lhs[1][1];
+	pivot = hp32(1.00)/lhs[1][1];
 	lhs[1][2] = lhs[1][2]*pivot;
 	lhs[1][3] = lhs[1][3]*pivot;
 	lhs[1][4] = lhs[1][4]*pivot;
@@ -3068,7 +3068,7 @@ static void binvcrhs(Hardposit lhs[5][5], Hardposit c[5][5], Hardposit r[5]) {
 	r[4]   = r[4]   - coeff*r[1];
 
 
-	pivot = 1.00/lhs[2][2];
+	pivot = hp32(1.00)/lhs[2][2];
 	lhs[2][3] = lhs[2][3]*pivot;
 	lhs[2][4] = lhs[2][4]*pivot;
 	c[2][0] = c[2][0]*pivot;
@@ -3119,7 +3119,7 @@ static void binvcrhs(Hardposit lhs[5][5], Hardposit c[5][5], Hardposit r[5]) {
 	r[4]   = r[4]   - coeff*r[2];
 
 
-	pivot = 1.00/lhs[3][3];
+	pivot = hp32(1.00)/lhs[3][3];
 	lhs[3][4] = lhs[3][4]*pivot;
 	c[3][0] = c[3][0]*pivot;
 	c[3][1] = c[3][1]*pivot;
@@ -3165,7 +3165,7 @@ static void binvcrhs(Hardposit lhs[5][5], Hardposit c[5][5], Hardposit r[5]) {
 	r[4]   = r[4]   - coeff*r[3];
 
 
-	pivot = 1.00/lhs[4][4];
+	pivot = hp32(1.00)/lhs[4][4];
 	c[4][0] = c[4][0]*pivot;
 	c[4][1] = c[4][1]*pivot;
 	c[4][2] = c[4][2]*pivot;
@@ -3220,7 +3220,7 @@ static void binvrhs( Hardposit lhs[5][5], Hardposit r[5] ) {
 	  c     
 	  c-------------------------------------------------------------------*/
 
-	pivot = 1.00/lhs[0][0];
+	pivot = hp32(1.00)/lhs[0][0];
 	lhs[0][1] = lhs[0][1]*pivot;
 	lhs[0][2] = lhs[0][2]*pivot;
 	lhs[0][3] = lhs[0][3]*pivot;
@@ -3256,7 +3256,7 @@ static void binvrhs( Hardposit lhs[5][5], Hardposit r[5] ) {
 	r[4]   = r[4]   - coeff*r[0];
 
 
-	pivot = 1.00/lhs[1][1];
+	pivot = hp32(1.00)/lhs[1][1];
 	lhs[1][2] = lhs[1][2]*pivot;
 	lhs[1][3] = lhs[1][3]*pivot;
 	lhs[1][4] = lhs[1][4]*pivot;
@@ -3287,7 +3287,7 @@ static void binvrhs( Hardposit lhs[5][5], Hardposit r[5] ) {
 	r[4]   = r[4]   - coeff*r[1];
 
 
-	pivot = 1.00/lhs[2][2];
+	pivot = hp32(1.00)/lhs[2][2];
 	lhs[2][3] = lhs[2][3]*pivot;
 	lhs[2][4] = lhs[2][4]*pivot;
 	r[2]   = r[2]  *pivot;
@@ -3313,7 +3313,7 @@ static void binvrhs( Hardposit lhs[5][5], Hardposit r[5] ) {
 	r[4]   = r[4]   - coeff*r[2];
 
 
-	pivot = 1.00/lhs[3][3];
+	pivot = hp32(1.00)/lhs[3][3];
 	lhs[3][4] = lhs[3][4]*pivot;
 	r[3]   = r[3]  *pivot;
 
@@ -3334,7 +3334,7 @@ static void binvrhs( Hardposit lhs[5][5], Hardposit r[5] ) {
 	r[4]   = r[4]   - coeff*r[3];
 
 
-	pivot = 1.00/lhs[4][4];
+	pivot = hp32(1.00)/lhs[4][4];
 	r[4]   = r[4]  *pivot;
 
 	coeff = lhs[0][4];

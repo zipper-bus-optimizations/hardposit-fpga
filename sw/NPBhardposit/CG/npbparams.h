@@ -10,12 +10,12 @@ c  in this directory. Do not modify it by hand.
 #define	SHIFT	10.0
 #define	RCOND	1.0e-1
 #define	CONVERTDOUBLE	FALSE
-#define COMPILETIME "20 Mar 2022"
+#define COMPILETIME "29 Mar 2022"
 #define NPBVERSION "3.0 structured"
 #define CS1 "g++ -std=gnu++11"
 #define CS2 "g++"
 #define CS3 "-lm -lquadmath -lrt"
 #define CS4 "-I../common -I../../SoftPosit/source/includ..."
-#define CS5 "-O3  -Wall -Wextra -ffp-contract=off -ffloa..."
+#define CS5 "-O3  -w  -ffp-contract=off -ffloat-store -W..."
 #define CS6 "(none)"
 #define CS7 "randdp"

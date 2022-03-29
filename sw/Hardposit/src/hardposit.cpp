@@ -12,6 +12,7 @@
 #include <bitset>
 #include <vector>
 #include <cstring>
+#include <stdlib.h>
 #include "afu_json_info.h"
 #include "hardposit.h"
 #include "softposit.h"
@@ -27,15 +28,13 @@ static uint64_t global_counter = 0;
 shared_buffer::ptr_t req;
 shared_buffer::ptr_t result;
 uint8_t req_q_pointer = 0;
-static Hardposit* result_track[NUM_ENTRIES];
-static Hardposit_cmp* result_track_cmp[NUM_ENTRIES];
+static Hardposit* result_track[NUM_FPGA_ENTRIES];
 
-static std::vector<uint8_t> dependency[NUM_ENTRIES];
 
 void poll_performance(){
-	memset(((void*)result->c_type())+(NUM_ENTRIES*WRITE_GRANULATIRY), 0, sizeof(Performance_array));
-	accel->write_csr64(24, NUM_ENTRIES);
-	volatile Performance_array* perf = (Performance_array*)(((void*)result->c_type())+(NUM_ENTRIES*WRITE_GRANULATIRY));
+	memset(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULATIRY), 0, sizeof(Performance_array));
+	accel->write_csr64(24, NUM_FPGA_ENTRIES);
+	volatile Performance_array* perf = (Performance_array*)(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULATIRY));
 	while(!perf->valid){}
 	std::cout <<"Total req: "<< perf->total_cycles<<std::endl;
 	std::cout <<"[0, 10)"<< perf->mem_req_cycles[0] <<std::endl;
@@ -55,9 +54,9 @@ void poll_performance(){
 
 void close_accel(){
 	accel->reset();
-	accel->close();
 	req->release();
 	result->release();
+	accel->close();
 }
 void init_accel(){
 	if(!accel){
@@ -75,10 +74,10 @@ void init_accel(){
 		token::ptr_t tok = tokens[0];
 		accel = handle::open(tok, FPGA_OPEN_SHARED);
 		accel->reset();
-		req = shared_buffer::allocate(accel, NUM_ENTRIES*READ_GRANULATIRY);
-		result = shared_buffer::allocate(accel,(NUM_ENTRIES+1)*WRITE_GRANULATIRY);
-	  std::fill_n(req->c_type(), NUM_ENTRIES*READ_GRANULATIRY, 0);
-	  std::fill_n(result->c_type(), (NUM_ENTRIES+1)*WRITE_GRANULATIRY, 0);
+		req = shared_buffer::allocate(accel, NUM_OPERAND_ENTRIES*READ_GRANULATIRY);
+		result = shared_buffer::allocate(accel,(NUM_FPGA_ENTRIES+1)*WRITE_GRANULATIRY);
+	  std::fill_n(req->c_type(), NUM_OPERAND_ENTRIES*READ_GRANULATIRY, 0);
+	  std::fill_n(result->c_type(), (NUM_FPGA_ENTRIES+1)*WRITE_GRANULATIRY, 0);
 
 		// open accelerator and map MMIO
 		accel->reset();
@@ -109,7 +108,23 @@ uint32_t Hardposit::get_val(){
 	if(!this->valid && this->ptr!=nullptr){
 		while(!this->ptr->flags){}
 		this->valid = true;
-		std::memcpy(&this->val, &this->ptr->result, sizeof(uint32_t));
+		uint32_t tmp = 0;
+		switch (static_cast<Inst>(this->val))
+		{
+			case LT:
+				tmp = this->ptr->flags & 4;
+				break;
+			case EQ:
+				tmp = this->ptr->flags & 2;
+				break;
+			case GT:
+				tmp = this->ptr->flags & 1;
+				break;
+			default:
+				tmp = this->ptr->result;
+				break;
+		}
+		this->val = tmp;
 		result_track[this->location] = nullptr;
 	}
 	return this->val;
@@ -148,31 +163,29 @@ Hardposit::Hardposit(double in_val){
 Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode){
 	Operand ops[3];
 	Hardposit ret;
-	uint8_t result_q_pointer = global_counter % NUM_ENTRIES;
+	uint8_t result_q_pointer = global_counter % NUM_FPGA_ENTRIES;
 	/*with reuse*/
 	#ifdef REUSE
-	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
+	if(this->ptr && (global_counter-this->counter) < NUM_FPGA_ENTRIES ){
 		ops[0].addr = this->location;
 		ops[0].addr_mode= 1;
-		dependency[this->location].push_back(result_q_pointer);
 	}else{
 		ops[0].addr = req_q_pointer;
 		ops[0].addr_mode= 2;
 		uint32_t res = this->get_val();
 		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
 	}
 
-	if(obj1.ptr && (global_counter-obj1.counter) < FPGA_ENTRIES ){
+	if(obj1.ptr && (global_counter-obj1.counter) < NUM_FPGA_ENTRIES ){
 		ops[1].addr = obj1.location;
 		ops[1].addr_mode= 1;
-		dependency[obj1.location].push_back(result_q_pointer);
 	}else{
 		ops[1].addr = req_q_pointer;
 		ops[1].addr_mode= 2;
 		uint32_t res = obj1.get_val();
 		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
 	}
 	#endif
 	/*no reuse*/
@@ -181,27 +194,26 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	ops[0].addr_mode= 2;
 	uint32_t retv = this->get_val();
 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));
-	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
 	ops[1].addr = req_q_pointer;
 	ops[1].addr_mode= 2;
 	retv = obj1.get_val();
 	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));		
-	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+	req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
 	#endif
 
 	if(inst == Inst::FMA){
 		/*with reuse*/
 		#ifdef REUSE
-		if(obj2.ptr && (global_counter -obj2.counter) < FPGA_ENTRIES ){
+		if(obj2.ptr && (global_counter -obj2.counter) < NUM_FPGA_ENTRIES ){
 			ops[2].addr = obj2.location;
 			ops[2].addr_mode= 1;
-			dependency[obj2.location].push_back(result_q_pointer);
 		}else{
 			ops[2].addr = req_q_pointer;
 			ops[2].addr_mode= 2;
 			uint32_t res = obj2.get_val();
 			mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
-			req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+			req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
 		}
 		#endif
 		/*no reuse*/
@@ -210,7 +222,7 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 		ops[2].addr_mode= 2;
 		uint32_t res = obj2.get_val();
 		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
+		req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
 		#endif
 	}else{
 		ops[2].addr_mode= 0;
@@ -223,28 +235,6 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 		}
 	}
 
-	Hardposit_cmp* res_cmp = result_track_cmp[result_q_pointer] ;
-	if( res_cmp != nullptr){
-		if(!res_cmp->valid){
-			res_cmp->get_val();
-		}
-	}
-
-	for(auto& i : dependency[result_q_pointer]){
-		res = result_track[i];
-		if( res!= nullptr){
-			if(!res->valid){
-				res->get_val();
-			}
-		}
-		res_cmp = result_track_cmp[i];
-		if( res_cmp!= nullptr){
-			if(!res_cmp->valid){
-				res_cmp->get_val();
-			}
-		}
-	}
-	dependency[result_q_pointer].clear();
 
 	ret.valid = false;
 
@@ -274,7 +264,6 @@ Hardposit::~Hardposit(){
 		this->get_val();
 	}
 }
-
 
 
 Hardposit Hardposit::operator + (Hardposit const &obj){
@@ -329,166 +318,23 @@ double Hardposit::toDouble(){
 int Hardposit::toInt(){
 	return posit32(this->val).toInt();
 }
-// compare
-Hardposit_cmp Hardposit::compute_cmp(Hardposit const &obj, Inst inst, bool mode){
-	uint8_t result_q_pointer = global_counter % NUM_ENTRIES;
-	Operand ops[2];
-	Hardposit_cmp ret;
 
-	/*with reuse*/
-	#ifdef REUSE
-	if(this->ptr && (global_counter-this->counter) < FPGA_ENTRIES ){
-		ops[0].addr = this->location;
-		ops[0].addr_mode= 1;
-		dependency[this->location].push_back(result_q_pointer);
-	}else{
-		ops[0].addr = req_q_pointer;
-		ops[0].addr_mode= 2;
-		uint32_t res = this->get_val();
-		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	}
+Hardposit::operator bool () const{
+	return (this->get_val() !=0);
+};
 
-	if(obj.ptr && (global_counter-obj.counter) < FPGA_ENTRIES ){
-		ops[1].addr = obj.location;
-		ops[1].addr_mode= 1;
-		dependency[obj.location].push_back(result_q_pointer);
-	}else{
-		ops[1].addr = req_q_pointer;
-		ops[1].addr_mode= 2;
-		uint32_t res = obj.get_val();
-		mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &res, sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	}
-	#endif
-	/*no reuse*/
-	#ifdef NOREUSE
-	ops[0].addr = req_q_pointer;
-	ops[0].addr_mode= 2;
-	uint32_t retv = this->get_val();
-	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));
-	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	ops[1].addr = req_q_pointer;
-	ops[1].addr_mode= 2;
-	retv = obj.get_val();
-	mempcpy(req->c_type() + sizeof(uint32_t)*req_q_pointer, &retv, sizeof(uint32_t));
-	req_q_pointer = (req_q_pointer + 1) % NUM_ENTRIES;
-	#endif
-
-	ops[2].addr_mode= 0;
-	Hardposit* res = result_track[result_q_pointer] ;
-
-	if( res!= nullptr){
-		if(!res->valid){
-			res->get_val();
-		}
-	}
-
-	Hardposit_cmp* res_cmp = result_track_cmp[result_q_pointer] ;
-	if( res_cmp!= nullptr){
-		if(!res_cmp->valid){
-			res_cmp->get_val();
-		}
-	}
-
-	for(auto& i : dependency[result_q_pointer]){
-		res = result_track[i];
-		if( res!= nullptr){
-			if(!res->valid){
-				res->get_val();
-			}
-		}
-		res_cmp = result_track_cmp[i];
-		if( res_cmp!= nullptr){
-			if(!res_cmp->valid){
-				res_cmp->get_val();
-			}
-		}
-	}
-	ret.valid = false;
-	dependency[result_q_pointer].clear();
-	ret.ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULATIRY);
-	ret.counter = global_counter;
-	ret.location = result_q_pointer;
-	uint64_t write_req = 0;
-
-	write_req += result_q_pointer;
-
-
-	mempcpy((uint8_t*)&write_req+1, ops, 3*sizeof(Operand));
-	uint8_t insmod =  inst + (mode << 3);
-	write_req += ((uint64_t)insmod) << 56;
-
-	global_counter ++;
-	ret.ptr->flags = 0;
-	result_track_cmp[result_q_pointer] = &ret;
-	accel->write_csr64(16, write_req);
-	return ret;
-}
-
-Hardposit_cmp::~Hardposit_cmp(){
-	if(this->ptr && !this->valid){
-		this->get_val();
-	}
-}
-
-Hardposit_cmp Hardposit::operator < (Hardposit const &obj){
-	Hardposit_cmp result = this->compute_cmp(obj, CMP, false);
-	result.type = LT;
+Hardposit Hardposit::operator < (Hardposit const &obj){
+	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
+	result.val = LT;
 	return result;
 }
-Hardposit_cmp Hardposit::operator > (Hardposit const &obj){
-	Hardposit_cmp result = this->compute_cmp(obj, CMP, false);
-	result.type = GT;
+Hardposit Hardposit::operator > (Hardposit const &obj){
+	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
+	result.val = GT;
 	return result;
 }
-Hardposit_cmp Hardposit::operator == (Hardposit const &obj){
-	Hardposit_cmp result = this->compute_cmp(obj, CMP, false);
-	result.type = EQ;
+Hardposit Hardposit::operator == (Hardposit const &obj){
+	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
+	result.val = EQ;
 	return result;
 }
-
-void Hardposit_cmp::print_val(){
-	std::cout << "Hardposit_cmp: " << std::hex<< this->get_val() << std::endl;
-}
-bool Hardposit_cmp::get_val(){
-	if(!this->valid && this->ptr!=nullptr){
-		while(!this->ptr->flags){}
-		this->valid = true;
-		switch (this->type){
-			case LT:
-				this->val = this->ptr->flags & 4;
-				break;
-			case EQ:
-				this->val = this->ptr->flags & 2;
-				break;
-			case GT:
-				this->val = this->ptr->flags & 1;
-			default:
-				break;
-		}
-		result_track_cmp[this->location] = nullptr;
-	}
-	return this->val;
-}
-Hardposit_cmp::Hardposit_cmp(bool in_val){
-	this->val = in_val;
-	this->valid = true;
-	this->ptr = nullptr;
-	this->location = 0;
-	this->counter = 0;
-}
-
-void Hardposit_cmp::operator = (Hardposit_cmp const &obj){
-	this->val = obj.val;
-	this->valid = obj.valid;
-	this->ptr = obj.ptr;
-	this->type = obj.type;
-	this->location = obj.location;
-	this->counter = obj.counter;
-}
-
-Hardposit_cmp::operator bool () const{
-	return this->val;
-}
-

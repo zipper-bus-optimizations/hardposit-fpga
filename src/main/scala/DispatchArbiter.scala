@@ -40,3 +40,14 @@ class DispatchArbiter(numBits: Int) extends Module{
 	io.hasChosen := afterPriorityExist | beforePriorityExist
 	io.chosen := Mux(afterPriorityExist, afterPriorityChosen, beforePriorityChosen)
 }
+
+class CBArbiter(numBits: Int) extends Module{
+	val io = IO(new Bundle{
+		val validity = Input(UInt(numBits.W))
+		val priority = Input(UInt(log2Ceil(numBits).W))
+		val fetchOffset = Input(Vec(Params.NumOperand* Params.NumRBEntries, UInt(48.W)))
+		val chosen = Output(UInt(log2Ceil(numBits).W))
+		val hasChosen = Output(Bool())
+	})
+	
+}

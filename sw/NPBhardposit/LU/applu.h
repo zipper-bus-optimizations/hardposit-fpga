@@ -24,17 +24,17 @@ c-------------------------------------------------------------------*/
 #define IPR_DEFAULT	1
 #define	OMEGA_DEFAULT	1.2
 
-#define	TOLRSD1_DEF	1.0e-8
-#define	TOLRSD2_DEF	1.0e-8
-#define	TOLRSD3_DEF	1.0e-8
-#define	TOLRSD4_DEF	1.0e-8
-#define	TOLRSD5_DEF	1.0e-8
+#define	TOLRSD1_DEF	hp32(1.0e-8)
+#define	TOLRSD2_DEF	hp32(1.0e-8)
+#define	TOLRSD3_DEF	hp32(1.0e-8)
+#define	TOLRSD4_DEF	hp32(1.0e-8)
+#define	TOLRSD5_DEF	hp32(1.0e-8)
 
-#define	C1		1.40e+00
-#define	C2		0.40e+00
-#define	C3		1.00e-01
-#define	C4		1.00e+00
-#define	C5		1.40e+00
+#define	C1		hp32(1.40e+00)
+#define	C2		hp32(0.40e+00)
+#define	C3		hp32(1.00e-01)
+#define	C4		hp32(1.00e+00)
+#define	C5		hp32(1.40e+00)
 
 /*--------------------------------------------------------------------
 c   grid

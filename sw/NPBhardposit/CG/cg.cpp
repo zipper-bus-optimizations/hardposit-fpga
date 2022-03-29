@@ -223,7 +223,7 @@ int main(int argc, char **argv) {
 			norm_temp11 = norm_temp11 + x[j]*z[j];
 			norm_temp12 = norm_temp12 + z[j]*z[j];
 		}
-		norm_temp12 = 1.0 / ( norm_temp12.sqrt() );
+		norm_temp12 = hp32(1.0) / ( norm_temp12.sqrt() );
 
 		/*--------------------------------------------------------------------
 		  c  Normalize z to obtain x
@@ -273,9 +273,9 @@ int main(int argc, char **argv) {
 			norm_temp12 = norm_temp12 + z[j]*z[j];
 		}
 
-		norm_temp12 = 1.0 / ( norm_temp12.sqrt() );
+		norm_temp12 = hp32(1.0) / ( norm_temp12.sqrt() );
 
-		zeta = hp32(SHIFT) + 1.0 / norm_temp11;
+		zeta = hp32(SHIFT) + hp32(1.0) / norm_temp11;
 
 		if( it == 1 ) {
 			printf("   iteration           ||r||                 zeta        |zeta - zeta_truth|\n");
@@ -320,7 +320,7 @@ int main(int argc, char **argv) {
 		printf(" NO VERIFICATION PERFORMED\n");
 	}
 
-	if ( t != 0.0 ) {
+	if ( t!=0 ) {
 		mflops = (2.0*NITER*NA)
 			* (3.0+(NONZER*(NONZER+1)) + 25.0*(5.0+(NONZER*(NONZER+1))) + 3.0 )
 			/ t / 1000000.0;
@@ -765,7 +765,7 @@ static void sparse(
 		for (k = jajp1; k < rowstr[j+1]; k++) {
 			i = colidx[k];
 			x[i] = x[i] + a[k];
-			if ( mark[i] == FALSE && x[i] != 0.0) {
+			if ( mark[i] == FALSE && (!(x[i] == hp32(0.0)))) {
 				mark[i] = TRUE;
 				nzrow = nzrow + 1;
 				nzloc[nzrow] = i;
@@ -780,7 +780,7 @@ static void sparse(
 			mark[i] = FALSE;
 			xi = x[i];
 			x[i] = 0.0;
-			if (xi != 0.0) {
+			if ( !(xi == hp32(0.0))) {
 				nza = nza + 1;
 				a[nza] = xi;
 				colidx[nza] = i;
