@@ -16,9 +16,11 @@ using namespace opae::fpga::types;
 void close_accel();
 void init_accel();
 enum Inst{NOOP, ADDSUB, CMP, FMA, MUL, SQRTDIV, LT, EQ, GT};
-struct Operand{
-	uint8_t addr_mode = 0;
-	uint8_t addr = 0;
+struct OpAddr{
+	/*2 bits for mode, if mode == 2, then the least significant bit is for id*/
+	/*one hot encoding for cachline*/
+	/*offset inside the cacheline*/
+	uint16_t addr = 0;
 };
 struct Result{
 		/* 3-bit pad, 1-bit isZero, 1-bit isNaR,

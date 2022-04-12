@@ -2,7 +2,7 @@ package hardposit
 
 import chisel3._
 import chisel3.util._
-
+import hardposit.Params._
 // first two bits are for which module
 object Instruction{
 	val none = 0.U(3.W)
@@ -12,18 +12,18 @@ object Instruction{
 	val mul = 4.U(3.W)
 	val sqrtdiv = 5.U(3.W)
 }
-class PositRequest(val nbits: Int, val es: Int)  extends Bundle{
-	val num1 = UInt(nbits.W)
-	val num2 = UInt(nbits.W)
-	val num3 = UInt(nbits.W)
+class PositRequest extends Bundle{
+	val num1 = UInt(Nbits.W)
+	val num2 = UInt(Nbits.W)
+	val num3 = UInt(Nbits.W)
 	val inst = UInt(3.W)
 	val mode = UInt(2.W)
 }
 
-class PositResult(val nbits: Int, val es: Int)  extends Bundle{
+class PositResult extends Bundle{
 	val isZero = Bool()
 	val isNaR  = Bool()
-	val out    = UInt(nbits.W)
+	val out    = UInt(Nbits.W)
 	val lt = Bool()
 	val eq = Bool()
 	val gt = Bool()
@@ -31,31 +31,31 @@ class PositResult(val nbits: Int, val es: Int)  extends Bundle{
 }
 
 
-class PositInterface(val nbits: Int, val es: Int) extends Bundle{
-	val request = Flipped(DecoupledIO(new PositRequest(nbits, es)))
-	val result = Decoupled(new PositResult(nbits, es))
-	val in_idx = Input(UInt(log2Ceil(Params.NumRBEntries).W))
-	val out_idx = Output(UInt(log2Ceil(Params.NumRBEntries).W))
+class PositInterface extends Bundle{
+	val request = Flipped(DecoupledIO(new PositRequest))
+	val result = Decoupled(new PositResult)
+	val in_idx = Input(UInt(log2Ceil(NumFPGAEntries).W))
+	val out_idx = Output(UInt(log2Ceil(NumFPGAEntries).W))
 }
 
-class Posit(val nbits: Int, val es: Int)(debug: Boolean) extends Module with HasHardPositParams {
+class Posit(val nbits:Int = Nbits, val es:Int = ES) extends Module with HasHardPositParams {
 
-  val io = IO(new PositInterface(nbits, es))
+  val io = IO(new PositInterface)
 	val positAddCore = Module(new PositAddCore(nbits, es))
-	val positCompare = Module(new PositCompare(nbits,es))
+	val positCompare = Module(new PositCompare(nbits, es))
 	val positFMACore = Module(new PositFMACore(nbits, es))
 	val positDivSqrtCore = Module(new PositDivSqrtCore(nbits, es))
 	val positMulCore = Module(new PositMulCore(nbits, es))
 
 
-	val init_num1 = RegInit(UInt(nbits.W), 0.U)
-	val init_num2 = RegInit(UInt(nbits.W), 0.U)
-	val init_num3 = RegInit(UInt(nbits.W), 0.U)
+	val init_num1 = RegInit(UInt(Nbits.W), 0.U)
+	val init_num2 = RegInit(UInt(Nbits.W), 0.U)
+	val init_num3 = RegInit(UInt(Nbits.W), 0.U)
 	val init_input_valid = RegInit(Bool(), false.B)
 	val init_inst = RegInit(UInt(3.W), 0.U)
 	val init_mode = RegInit(UInt(2.W), 0.U)
 	val init_valid = RegInit(Bool(), false.B)
-	val init_idx = RegInit(UInt(log2Ceil(Params.NumRBEntries).W), 0.U)
+	val init_idx = RegInit(UInt(log2Ceil(NumFPGAEntries).W), 0.U)
 
 	val result_valid = RegInit(Bool(), false.B)
 	val exec_valid = RegInit(Bool(), false.B)
@@ -81,23 +81,23 @@ class Posit(val nbits: Int, val es: Int)(debug: Boolean) extends Module with Has
 	val exec_num1 = RegInit(new unpackedPosit(nbits, es), 0.U.asTypeOf(new unpackedPosit(nbits, es)))
 	val exec_num2 = RegInit(new unpackedPosit(nbits, es), 0.U.asTypeOf(new unpackedPosit(nbits, es)))
 	val exec_num3 = RegInit(new unpackedPosit(nbits, es), 0.U.asTypeOf(new unpackedPosit(nbits, es)))
-	val comp_num1 = RegInit(UInt(nbits.W), 0.U)
-	val comp_num2 = RegInit(UInt(nbits.W), 0.U)
+	val comp_num1 = RegInit(UInt(Nbits.W), 0.U)
+	val comp_num2 = RegInit(UInt(Nbits.W), 0.U)
 	val exec_input_valid = RegInit(Bool(), false.B)
 	val exec_inst = RegInit(UInt(3.W), 0.U)
 	val exec_mode = RegInit(UInt(2.W), 0.U)
-	val exec_idx = RegInit(UInt(log2Ceil(Params.NumRBEntries).W), 0.U)
+	val exec_idx = RegInit(UInt(log2Ceil(NumFPGAEntries).W), 0.U)
 	val dispatched = RegInit(Bool(), false.B)
 
 	val default_unpacked = Wire(new unpackedPosit(nbits, es))
 
-	val result_out = RegInit(new unpackedPosit(nbits, es), 0.U.asTypeOf(new unpackedPosit(nbits,es)))
+	val result_out = RegInit(new unpackedPosit(nbits, es), 0.U.asTypeOf(new unpackedPosit(Nbits,ES)))
 	val result_stickyBit = RegInit(Bool(), 0.U)
 	val result_trailingBits = RegInit(UInt(trailingBitCount.W), 0.U)
 	val result_lt = RegInit(Bool(), false.B)
 	val result_eq = RegInit(Bool(), false.B)
 	val result_gt = RegInit(Bool(), false.B)
-	val result_idx = RegInit(UInt(log2Ceil(Params.NumRBEntries).W), 0.U)
+	val result_idx = RegInit(UInt(log2Ceil(NumFPGAEntries).W), 0.U)
 
 	io.request.ready := ~init_valid 
 	default_unpacked .sign := false.B

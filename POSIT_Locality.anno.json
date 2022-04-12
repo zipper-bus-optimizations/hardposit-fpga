@@ -21,6 +21,13 @@
     ]
   },
   {
+    "class":"firrtl.transforms.CombinationalPath",
+    "sink":"~POSIT_Locality|POSIT_Locality>io_mem_read_req_tag",
+    "sources":[
+      "~POSIT_Locality|POSIT_Locality>io_mem_write_ready"
+    ]
+  },
+  {
     "class":"logger.LogLevelAnnotation",
     "globalLogLevel":{
       

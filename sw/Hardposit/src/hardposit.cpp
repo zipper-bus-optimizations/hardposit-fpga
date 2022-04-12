@@ -32,9 +32,9 @@ static Hardposit* result_track[NUM_FPGA_ENTRIES];
 
 
 void poll_performance(){
-	memset(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULATIRY), 0, sizeof(Performance_array));
+	memset(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULARITY), 0, sizeof(Performance_array));
 	accel->write_csr64(24, NUM_FPGA_ENTRIES);
-	volatile Performance_array* perf = (Performance_array*)(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULATIRY));
+	volatile Performance_array* perf = (Performance_array*)(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULARITY));
 	while(!perf->valid){}
 	std::cout <<"Total req: "<< perf->total_cycles<<std::endl;
 	std::cout <<"[0, 10)"<< perf->mem_req_cycles[0] <<std::endl;
@@ -74,21 +74,19 @@ void init_accel(){
 		token::ptr_t tok = tokens[0];
 		accel = handle::open(tok, FPGA_OPEN_SHARED);
 		accel->reset();
-		req = shared_buffer::allocate(accel, NUM_OPERAND_ENTRIES*READ_GRANULATIRY);
-		result = shared_buffer::allocate(accel,(NUM_FPGA_ENTRIES+1)*WRITE_GRANULATIRY);
-	  std::fill_n(req->c_type(), NUM_OPERAND_ENTRIES*READ_GRANULATIRY, 0);
-	  std::fill_n(result->c_type(), (NUM_FPGA_ENTRIES+1)*WRITE_GRANULATIRY, 0);
+		req = shared_buffer::allocate(accel, NUM_CACHELINE* SIZE_OF_CACHELINE);
+		result = shared_buffer::allocate(accel,(NUM_FPGA_ENTRIES+1)*WRITE_GRANULARITY);
+	  std::fill_n(req->c_type(), NUM_OPERAND_ENTRIES*READ_GRANULARITY, 0);
+	  std::fill_n(result->c_type(), (NUM_FPGA_ENTRIES+1)*WRITE_GRANULARITY, 0);
 
 		// open accelerator and map MMIO
 		accel->reset();
 
 		uint64_t read_setup = 0;
 		read_setup += ((req->io_address())>>6);
-		read_setup += (READ_GRANULATIRY << 42);
-
 		uint64_t write_setup = 0;
 		write_setup += ((result->io_address())>>6);
-		write_setup += (WRITE_GRANULATIRY << 42);
+		write_setup += (WRITE_GRANULARITY << 42);
 	  __sync_synchronize();
 		accel->write_csr64(0, read_setup);
 		accel->write_csr64(8, write_setup);
@@ -161,71 +159,92 @@ Hardposit::Hardposit(double in_val){
 	this->counter = 0;
 }
 Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode){
-	Operand ops[3];
+	OpAddr ops[3];
 	Hardposit ret;
 	uint8_t result_q_pointer = global_counter % NUM_FPGA_ENTRIES;
+	uint64_t mask = (1<<9-1)<<4;
 	/*with reuse*/
 	#ifdef REUSE
 	if(this->ptr && (global_counter-this->counter) < NUM_FPGA_ENTRIES ){
-		ops[0].addr = this->location;
-		ops[0].addr_mode= 1;
+		ops[0].addr = this->location + (1 << 14);
 	}else{
-		ops[0].addr = req_q_pointer;
-		ops[0].addr_mode= 2;
-		uint32_t res = this->get_val();
-		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));
-		req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
+		uint16_t offset = CALC_OFFSET(req_q_pointer);
+		uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
+		uint8_t id = CALC_ID(req_q_pointer);
+		ops[0].addr = offset + cacheline + (id << 14) + (1 << 15);
+		Operand op;
+		op.val = this->get_val();
+		op.valid_w_id = id + 2;
+		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+		req_q_pointer++;
 	}
 
 	if(obj1.ptr && (global_counter-obj1.counter) < NUM_FPGA_ENTRIES ){
-		ops[1].addr = obj1.location;
-		ops[1].addr_mode= 1;
+		ops[1].addr = obj1.location + (1 << 14);
 	}else{
-		ops[1].addr = req_q_pointer;
-		ops[1].addr_mode= 2;
-		uint32_t res = obj1.get_val();
-		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &res, sizeof(uint32_t));		
-		req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
+		uint16_t offset = CALC_OFFSET(req_q_pointer);
+		uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
+		uint8_t id = CALC_ID(req_q_pointer);
+		ops[1].addr = offset + cacheline + (id << 14) + (1 << 15);
+		Operand op;
+		op.val = obj1.get_val();
+		op.valid_w_id = id + 2;
+		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+		req_q_pointer++;
 	}
 	#endif
 	/*no reuse*/
 	#ifdef NOREUSE
-	ops[0].addr = req_q_pointer;
-	ops[0].addr_mode= 2;
-	uint32_t retv = this->get_val();
-	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));
-	req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
-	ops[1].addr = req_q_pointer;
-	ops[1].addr_mode= 2;
-	retv = obj1.get_val();
-	mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer), &retv, sizeof(uint32_t));		
-	req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
+	uint16_t offset = CALC_OFFSET(req_q_pointer);
+	uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
+	uint8_t id = CALC_ID(req_q_pointer);
+	ops[0].addr = offset + cacheline + (id << 14) + (1 << 15);
+	Operand op;
+	op.val = this->get_val();
+	op.valid_w_id = id + 2;
+	mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+	req_q_pointer++;
+	offset = CALC_OFFSET(req_q_pointer);
+	cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
+	id = CALC_ID(req_q_pointer);
+	ops[1].addr = offset + cacheline + (id << 14) + (1 << 15);
+	op.val = obj1.get_val();
+	op.valid_w_id = id + 2;
+	mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+	req_q_pointer++;
 	#endif
 
 	if(inst == Inst::FMA){
 		/*with reuse*/
 		#ifdef REUSE
 		if(obj2.ptr && (global_counter -obj2.counter) < NUM_FPGA_ENTRIES ){
-			ops[2].addr = obj2.location;
-			ops[2].addr_mode= 1;
+			ops[2].addr = obj2.location  + (1 << 14);
 		}else{
-			ops[2].addr = req_q_pointer;
-			ops[2].addr_mode= 2;
-			uint32_t res = obj2.get_val();
-			mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
-			req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
+			uint16_t offset = CALC_OFFSET(req_q_pointer);
+			uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
+			uint8_t id = CALC_ID(req_q_pointer);
+			ops[2].addr = offset + cacheline + (id << 14) + (1 << 15);
+			Operand op;
+			op.val = obj2.get_val();
+			op.valid_w_id = id + 2;
+			mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+			req_q_pointer++;
 		}
 		#endif
 		/*no reuse*/
 		#ifdef NOREUSE
-		ops[2].addr = req_q_pointer;
-		ops[2].addr_mode= 2;
-		uint32_t res = obj2.get_val();
-		mempcpy(((void*)req->c_type() + sizeof(uint32_t)*req_q_pointer),  &res, sizeof(uint32_t));		
-		req_q_pointer = (req_q_pointer + 1) % NUM_OPERAND_ENTRIES;
+		uint16_t offset = CALC_OFFSET(req_q_pointer);
+		uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
+		uint8_t id = CALC_ID(req_q_pointer);
+		ops[2].addr = offset + cacheline + (id << 14) + (1 << 15);
+		Operand op;
+		op.val = obj2.get_val();
+		op.valid_w_id = id + 2;
+		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);	
+		req_q_pointer++;
 		#endif
 	}else{
-		ops[2].addr_mode= 0;
+		ops[2].addr = 0;
 	}
 
 	Hardposit* res = result_track[result_q_pointer] ;
@@ -238,7 +257,7 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 
 	ret.valid = false;
 
-	ret.ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULATIRY);
+	ret.ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULARITY);
 	ret.counter = global_counter;
 	ret.location = result_q_pointer;
 	uint64_t write_req = 0;
@@ -246,7 +265,7 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	write_req += result_q_pointer;
 
 
-	mempcpy((uint8_t*)&write_req+1, ops, 3*sizeof(Operand));
+	mempcpy((uint8_t*)&write_req+1, ops, 3*sizeof(OpAddr));
 	uint8_t insmod =  inst + (mode << 3);
 	write_req += ((uint64_t)insmod) << 56;
 

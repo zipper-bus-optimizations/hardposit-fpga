@@ -21,8 +21,8 @@ class RBEntry extends RequestOperandEntry{
 	val written = Bool()
 	val wr_addr = UInt(8.W)
 	val request = new RBRequest
-	val result = new PositResult(Params.Nbits, Params.ES)
+	val result = new PositResult
 }
 class ReorderBuffer extends Bundle{
-	val entries = Vec(Params.NumRBEntries, new RBEntry)
+	val entries = Vec(Params.NumFPGAEntries, new RBEntry)
 }

@@ -5,9 +5,9 @@ include ../config/make.def
 
 include ../sys/make.common
 
-PROGRAM= ../bin/tests
+PROGRAM= ./tests
 OBJS= tests.o
-all: ${PROGRAM}
+all: clean ${PROGRAM}
 
 ${PROGRAM}: ${PROGRAM}.fpga ${PROGRAM}.ase ${PROGRAM}_NOREUSE.fpga ${PROGRAM}_NOREUSE.ase;
 
@@ -23,6 +23,11 @@ ${PROGRAM}_NOREUSE.fpga: ${OBJS}
 ${PROGRAM}_NOREUSE.ase: ${OBJS}
 	${CLINK} ${CPPFLAGS} ${CLINKFLAGSASE} -o $@ ${OBJS} $(CLINK_LIBASE_NOREUSE) ${C_LIB} 
 
+config_tests: encoding_tests.o
+	${CLINK} ${CPPFLAGS} ${CLINKFLAGSFPGA} -o $@  $^ $(CLINK_LIBFPGA) ${C_LIB} 
+
+encoding_tests.o:  encoding_tests.cpp
+	${CCOMPILE} $^
 
 tests.o:		tests.cpp
 	${CCOMPILE} tests.cpp

@@ -162,7 +162,6 @@ module ofs_plat_afu
       if(!reset_n) begin
         req_base_address <=  'b0;
         resp_base_address <=  'b0;
-        req_granularity <=  'b0;
         resp_granularity <=  'b0;
         read_meta_data <= 0;
         meta_data_offset <= 0;
@@ -174,13 +173,12 @@ module ofs_plat_afu
           case (mmio_req_hdr.address)
             0: 
               begin
-                $fwrite(32'h80000002,"Writing to read granulatiry\n");
+                $fwrite(32'h80000002,"Writing to read granularity\n");
                 req_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
-                req_granularity <=  mmio_write_data[ CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH];
               end
 
             2: begin
-                $fwrite(32'h80000002,"Writing to write granulatiry\n");
+                $fwrite(32'h80000002,"Writing to write granularity\n");
               resp_base_address <=  mmio_write_data[CCIP_CLADDR_WIDTH-1:0];
               resp_granularity <=  mmio_write_data[CCIP_CLADDR_WIDTH+8-1: CCIP_CLADDR_WIDTH]; 
             end
@@ -239,20 +237,21 @@ module ofs_plat_afu
     assign req_valid = is_csr_write && (mmio_req_hdr.address == 4);
     assign mode = mmio_write_data[60:59];
     assign inst = mmio_write_data[58:56];
-    assign operands_value[2] = mmio_write_data[55:48];
-    assign operands_mode[2] = mmio_write_data[47:40];
-    assign operands_value[1] = mmio_write_data[39:32];
-    assign operands_mode[1] = mmio_write_data[31:24];
-    assign operands_value[0] = mmio_write_data[23:16];
-    assign operands_mode[0] = mmio_write_data[16:8];
+    assign operands_value[2] = mmio_write_data[55:40];
+    assign operands_mode[2] = mmio_write_data[55:54];
+    assign operands_value[1] = mmio_write_data[39:24];
+    assign operands_mode[1] = mmio_write_data[39:38];
+    assign operands_value[0] = mmio_write_data[23:8];
+    assign operands_mode[0] = mmio_write_data[23:22];
     assign wr_addr = mmio_write_data[7:0];
 
     // for mem read
     logic mem_read_req_valid;
-    logic[7:0] mem_read_req_addr;
-    logic[CCIP_CLDATA_WIDTH-1:0] mem_read_req_data;
+    t_ccip_clAddr mem_read_req_addr;
+    t_ccip_mdata mem_read_req_tag;
+    t_ccip_mdata mem_read_resp_tag;
+    t_ccip_clData mem_read_req_data;
     logic mem_read_resp_valid;
-    logic[7:0] mem_read_resp_tag;
     assign mem_read_resp_valid = host_ccip.sRx.c0.rspValid && (!host_ccip.sRx.c0.mmioRdValid);
     assign mem_read_resp_tag = host_ccip.sRx.c0.hdr.mdata[7:0];
     assign mem_read_req_data = host_ccip.sRx.c0.data;
@@ -293,12 +292,13 @@ module ofs_plat_afu
     .io_mem_write_bits_wr_addr(mem_write_bits_wr_addr), 
     .io_mem_read_req_valid(mem_read_req_valid), 
     .io_mem_read_req_addr(mem_read_req_addr), 
+    .io_mem_read_req_tag(mem_read_req_tag),
     .io_mem_read_data(mem_read_req_data), 
     .io_mem_read_resp_valid(mem_read_resp_valid), 
     .io_mem_read_resp_tag(mem_read_resp_tag));
 
-    logic[41:0] rd_mem_hdr_addr;
-    assign rd_mem_hdr_addr = req_base_address + ((req_granularity*mem_read_req_addr)>>6);
+    t_ccip_clAddr rd_mem_hdr_addr;
+    assign rd_mem_hdr_addr = req_base_address + mem_read_req_addr;
 
     always_ff @( posedge clk ) begin
       if(!reset_n) begin
@@ -306,7 +306,11 @@ module ofs_plat_afu
         host_ccip.sTx.c0.valid <=  0;        
       end
       else begin
-        host_ccip.sTx.c0.hdr.mdata <=  {8'b0, mem_read_req_addr};
+        if ($isunknown(mem_read_req_tag)) $fwrite(32'h80000002, "mem_read_req_tag=%b has x's\n", mem_read_req_tag);
+        if ($isunknown(req_base_address)) $fwrite(32'h80000002,  "req_base_address=%b has x's\n", req_base_address);
+        if ($isunknown(mem_read_req_addr)) $fwrite(32'h80000002,  "mem_read_req_addr=%b has x's\n", mem_read_req_addr);
+        if ($isunknown(rd_mem_hdr_addr)) $fwrite(32'h80000002,  "rd_mem_hdr_addr=%b has x's\n", rd_mem_hdr_addr);
+        host_ccip.sTx.c0.hdr.mdata <=  mem_read_req_tag;
         host_ccip.sTx.c0.hdr.address <=  rd_mem_hdr_addr;
         host_ccip.sTx.c0.hdr.req_type <=  eREQ_RDLINE_S;
         host_ccip.sTx.c0.hdr.cl_len <=  eCL_LEN_1;
