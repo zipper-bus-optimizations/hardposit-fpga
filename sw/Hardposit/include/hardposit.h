@@ -4,6 +4,7 @@
 #include <opae/cxx/core/token.h>
 #include <opae/cxx/core/version.h>
 #include <cstdint>
+#include <list>
 #include "config.h"
 #include "softposit.h"
 #include "softposit_types.h"
@@ -37,11 +38,11 @@ struct Performance_array{
 
 class Hardposit {
 	public:
+
 		uint32_t val;
-		volatile Result* ptr;
 		bool valid;
+		bool in_fpga;
 		uint8_t location;
-		uint32_t counter;
 
 		void print_val();
 		uint32_t get_val();
@@ -49,7 +50,11 @@ class Hardposit {
 		Hardposit(int in_val);
 		Hardposit(float in_val);
 		Hardposit(double in_val);
-		Hardposit(): Hardposit((uint32_t)0){};
+		Hardposit(): Hardposit((uint32_t)0){
+			this->valid = true; 
+			this->location = 0;
+			this->in_fpga = false;
+		};
 		~Hardposit();
 		Hardposit compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode);
 		Hardposit operator + (Hardposit const &obj);
@@ -62,6 +67,7 @@ class Hardposit {
 		Hardposit operator == (Hardposit const &obj);
 		Hardposit sqrt();
 		Hardposit FMA(Hardposit const &obj1, Hardposit const &obj2);
+		static void get_val_at_slot(const uint8_t& pos, bool keep);
 		void operator = (Hardposit const &obj);
 		void operator = (float const &obj);
 		double toDouble();
@@ -137,4 +143,10 @@ inline Hardposit sqrt(Hardposit& a){
 
 
 void poll_performance();
+
+struct ResultSlot{
+		volatile Result* ptr = nullptr;
+		std::list<Hardposit*> crntPosit;
+};
+
 #endif

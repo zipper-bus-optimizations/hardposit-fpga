@@ -13,6 +13,7 @@
 #include <vector>
 #include <cstring>
 #include <stdlib.h>
+#include <assert.h> 
 #include "afu_json_info.h"
 #include "hardposit.h"
 #include "softposit.h"
@@ -28,8 +29,7 @@ static uint64_t global_counter = 0;
 shared_buffer::ptr_t req;
 shared_buffer::ptr_t result;
 uint8_t req_q_pointer = 0;
-static Hardposit* result_track[NUM_FPGA_ENTRIES];
-
+static ResultSlot result_track[NUM_FPGA_ENTRIES];
 
 void poll_performance(){
 	memset(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULARITY), 0, sizeof(Performance_array));
@@ -91,6 +91,7 @@ void init_accel(){
 		accel->write_csr64(0, read_setup);
 		accel->write_csr64(8, write_setup);
 	}
+	// std::cout <<"initliazed success"<<std::endl;
 }
 
 
@@ -102,70 +103,87 @@ void Hardposit::print_val(){
 	std::cout << "Hardposit: " << std::bitset<32>(this->get_val()) << std::endl;
 }
 
-uint32_t Hardposit::get_val(){
-	if(!this->valid && this->ptr!=nullptr){
-		while(!this->ptr->flags){}
-		this->valid = true;
+void Hardposit::get_val_at_slot(const uint8_t& pos, bool keep){
+	// std::cout <<"in get_val_at_slot"<<std::endl;
+	// std::cout <<"pos_to_get: "<<(int)pos <<" ptr: "<<(int)result_track[pos].ptr <<" list_size: "<< result_track[pos].crntPosit.size()<<std::endl;
+	volatile Result* ptr = result_track[pos].ptr;
+	if(ptr != nullptr){
+		while(!ptr->flags){}
 		uint32_t tmp = 0;
-		switch (static_cast<Inst>(this->val))
-		{
-			case LT:
-				tmp = this->ptr->flags & 4;
-				break;
-			case EQ:
-				tmp = this->ptr->flags & 2;
-				break;
-			case GT:
-				tmp = this->ptr->flags & 1;
-				break;
-			default:
-				tmp = this->ptr->result;
-				break;
+		for(auto it = result_track[pos].crntPosit.begin(); it != result_track[pos].crntPosit.end(); ++it){
+			(*it)->in_fpga = keep;
+			if(!(*it)->valid){
+				switch (static_cast<Inst>((*it)->val))
+				{
+					case LT:
+						tmp = ptr->flags & 4;
+						break;
+					case EQ:
+						tmp = ptr->flags & 2;
+						break;
+					case GT:
+						tmp = ptr->flags & 1;
+						break;
+					default:
+						tmp = ptr->result;
+						break;
+				}
+				(*it)->val = tmp;
+				(*it)->valid = true;
+			}
 		}
-		this->val = tmp;
-		result_track[this->location] = nullptr;
 	}
+	// std::cout <<"get_val_at_slot success"<<std::endl;
+	return;
+}
+
+uint32_t Hardposit::get_val(){
+	// std::cout <<"in get_val"<<std::endl;
+	if(!this->valid){
+		if(!this->in_fpga){
+			assert(("in_fpga should be true but now false", this->in_fpga));
+		}
+		get_val_at_slot(this->location, true);
+	}
+	// std::cout <<"get_val success"<<std::endl;
 	return this->val;
 }
 
 Hardposit::Hardposit(uint32_t in_val){
 	this->val = in_val;
 	this->valid = true;
-	this->ptr = nullptr;
+	this->in_fpga = false;
 	this->location = 0;
-	this->counter = 0;
 }
 
 Hardposit::Hardposit(int in_val){
 	this->val = posit32(in_val).value;
 	this->valid = true;
-	this->ptr = nullptr;
+	this->in_fpga = false;
 	this->location = 0;
-	this->counter = 0;
 }
 
 Hardposit::Hardposit(float in_val){
 	this->val = posit32(in_val).value;
-	this->ptr = nullptr;
 	this->valid = true;
+	this->in_fpga = false;
 	this->location = 0;
-	this->counter = 0;
 }
 Hardposit::Hardposit(double in_val){
 	this->val = posit32(in_val).value;
-	this->ptr = nullptr;
 	this->valid = true;
+	this->in_fpga = false;
 	this->location = 0;
-	this->counter = 0;
 }
 Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode){
+	// std::cout <<"in compute"<<std::endl;
 	OpAddr ops[3];
 	Hardposit ret;
 	uint8_t result_q_pointer = global_counter % NUM_FPGA_ENTRIES;
 	uint64_t mask = (1<<9-1)<<4;
 	/*with reuse*/
 	#ifdef REUSE
-	if(this->ptr && (global_counter-this->counter) < NUM_FPGA_ENTRIES ){
+	if( this->in_fpga && result_q_pointer!= this->location){
 		ops[0].addr = this->location + (1 << 14);
 	}else{
 		uint16_t offset = CALC_OFFSET(req_q_pointer);
@@ -179,7 +197,7 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 		req_q_pointer++;
 	}
 
-	if(obj1.ptr && (global_counter-obj1.counter) < NUM_FPGA_ENTRIES ){
+	if( obj1.in_fpga && result_q_pointer!= obj1.location ){
 		ops[1].addr = obj1.location + (1 << 14);
 	}else{
 		uint16_t offset = CALC_OFFSET(req_q_pointer);
@@ -217,7 +235,7 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	if(inst == Inst::FMA){
 		/*with reuse*/
 		#ifdef REUSE
-		if(obj2.ptr && (global_counter -obj2.counter) < NUM_FPGA_ENTRIES ){
+		if(obj2.in_fpga && result_q_pointer!= obj2.location ){
 			ops[2].addr = obj2.location  + (1 << 14);
 		}else{
 			uint16_t offset = CALC_OFFSET(req_q_pointer);
@@ -247,19 +265,15 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 		ops[2].addr = 0;
 	}
 
-	Hardposit* res = result_track[result_q_pointer] ;
-	if( res != nullptr){
-		if(!res->valid){
-			res->get_val();
-		}
-	}
-
+	get_val_at_slot(result_q_pointer, false);
+	result_track[result_q_pointer].ptr = nullptr;
+	result_track[result_q_pointer].crntPosit.clear();
 
 	ret.valid = false;
-
-	ret.ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULARITY);
-	ret.counter = global_counter;
 	ret.location = result_q_pointer;
+	ret.in_fpga = true;
+	
+	result_track[result_q_pointer].ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULARITY);
 	uint64_t write_req = 0;
 
 	write_req += result_q_pointer;
@@ -270,18 +284,23 @@ Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst 
 	write_req += ((uint64_t)insmod) << 56;
 
 	global_counter ++;
-	ret.ptr->flags = 0;
+	result_track[result_q_pointer].ptr->flags = 0;
 
-	result_track[result_q_pointer] = &ret;
+	result_track[result_q_pointer].crntPosit.push_back(&ret);
+
   __sync_synchronize();
+
 	accel->write_csr64(16, write_req);
+	// std::cout <<"compute success"<<std::endl;
 	return ret;
 }
 
 Hardposit::~Hardposit(){
-	if(this->ptr && !this->valid){
-		this->get_val();
+	// std::cout <<"in ~Hardposit"<<std::endl;
+	if(this->in_fpga){
+		result_track[this->location].crntPosit.remove(this);
 	}
+	// std::cout <<"~Hardposit success"<<std::endl;
 }
 
 
@@ -315,27 +334,31 @@ Hardposit Hardposit::FMA(Hardposit const &obj1, Hardposit const &obj2)
 	return this->compute(obj1, obj2, Inst::FMA, false);
 }
 void Hardposit::operator = (Hardposit const &obj){
+	if(this->in_fpga){
+		result_track[this->location].crntPosit.remove(this);
+	}
 	this->val = obj.val;
 	this->valid = obj.valid;
-	this->ptr = obj.ptr;
+	this->in_fpga = obj.in_fpga;
 	this->location = obj.location;
-	this->counter = obj.counter;
+	if(this->in_fpga){
+		result_track[this->location].crntPosit.push_back(this);
+	}
 }
 
 void Hardposit::operator = (float const &obj){
 	this->val = posit32(obj).value;
-	this->ptr = nullptr;
+	this->in_fpga = false;
 	this->valid = true;
 	this->location = 0;
-	this->counter = 0;
 }
 
 double Hardposit::toDouble(){
-	return posit32(this->val).toDouble();
+	return convertP32ToDouble(castP32(this->get_val()));
 }
 
 int Hardposit::toInt(){
-	return posit32(this->val).toInt();
+	return p32_int(castP32(this->get_val()));
 }
 
 Hardposit::operator bool () const{
