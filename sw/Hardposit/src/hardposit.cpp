@@ -52,13 +52,14 @@ void poll_performance(){
 	std::cout <<"[1000, )"<< perf->mem_req_cycles[12] <<std::endl;
 }
 
-void close_accel(){
+int close_accel(){
 	accel->reset();
 	req->release();
 	result->release();
 	accel->close();
+	return 0;
 }
-void init_accel(){
+int init_accel(){
 	if(!accel){
 		properties::ptr_t filter = properties::get();
 		filter->guid.parse(AFU_ACCEL_UUID);
@@ -91,6 +92,7 @@ void init_accel(){
 		accel->write_csr64(0, read_setup);
 		accel->write_csr64(8, write_setup);
 	}
+	return 0;
 	// std::cout <<"initliazed success"<<std::endl;
 }
 
@@ -175,7 +177,7 @@ Hardposit::Hardposit(double in_val){
 	this->in_fpga = false;
 	this->location = 0;
 }
-Hardposit Hardposit::compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode){
+Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst inst, bool mode){
 	// std::cout <<"in compute"<<std::endl;
 	OpAddr ops[3];
 	Hardposit ret;
@@ -304,36 +306,37 @@ Hardposit::~Hardposit(){
 }
 
 
-Hardposit Hardposit::operator + (Hardposit const &obj){
+Hardposit Hardposit::operator + (Hardposit const& obj){
 	return this->compute(obj, Hardposit(), ADDSUB, false);
 }
 
-Hardposit Hardposit::operator - (Hardposit const &obj){
+Hardposit Hardposit::operator - (Hardposit const& obj){
 	return this->compute(obj, Hardposit(), ADDSUB, true);
 }
 
-Hardposit Hardposit::operator- (){
+Hardposit& Hardposit::operator- (){
 	if(!this->valid){
 		this->get_val();
 	}
 	this->val ^= (1<<31);
+	return *this;
 }
 
-Hardposit Hardposit::operator / (Hardposit const &obj){
+Hardposit Hardposit::operator / (Hardposit const& obj){
 	return this->compute(obj, Hardposit(), SQRTDIV, false);
 }
-Hardposit Hardposit::operator * (Hardposit const &obj){
+Hardposit Hardposit::operator * (Hardposit const& obj){
 	return this->compute(obj, Hardposit(), MUL, false);
 }
 
 Hardposit Hardposit::sqrt(){
 	return this->compute(Hardposit(), Hardposit(), SQRTDIV, true);
 }
-Hardposit Hardposit::FMA(Hardposit const &obj1, Hardposit const &obj2)
+Hardposit Hardposit::FMA(Hardposit const& obj1, Hardposit const& obj2)
 {
 	return this->compute(obj1, obj2, Inst::FMA, false);
 }
-void Hardposit::operator = (Hardposit const &obj){
+Hardposit& Hardposit::operator = (Hardposit const& obj){
 	if(this->in_fpga){
 		result_track[this->location].crntPosit.remove(this);
 	}
@@ -344,13 +347,15 @@ void Hardposit::operator = (Hardposit const &obj){
 	if(this->in_fpga){
 		result_track[this->location].crntPosit.push_back(this);
 	}
+	return *this;
 }
 
-void Hardposit::operator = (float const &obj){
+Hardposit& Hardposit::operator = (float const& obj){
 	this->val = posit32(obj).value;
 	this->in_fpga = false;
 	this->valid = true;
 	this->location = 0;
+	return *this;
 }
 
 double Hardposit::toDouble(){
@@ -362,20 +367,20 @@ int Hardposit::toInt(){
 }
 
 Hardposit::operator bool () const{
-	return (this->get_val() !=0);
+	return ( this->get_val() !=0);
 };
 
-Hardposit Hardposit::operator < (Hardposit const &obj){
+Hardposit Hardposit::operator < (Hardposit const& obj){
 	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
 	result.val = LT;
 	return result;
 }
-Hardposit Hardposit::operator > (Hardposit const &obj){
+Hardposit Hardposit::operator > (Hardposit const& obj){
 	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
 	result.val = GT;
 	return result;
 }
-Hardposit Hardposit::operator == (Hardposit const &obj){
+Hardposit Hardposit::operator == (Hardposit const& obj){
 	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
 	result.val = EQ;
 	return result;

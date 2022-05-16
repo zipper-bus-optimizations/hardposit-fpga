@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/homes/chshibo/hardposit-chisel3/src/main/scala/POSIT_Locality.scala:136:20: illegal start of simple expression[0m
+[0m[[0m[31merror[0m] [0m[0m				val v_offset = = MuxLookup(rb.entries(i).request.operands(j).value(BitsForOffset-1,0), 0.U, [0m
+[0m[[0m[31merror[0m] [0m[0m				               ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

@@ -14,8 +14,8 @@
 
 using namespace opae::fpga::types;
 
-void close_accel();
-void init_accel();
+int close_accel();
+int init_accel();
 enum Inst{NOOP, ADDSUB, CMP, FMA, MUL, SQRTDIV, LT, EQ, GT};
 struct OpAddr{
 	/*2 bits for mode, if mode == 2, then the least significant bit is for id*/
@@ -56,20 +56,20 @@ class Hardposit {
 			this->in_fpga = false;
 		};
 		~Hardposit();
-		Hardposit compute(Hardposit const &obj1, Hardposit const &obj2, Inst inst, bool mode);
-		Hardposit operator + (Hardposit const &obj);
-		Hardposit operator - (Hardposit const &obj);
-		Hardposit operator- ();
-		Hardposit operator / (Hardposit const &obj);
-		Hardposit operator * (Hardposit const &obj);
-		Hardposit operator < (Hardposit const &obj);
-		Hardposit operator > (Hardposit const &obj);
-		Hardposit operator == (Hardposit const &obj);
+		Hardposit compute(Hardposit const& obj1, Hardposit const& obj2, Inst inst, bool mode);
+		Hardposit operator + (Hardposit const& obj);
+		Hardposit operator - (Hardposit const& obj);
+		Hardposit& operator- ();
+		Hardposit operator / (Hardposit const& obj);
+		Hardposit operator * (Hardposit const& obj);
+		Hardposit operator < (Hardposit const& obj);
+		Hardposit operator > (Hardposit const& obj);
+		Hardposit operator == (Hardposit const& obj);
 		Hardposit sqrt();
-		Hardposit FMA(Hardposit const &obj1, Hardposit const &obj2);
+		Hardposit FMA(Hardposit const& obj1, Hardposit const& obj2);
 		static void get_val_at_slot(const uint8_t& pos, bool keep);
-		void operator = (Hardposit const &obj);
-		void operator = (float const &obj);
+		Hardposit& operator = (Hardposit const& obj);
+		Hardposit& operator = (float const& obj);
 		double toDouble();
 		int toInt();
 		operator bool () const;
@@ -88,52 +88,52 @@ inline Hardposit hp32(double a){
 	return Hardposit(p32(a).value);
 }
 
-inline Hardposit operator/(float a, Hardposit b){
+inline Hardposit operator/(const float& a, const Hardposit& b){
 	return hp32(a)/b;
 }
 
-inline Hardposit operator+(float a, Hardposit b){
+inline Hardposit operator+(const float& a, const Hardposit& b){
 	return hp32(a)+b;
 }
-inline Hardposit operator-(float a, Hardposit b){
+inline Hardposit operator-(const float& a, const Hardposit& b){
 	return hp32(a)-b;
 }
 
-inline Hardposit operator/(double a, Hardposit b){
+inline Hardposit operator/(const double& a, const Hardposit& b){
 	return hp32(a)/b;
 }
 
-inline Hardposit operator/(Hardposit a, int b){
-	return a/hp32(b);
+inline Hardposit operator/(const Hardposit& a, const int& b){
+	return (Hardposit)a/ (Hardposit)hp32(b);
 }
 
-inline Hardposit operator+(double a, Hardposit b){
+inline Hardposit operator+(const double& a, const Hardposit& b){
 	return hp32(a)+b;
 }
-inline Hardposit operator-(double a, Hardposit b){
+inline Hardposit operator-(const double& a, const Hardposit& b){
 	return hp32(a)-b;
 }
 
-inline bool  operator!=(Hardposit b, float a){
+inline bool  operator!=(const Hardposit& b, const float& a){
 	return ! (hp32(a)==b).val;
 }
-inline bool operator==(Hardposit b, float a){
+inline bool operator==(const Hardposit& b, const float& a){
 	return (hp32(a)==b).val;
 }
 
-inline bool  operator!=(Hardposit b, double a){
+inline bool  operator!=(const Hardposit& b, const double& a){
 	return ! (hp32(a)==b).val;
 }
-inline bool operator==(Hardposit b, double a){
+inline bool operator==(const Hardposit& b, const double& a){
 	return (hp32(a)==b).val;
 }
 
 
-inline Hardposit operator*(float a, Hardposit b){
+inline Hardposit operator*(const float& a, const Hardposit& b){
 	return Hardposit(a)*b;
 }
 
-inline Hardposit operator*(Hardposit b, float a){
+inline Hardposit operator*(const Hardposit& b, const float& a){
 	return Hardposit(a)*b;
 }
 

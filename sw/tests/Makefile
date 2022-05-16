@@ -9,8 +9,8 @@ AFU_JSON_INFO = afu_json_info.h
 CPPFLAGS += $(CFLAGS) -Wno-cpp 
 
 
-FPGA_CPPFLAGS = $(CPPFLAGS) ../Hardposit/lib/libhardpositfpga.a /homes/chshibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a -I../SoftPosit/source/include/ -I../Hardposit/include
-ASE_CPPFLAGS = $(CPPFLAGS) ../Hardposit/lib/libhardpositase.a /homes/chshibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a -I../SoftPosit/source/include/ -I../Hardposit/include
+FPGA_CPPFLAGS = $(CPPFLAGS) ../Hardposit/lib/libhardpositfpga.a /homes/chshibo/Shibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a -I../SoftPosit/source/include/ -I../Hardposit/include
+ASE_CPPFLAGS = $(CPPFLAGS) ../Hardposit/lib/libhardpositase.a /homes/chshibo/Shibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a -I../SoftPosit/source/include/ -I../Hardposit/include
 
 # Files and folders
 SRCS = $(TEST).cpp 

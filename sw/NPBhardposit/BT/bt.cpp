@@ -42,12 +42,10 @@ OpenMP C version: S. Satoh
 static void add(void);
 static void adi(void);
 static void error_norm(Hardposit rms[5]);
-static void error_norm(__float128 rms[5]);
+static void error_norm(Hardposit rms[5]);
 static void rhs_norm(Hardposit rms[5]);
-static void rhs_norm_quad(__float128 rms[5]);
+static void rhs_norm_quad(Hardposit rms[5]);
 static void exact_rhs(void);
-static void exact_solution(__float128 xi, __float128 eta, __float128 zeta,
-		__float128 dtemp[5]);
 static void exact_solution(Hardposit xi, Hardposit eta, Hardposit zeta,
 		Hardposit dtemp[5]);
 static void initialize(void);
@@ -146,8 +144,8 @@ int main(int argc, char **argv) {
 	timer_clear(1);
 	timer_start(1);
 
-	__float128 xce[5];
-	__float128 xcr[5];
+	Hardposit xce[5];
+	Hardposit xcr[5];
 	for (step = 1; step <= niter; step++) {
 
 		if (step%20 == 0 || step == 1) {
@@ -158,9 +156,9 @@ int main(int argc, char **argv) {
 		compute_rhs();
 		rhs_norm_quad(xcr);
 		for(int m=0; m<5; m++) {
-			xcr[m] = xcr[m] / static_cast<__float128>(dt.toDouble());
+			xcr[m] = xcr[m] / dt;
 		}
-		printf("%d %20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe\n", step, xcr[0], xcr[1], xcr[2], xcr[3], xcr[4], xce[0], xce[1], xce[2], xce[3], xce[4]);
+		printf("%d %20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe\n", step, xcr[0].toDouble(), xcr[1].toDouble(), xcr[2].toDouble(), xcr[3].toDouble(), xcr[4].toDouble(), xce[0].toDouble(), xce[1].toDouble(), xce[2].toDouble(), xce[3].toDouble(), xce[4].toDouble());
 
 	}
 
@@ -237,43 +235,8 @@ static void adi(void) {
 
 /*--------------------------------------------------------------------
   --------------------------------------------------------------------*/
-static void error_norm(__float128 rms[5]) {
 
-	/*--------------------------------------------------------------------
-	  c     this function computes the norm of the difference between the
-	  c     computed solution and the exact solution
-	  c-------------------------------------------------------------------*/
 
-	int i, j, k, m, d;
-	__float128 xi, eta, zeta, u_exact[5], add;
-
-	for (m = 0; m < 5; m++) {
-		rms[m] = 0.0;
-	}
-
-	for (i = 0; i < grid_points[0]; i++) {
-		xi = (__float128)i * (__float128)dnxm1.toDouble();
-		for (j = 0; j < grid_points[1]; j++) {
-			eta = (__float128)j * (__float128)dnym1.toDouble();
-			for (k = 0; k < grid_points[2]; k++) {
-				zeta = (__float128)k * (__float128)dnzm1.toDouble();
-				exact_solution(xi, eta, zeta, u_exact);
-
-				for (m = 0; m < 5; m++) {
-					add = (__float128)u[i][j][k][m].toDouble() - u_exact[m];
-					rms[m] = rms[m] + add*add;
-				}
-			}
-		}
-	}
-
-	for (m = 0; m < 5; m++) {
-		//for (d = 0; d <= 2; d++) {
-		//	rms[m] = rms[m] / (__float128)(grid_points[d]-2);
-		//}
-		rms[m] = sqrtq(rms[m]);
-	}
-}
 
 static void error_norm(Hardposit rms[5]) {
 
@@ -315,13 +278,13 @@ static void error_norm(Hardposit rms[5]) {
 
 /*--------------------------------------------------------------------
   --------------------------------------------------------------------*/
-static void rhs_norm_quad(__float128 rms[5]) {
+static void rhs_norm_quad(Hardposit rms[5]) {
 
 	/*--------------------------------------------------------------------
 	  --------------------------------------------------------------------*/
 
 	int i, j, k, d, m;
-	__float128 add;
+	Hardposit add;
 
 	for (m = 0; m < 5; m++) {
 		rms[m] = 0.0q;
@@ -331,7 +294,7 @@ static void rhs_norm_quad(__float128 rms[5]) {
 		for (j = 1; j < grid_points[1]-1; j++) {
 			for (k = 1; k < grid_points[2]-1; k++) {
 				for (m = 0; m < 5; m++) {
-					add = static_cast<__float128>(rhs[i][j][k][m].toDouble());
+					add = rhs[i][j][k][m];
 					rms[m] = rms[m] + add*add;
 				}
 			}
@@ -340,9 +303,9 @@ static void rhs_norm_quad(__float128 rms[5]) {
 
 	for (m = 0; m < 5; m++) {
 		for (d = 0; d <= 2; d++) {
-			rms[m] = rms[m] / static_cast<__float128>(grid_points[d]-2);
+			rms[m] = rms[m] / (grid_points[d]-2);
 		}
-		rms[m] = sqrtq(rms[m]);
+		rms[m] = sqrt(rms[m]);
 	}
 }
 
@@ -717,29 +680,6 @@ static void exact_rhs(void) {
 
 /*--------------------------------------------------------------------
   --------------------------------------------------------------------*/
-static void exact_solution(__float128 xi, __float128 eta, __float128 zeta,
-		__float128 dtemp[5]) {
-
-	/*--------------------------------------------------------------------
-	  --------------------------------------------------------------------*/
-
-	/*--------------------------------------------------------------------
-	  c     this function returns the exact solution at point xi, eta, zeta  
-	  c-------------------------------------------------------------------*/
-
-	int m;
-
-	for (m = 0; m < 5; m++) {
-		dtemp[m] =  (__float128)ce[m][0].toDouble() +
-			xi*((__float128)ce[m][1].toDouble() + xi*((__float128)ce[m][4].toDouble() + xi*((__float128)ce[m][7].toDouble()
-							+ xi*(__float128)ce[m][10].toDouble()))) +
-			eta*((__float128)ce[m][2].toDouble() + eta*((__float128)ce[m][5].toDouble() + eta*((__float128)ce[m][8].toDouble()
-							+ eta*(__float128)ce[m][11].toDouble())))+
-			zeta*((__float128)ce[m][3].toDouble() + zeta*((__float128)ce[m][6].toDouble() + zeta*((__float128)ce[m][9].toDouble() + 
-							zeta*(__float128)ce[m][12].toDouble())));
-	}
-}
-
 static void exact_solution(Hardposit xi, Hardposit eta, Hardposit zeta,
 		Hardposit dtemp[5]) {
 
@@ -762,7 +702,6 @@ static void exact_solution(Hardposit xi, Hardposit eta, Hardposit zeta,
 							zeta*ce[m][12])));
 	}
 }
-
 /*--------------------------------------------------------------------
   --------------------------------------------------------------------*/
 

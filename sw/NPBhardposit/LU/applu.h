@@ -91,7 +91,7 @@ c-------------------------------------------------------------------*/
 /* common /ctscon/ */
 static int itmax, invert;
 static Hardposit dt, omega, tolrsd[5], rsdnm[5], frc, ttotal;
-static __float128 errnm[5];
+static Hardposit errnm[5];
   
 /* common /cjac/ */
 static Hardposit a[ISIZ1][ISIZ2][5][5];

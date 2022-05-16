@@ -62,7 +62,7 @@ static void domain(void);
 static void erhs(void);
 static void error(void);
 static void exact( int i, int j, int k, Hardposit u000ijk[5] );
-static void exact( int i, int j, int k, __float128 u000ijk[5] );
+static void exact( int i, int j, int k, Hardposit u000ijk[5] );
 static void jacld(int k);
 static void jacu(int k);
 static void l2norm (int nx0, int ny0, int nz0,
@@ -77,7 +77,7 @@ static void setbv(void);
 static void setcoeff(void);
 static void setiv(void);
 static void ssor(void);
-static void verify(Hardposit xcr[5], __float128 xce[5], Hardposit xci,
+static void verify(Hardposit xcr[5], Hardposit xce[5], Hardposit xci,
 		char *problem_class, boolean *verified);
 
 /*--------------------------------------------------------------------
@@ -1102,8 +1102,8 @@ static void error(void) {
 	  --------------------------------------------------------------------*/
 	int i, j, k, m;
 	int iglob, jglob;
-	__float128  tmp;
-	__float128  u000ijk[5];
+	Hardposit  tmp;
+	Hardposit  u000ijk[5];
 
 	for (m = 0; m < 5; m++) {
 		errnm[m] = 0.0;
@@ -1116,7 +1116,7 @@ static void error(void) {
 			for (k = 1; k <= nz-2; k++) {
 				exact( iglob, jglob, k, u000ijk );
 				for (m = 0; m < 5; m++) {
-					tmp = ( (__float128)u000ijk[m] - u[i][j][k][m].toDouble() );
+					tmp = ( u000ijk[m] - u[i][j][k][m] );
 					errnm[m] = errnm[m] + tmp *tmp;
 				}
 			}
@@ -1167,40 +1167,6 @@ static void exact( int i, int j, int k, Hardposit u000ijk[5] ) {
 	}
 }
 
-static void exact( int i, int j, int k, __float128 u000ijk[5] ) {
-
-	/*--------------------------------------------------------------------
-	  c
-	  c   compute the exact solution at (i,j,k)
-	  c
-	  --------------------------------------------------------------------*/
-
-	/*--------------------------------------------------------------------
-	  c  local variables
-	  --------------------------------------------------------------------*/
-	int m;
-	__float128 xi, eta, zeta;
-
-	xi  = (__float128)(i) / (__float128)(nx0 - 1);
-	eta  = (__float128)(j) / (__float128)(ny0 - 1);
-	zeta = (__float128)(k) / (__float128)(nz - 1);
-
-	for (m = 0; m < 5; m++) {
-		u000ijk[m] =  (__float128)ce[m][0].toDouble()
-			+ (__float128)ce[m][1].toDouble() * xi
-			+ (__float128)ce[m][2].toDouble() * eta
-			+ (__float128)ce[m][3].toDouble() * zeta
-			+ (__float128)ce[m][4].toDouble() * xi * xi
-			+ (__float128)ce[m][5].toDouble() * eta * eta
-			+ (__float128)ce[m][6].toDouble() * zeta * zeta
-			+ (__float128)ce[m][7].toDouble() * xi * xi * xi
-			+ (__float128)ce[m][8].toDouble() * eta * eta * eta
-			+ (__float128)ce[m][9].toDouble() * zeta * zeta * zeta
-			+ (__float128)ce[m][10].toDouble() * xi * xi * xi * xi
-			+ (__float128)ce[m][11].toDouble() * eta * eta * eta * eta
-			+ (__float128)ce[m][12].toDouble() * zeta * zeta * zeta * zeta;
-	}
-}
 
 /*--------------------------------------------------------------------
   --------------------------------------------------------------------*/
@@ -1944,7 +1910,7 @@ static void l2norm_quad (int nx0, int ny0, int nz0,
 		  c   for even number sizes only.  Only needed in v.
 		  -doubli-------------------------------------------------------------------*/
 		Hardposit v[ISIZ1][ISIZ2/2*2+1][ISIZ3/2*2+1][5],
-		__float128 sum[5]) {
+		Hardposit sum[5]) {
 
 	/*--------------------------------------------------------------------
 	  c   to compute the l2-norm of vector v.
@@ -1954,7 +1920,7 @@ static void l2norm_quad (int nx0, int ny0, int nz0,
 	  c  local variables
 	  --------------------------------------------------------------------*/
 	int i, j, k, m;
-	__float128 sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0, sum4=0.0;
+	Hardposit sum0=0.0, sum1=0.0, sum2=0.0, sum3=0.0, sum4=0.0;
 
 	for (m = 0; m < 5; m++) {
 		sum[m] = 0.0q;
@@ -1963,23 +1929,23 @@ static void l2norm_quad (int nx0, int ny0, int nz0,
 	for (i = ist; i <= iend; i++) {
 		for (j = jst; j <= jend; j++) {
 			for (k = 1; k <= nz0-2; k++) {
-				sum0 = sum0 + static_cast<__float128>(v[i][j][k][0].toDouble()) * static_cast<__float128>(v[i][j][k][0].toDouble());
-				sum1 = sum1 + static_cast<__float128>(v[i][j][k][1].toDouble()) * static_cast<__float128>(v[i][j][k][1].toDouble());
-				sum2 = sum2 + static_cast<__float128>(v[i][j][k][2].toDouble()) * static_cast<__float128>(v[i][j][k][2].toDouble());
-				sum3 = sum3 + static_cast<__float128>(v[i][j][k][3].toDouble()) * static_cast<__float128>(v[i][j][k][3].toDouble());
-				sum4 = sum4 + static_cast<__float128>(v[i][j][k][4].toDouble()) * static_cast<__float128>(v[i][j][k][4].toDouble());
+				sum0 = sum0 + v[i][j][k][0] * v[i][j][k][0];
+				sum1 = sum1 + v[i][j][k][1] * v[i][j][k][1];
+				sum2 = sum2 + v[i][j][k][2] * v[i][j][k][2];
+				sum3 = sum3 + v[i][j][k][3] * v[i][j][k][3];
+				sum4 = sum4 + v[i][j][k][4] * v[i][j][k][4];
 			}
 		}
 	}
 
-	sum[0] += sum0;
-	sum[1] += sum1;
-	sum[2] += sum2;
-	sum[3] += sum3;
-	sum[4] += sum4;
+	sum[0] = sum[0]+ sum0;
+	sum[1] = sum[1]+ sum1;
+	sum[2] = sum[2]+ sum2;
+	sum[3] = sum[3]+ sum3;
+	sum[4] = sum[4]+ sum4;
 
 	for (m = 0;  m < 5; m++) {
-		sum[m] = sqrtq ( sum[m] / static_cast<__float128>( (nx0-2)*(ny0-2)*(nz0-2) ) );
+		sum[m] = sqrtq ( sum[m] /  (nx0-2)*(ny0-2)*(nz0-2)  );
 	}
 }
 
@@ -3163,11 +3129,12 @@ static void ssor(void) {
 					rsd, rsdnm );
 		}
 
-		__float128 rsdnm_quad[5];
+		Hardposit rsdnm_quad[5];
 		l2norm_quad( nx0, ny0, nz0, ist, iend, jst, jend, rsd, rsdnm_quad);
 		error();
 
-		printf("%d %20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe\n", istep, rsdnm_quad[0], rsdnm_quad[1], rsdnm_quad[2], rsdnm_quad[3], rsdnm_quad[4], errnm[0], errnm[1], errnm[2], errnm[3], errnm[4]);
+		printf("%d %20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe%20.13Qe\n", istep, rsdnm_quad[0].toDouble(), rsdnm_quad[1].toDouble(), rsdnm_quad[2].toDouble(), rsdnm_quad[3].toDouble(), rsdnm_quad[4].toDouble(), 
+			errnm[0].toDouble(), errnm[1].toDouble(), errnm[2].toDouble(), errnm[3].toDouble(), errnm[4].toDouble());
 
 
 		/*--------------------------------------------------------------------
@@ -3191,7 +3158,7 @@ static void ssor(void) {
 /*--------------------------------------------------------------------
   --------------------------------------------------------------------*/
 
-static void verify(Hardposit xcr[5], __float128 xce[5], Hardposit xci,
+static void verify(Hardposit xcr[5], Hardposit xce[5], Hardposit xci,
 		char *problem_class, boolean *verified) {
 
 	/*--------------------------------------------------------------------
@@ -3381,11 +3348,11 @@ static void verify(Hardposit xcr[5], __float128 xce[5], Hardposit xci,
 	  --------------------------------------------------------------------*/
 	for (m = 0; m < 5; m++) {
 
-		xcrdif[m] = fabsq(((__float128)xcr[m].toDouble()-xcrref[m])/xcrref[m]);
-		xcedif[m] = fabsq(((__float128)xce[m]-xceref[m])/xceref[m]);
+		xcrdif[m] = fabsq((xcr[m].toDouble()-xcrref[m])/xcrref[m]);
+		xcedif[m] = fabsq((xce[m].toDouble()-xceref[m])/xceref[m]);
 
 	}
-	xcidif = fabsq(((__float128)xci.toDouble() - xciref)/xciref);
+	xcidif = fabsq((xci.toDouble() - xciref)/xciref);
 
 	/*--------------------------------------------------------------------
 	  c    Output the comparison of computed results to known cases.
@@ -3396,7 +3363,7 @@ static void verify(Hardposit xcr[5], __float128 xce[5], Hardposit xci,
 		quadmath_snprintf(quad_str[0], sizeof quad_str[0], "%20.13Qe", epsilon);
 		printf(" Accuracy setting for epsilon = %s", quad_str[0]);
 		//printf(" Accuracy setting for epsilon = %20.13e\n", epsilon);
-		if (fabsq((__float128)dt.toDouble()-dtref) > epsilon) {  
+		if (fabsq(dt.toDouble()-dtref) > epsilon) {  
 			*verified = FALSE;
 			*problem_class = 'U';
 			quadmath_snprintf(quad_str[0], sizeof quad_str[0], "%20.13Qe", dtref);
@@ -3434,7 +3401,7 @@ static void verify(Hardposit xcr[5], __float128 xce[5], Hardposit xci,
 	}
 
 	for (m = 0; m < 5; m++) {
-		quadmath_snprintf(quad_str[0], sizeof quad_str[0], "%20.13Qe", xce[m]);
+		quadmath_snprintf(quad_str[0], sizeof quad_str[0], "%20.13Qe", xce[m].toDouble());
 		quadmath_snprintf(quad_str[1], sizeof quad_str[1], "%20.13Qe", xceref[m]);
 		quadmath_snprintf(quad_str[2], sizeof quad_str[2], "%20.13Qe", xcedif[m]);
 		if (*problem_class  ==  'U') {

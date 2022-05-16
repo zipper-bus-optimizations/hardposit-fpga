@@ -47,7 +47,7 @@ OpenMP C version: S. Satoh
 static int is1, is2, is3, ie1, ie2, ie3;
 
 static void norm2u3(Hardposit ***r, int n1, int n2, int n3,
-		__float128 *rnm2, __float128 *rnmu, int nx, int ny, int nz);
+		Hardposit *rnm2, Hardposit *rnmu, int nx, int ny, int nz);
 
 /* functions prototypes */
 static void setup(int *n1, int *n2, int *n3, int lt);
@@ -273,13 +273,13 @@ int main(int argc, char *argv[]) {
 	resid(u[lt],v,r[lt],n1,n2,n3,a,lt);
 	norm2u3(r[lt],n1,n2,n3,&rnm2,&rnmu,nx[lt],ny[lt],nz[lt]);
 
-	__float128 rnm2_quad, rnmu_quad;
+	Hardposit rnm2_quad, rnmu_quad;
 	for ( it = 1; it <= nit; it++) {
 		mg3P(u,v,r,a,c,n1,n2,n3,lt);
 		resid(u[lt],v,r[lt],n1,n2,n3,a,lt);
 
 		norm2u3(r[lt],n1,n2,n3,&rnm2_quad,&rnmu_quad,nx[lt],ny[lt],nz[lt]);
-		printf("%d\t%20.14Qe\t%20.14Qe\n", it, rnm2_quad, rnmu_quad);
+		printf("%d\t%20.14Qe\t%20.14Qe\n", it, rnm2_quad.toDouble(), rnmu_quad.toDouble());
 	}
 	//norm2u3(r[lt],n1,n2,n3,&rnm2,&rnmu,nx[lt],ny[lt],nz[lt]);
 
@@ -800,39 +800,6 @@ static void interp( Hardposit ***z, int mm1, int mm2, int mm3,
 	}
 }
 
-static void norm2u3(Hardposit ***r, int n1, int n2, int n3,
-		__float128 *rnm2, __float128 *rnmu, int nx, int ny, int nz) {
-
-	/*--------------------------------------------------------------------
-	  c-------------------------------------------------------------------*/
-
-	/*--------------------------------------------------------------------
-	  c     norm2u3 evaluates approximations to the L2 norm and the
-	  c     uniform (or L-infinity or Chebyshev) norm, under the
-	  c     assumption that the boundaries are periodic or zero.  Add the
-	  c     boundaries in with half weight (quarter weight on the edges
-	  c     and eighth weight at the corners) for inhomogeneous boundaries.
-	  c-------------------------------------------------------------------*/
-
-	__float128 s = 0.0;
-	int i3, i2, i1, n;
-	__float128 a = 0.0, tmp = 0.0;
-
-	n = nx*ny*nz;
-
-	for (i3 = 1; i3 < n3-1; i3++) {
-		for (i2 = 1; i2 < n2-1; i2++) {
-			for (i1 = 1; i1 < n1-1; i1++) {
-				s = s + static_cast<__float128>(r[i3][i2][i1].toDouble()) * static_cast<__float128>(r[i3][i2][i1].toDouble());
-				a = fabsq(static_cast<__float128>(r[i3][i2][i1].toDouble()));
-				if (a > tmp) tmp = a;
-			}
-		}
-	}
-	*rnmu = tmp;
-	//*rnm2 = sqrtq(s/(__float128)n);
-	*rnm2 = sqrtq(s);
-}
 
 
 /*--------------------------------------------------------------------

@@ -1,7 +1,7 @@
 include ../../common/sw/common_include.mk
 
 
-CPPFLAGS += $(CFLAGS) -Wno-cpp /homes/chshibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a -I../SoftPosit/source/include/ -I./include/
+CPPFLAGS += $(CFLAGS) -Wno-cpp /homes/chshibo/Shibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a -I../SoftPosit/source/include/ -I./include/
 SRC_DIR = src
 INCLUDE_DIR = include
 LIB_DIR = lib

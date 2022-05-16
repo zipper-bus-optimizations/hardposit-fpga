@@ -6,7 +6,7 @@ build:
 	mv POSIT_Locality.v hw/rtl/
 software:
 	cd sw/Hardposit && make all
-	cd /homes/chshibo/hardposit-chisel3/sw/NPBhardposit && make suite
+	cd /homes/chshibo/Shibo/hardposit-chisel3/sw/NPBhardposit && make suite
 TEST_BUILD_DIR = test_generator/build
 TESTPOSIT_GEN = ./PositTestGenerator
 
