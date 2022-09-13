@@ -1,0 +1,28 @@
+# How to Run Expriment
+
+## Config FPGA
+
+First we need to config fpga
+
+```script
+qsub-fpga
+cd hw/build_fpga
+fpgaconf bdx-rtl.gbs
+```
+
+If succeed, it will return without any other prompt.
+
+## Compile library and benchmark (Skip if it is already compiled)
+```script
+cd sw/Hardposit
+make
+cd ../NPBhardposit
+make suite
+```
+
+## Run benchmarks
+
+```script
+cd bin
+./[benchmark_name].fpga
+```
