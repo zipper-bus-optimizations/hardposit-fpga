@@ -1,0 +1,4 @@
+../bdx-rtl.json
+Posit.sv
+POSIT_Locality_coalesce.v
+../par/ccip_async.sdc

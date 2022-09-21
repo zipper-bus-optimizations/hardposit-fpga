@@ -1,9 +1,9 @@
+base_dir   = $(abspath .)
+gen_dir    = $(base_dir)/hw/rtl/
 default: build
 
-
 build: 
-	sbt run
-	mv POSIT_Locality.v hw/rtl/
+	sbt 'run $(gen_dir)'
 software:
 	cd sw/Hardposit && make all
 	cd /homes/chshibo/Shibo/hardposit-chisel3/sw/NPBhardposit && make suite

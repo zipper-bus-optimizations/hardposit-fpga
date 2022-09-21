@@ -4,7 +4,7 @@ import chisel3._
 import chisel3.util._
 import scala.collection.mutable.ArrayBuffer
 
-class POSIT_Locality() extends Module {
+class POSIT_Locality(coalesce: Boolean) extends Module {
 	import hardposit.Params._
   val io = IO(new PositLocalityTopInterface)
 
@@ -153,7 +153,7 @@ class POSIT_Locality() extends Module {
 
 
 	val waitingToBeFetched = Wire(Vec(NumOperand* NumFPGAEntries, Bool()))
-	val notInFetchVec = Wire(Vec(NumOperand* NumFPGAEntries, Bool()))
+	// val notInFetchVec = Wire(Vec(NumOperand* NumFPGAEntries, Bool()))
 	val fetchOffSet = Wire(Vec(NumOperand* NumFPGAEntries, UInt(48.W)))
 	val crnt_inFetch = Wire(Vec(NumOperand* NumFPGAEntries, Bool()))
 	val inFetch = Wire(Vec(NumOperand* NumFPGAEntries, Bool()))
@@ -161,7 +161,7 @@ class POSIT_Locality() extends Module {
 		for(j <- 0 until NumOperand){
 			if(coalesce){
 				waitingToBeFetched(i*NumOperand+j) := rb.entries(i).valid && (rb.entries(i).request.operands(j).mode(1) === 1.U) && ((rb.entries(i).request.operands(j).value(13, BitsForOffset) & reg_infetch_cacheline ) === 0.U)
-				notInFetchVec(i*NumOperand+j) := (rb.entries(i).request.operands(j).value(13, BitsForOffset) & reg_infetch_cacheline ) === 0.U
+				// notInFetchVec(i*NumOperand+j) := (rb.entries(i).request.operands(j).value(13, BitsForOffset) & reg_infetch_cacheline ) === 0.U
 			}else{ 
 				waitingToBeFetched(i*NumOperand+j) := rb.entries(i).valid && (rb.entries(i).request.operands(j).mode(1) === 1.U) && (!rb.entries(i).request.inFetch(j))
 			}
@@ -286,7 +286,7 @@ class POSIT_Locality() extends Module {
 						operands(0).value, operands(0).mode, fetched(0),operands(1).value,operands(1).mode, fetched(1), operands(2).value,operands(2).mode, fetched(2),result.isZero, result.isNaR, result.out,result.lt,
 						result.eq,result.gt,result.exceptions )
 			}
-			printf("waiting to be fetched: %b, notinfetch:%b\n",waitingToBeFetched.asUInt, notInFetchVec.asUInt)
+			// printf("waiting to be fetched: %b, notinfetch:%b\n",waitingToBeFetched.asUInt, notInFetchVec.asUInt)
 			printf("reg_infetch_cacheline:%b\n", reg_infetch_cacheline)
 
 			printf("pe: \n")

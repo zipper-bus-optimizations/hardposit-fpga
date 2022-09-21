@@ -20,7 +20,7 @@ include ../sys/make.common
 
 # header.h: npbparams.h
 
-${PROGRAM}: config ${OBJS} ${PROGRAM}.fpga ${PROGRAM}.ase ${PROGRAM}_NOREUSE.fpga ${PROGRAM}_NOREUSE.ase;
+${PROGRAM}: config ${OBJS} ${PROGRAM}.fpga ${PROGRAM}.ase ${PROGRAM}_NOREUSE.fpga ${PROGRAM}_NOREUSE.ase ${PROGRAM}_BASELINE.fpga ${PROGRAM}_BASELINE.ase;
 
 ${PROGRAM}.fpga: config ${OBJS}
 	${CLINK} ${CPPFLAGS} ${CLINKFLAGSFPGA} -o $@  ${OBJS} $(CLINK_LIBFPGA) ${C_LIB} 
@@ -33,6 +33,13 @@ ${PROGRAM}_NOREUSE.fpga: config ${OBJS}
 
 ${PROGRAM}_NOREUSE.ase: config ${OBJS}
 	${CLINK} ${CPPFLAGS} ${CLINKFLAGSASE} -o $@ ${OBJS} $(CLINK_LIBASE_NOREUSE) ${C_LIB} 
+
+${PROGRAM}_BASELINE.fpga: config ${OBJS}
+	${CLINK} ${CPPFLAGS} ${CLINKFLAGSFPGA} -o $@  ${OBJS} $(CLINK_LIBFPGA_BASELINE) ${C_LIB} 
+
+${PROGRAM}_BASELINE.ase: config ${OBJS}
+	${CLINK} ${CPPFLAGS} ${CLINKFLAGSASE} -o $@ ${OBJS} $(CLINK_LIBASE_BASELINE) ${C_LIB} 
+
 
 bt.o: bt.cpp  header.h npbparams.h
 	${CCOMPILE} $<

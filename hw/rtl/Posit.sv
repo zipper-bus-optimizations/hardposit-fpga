@@ -237,11 +237,11 @@ module ofs_plat_afu
     assign req_valid = is_csr_write && (mmio_req_hdr.address == 4);
     assign mode = mmio_write_data[60:59];
     assign inst = mmio_write_data[58:56];
-    assign operands_value[2] = mmio_write_data[55:40];
+    assign operands_value[2] = mmio_write_data[53:40];
     assign operands_mode[2] = mmio_write_data[55:54];
-    assign operands_value[1] = mmio_write_data[39:24];
+    assign operands_value[1] = mmio_write_data[37:24];
     assign operands_mode[1] = mmio_write_data[39:38];
-    assign operands_value[0] = mmio_write_data[23:8];
+    assign operands_value[0] = mmio_write_data[21:8];
     assign operands_mode[0] = mmio_write_data[23:22];
     assign wr_addr = mmio_write_data[7:0];
 
@@ -253,7 +253,7 @@ module ofs_plat_afu
     t_ccip_clData mem_read_req_data;
     logic mem_read_resp_valid;
     assign mem_read_resp_valid = host_ccip.sRx.c0.rspValid && (!host_ccip.sRx.c0.mmioRdValid);
-    assign mem_read_resp_tag = host_ccip.sRx.c0.hdr.mdata[7:0];
+    assign mem_read_resp_tag = host_ccip.sRx.c0.hdr.mdata[13:0];
     assign mem_read_req_data = host_ccip.sRx.c0.data;
 
     logic mem_write_req_valid;

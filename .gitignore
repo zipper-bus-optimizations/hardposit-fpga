@@ -13,9 +13,12 @@ cmake-build-debug/
 test-*/
 test_generator/build
 PositTestGenerator
-hw/build_fpga/
-hw/build_sim/
-sw/build_sim/
+hw/build_fpga/*
+hw/build_sim/*
+hw/build_fpga_coalesce/*
+hw/build_sim_coalesce/*
+hw/build_fpga_nocoalesce/*
+hw/build_sim_nocoalesce/*
 */bin/*.A
 */bin/*.B
 *.o

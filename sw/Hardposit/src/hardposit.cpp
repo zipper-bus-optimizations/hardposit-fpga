@@ -214,7 +214,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 	}
 	#endif
 	/*no reuse*/
-	#ifdef NOREUSE
+	#if defined(NOREUSE) || defined(BASELINE)
 	uint16_t offset = CALC_OFFSET(req_q_pointer);
 	uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
 	uint8_t id = CALC_ID(req_q_pointer);
@@ -252,7 +252,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 		}
 		#endif
 		/*no reuse*/
-		#ifdef NOREUSE
+		#if defined(NOREUSE) || defined(BASELINE)
 		uint16_t offset = CALC_OFFSET(req_q_pointer);
 		uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
 		uint8_t id = CALC_ID(req_q_pointer);
@@ -294,6 +294,9 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 
 	accel->write_csr64(16, write_req);
 	// std::cout <<"compute success"<<std::endl;
+	#ifdef BASELINE
+		ret.get_val();
+	#endif
 	return ret;
 }
 

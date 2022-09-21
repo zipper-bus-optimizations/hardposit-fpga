@@ -6,7 +6,6 @@ import scala.math._
 object Params{
 	val debug = true
 	val reuse = true
-	val coalesce = true
 	val outoforder = true
 	val Nbits = 32
 	val EntryWidth = if(Nbits>8) Nbits else 8

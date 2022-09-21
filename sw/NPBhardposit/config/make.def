@@ -111,6 +111,9 @@ CLINK_LIBASE =  $(ASE_LIBS) /homes/chshibo/Shibo/hardposit-chisel3/sw/Hardposit/
 
 CLINK_LIBFPGA_NOREUSE = $(FPGA_LIBS) /homes/chshibo/Shibo/hardposit-chisel3/sw/Hardposit/lib/libhardpositfpga_noreuse.a /homes/chshibo/Shibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a 
 CLINK_LIBASE_NOREUSE =  $(ASE_LIBS) /homes/chshibo/Shibo/hardposit-chisel3/sw/Hardposit/lib/libhardpositase_noreuse.a /homes/chshibo/Shibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a
+
+CLINK_LIBFPGA_BASELINE = $(FPGA_LIBS) /homes/chshibo/Shibo/hardposit-chisel3/sw/Hardposit/lib/libhardpositfpga_baseline.a /homes/chshibo/Shibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a 
+CLINK_LIBASE_BASELINE =  $(ASE_LIBS) /homes/chshibo/Shibo/hardposit-chisel3/sw/Hardposit/lib/libhardpositase_baseline.a /homes/chshibo/Shibo/hardposit-chisel3/sw/SoftPosit/build/Linux-x86_64-GCC/softposit.a
 #-fexcess-precision=standard
 
 #---------------------------------------------------------------------------
