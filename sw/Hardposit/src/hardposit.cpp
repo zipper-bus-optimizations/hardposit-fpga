@@ -110,7 +110,9 @@ void Hardposit::get_val_at_slot(const uint8_t& pos, bool keep){
 	// std::cout <<"pos_to_get: "<<(int)pos <<" ptr: "<<(int)result_track[pos].ptr <<" list_size: "<< result_track[pos].crntPosit.size()<<std::endl;
 	volatile Result* ptr = result_track[pos].ptr;
 	if(ptr != nullptr){
-		while(!ptr->flags){}
+		while(!ptr->flags){
+			// printf("global counter: %d, pos: %d\n",global_counter, pos);
+		}
 		uint32_t tmp = 0;
 		for(auto it = result_track[pos].crntPosit.begin(); it != result_track[pos].crntPosit.end(); ++it){
 			(*it)->in_fpga = keep;
@@ -196,6 +198,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 		op.val = this->get_val();
 		op.valid_w_id = id + 2;
 		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+		// std::cout <<"offset: "<<offset<<" cacheline: "<<std::bitset<16>(cacheline) <<std::endl;
 		req_q_pointer++;
 	}
 
@@ -286,7 +289,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 	write_req += ((uint64_t)insmod) << 56;
 
 	global_counter ++;
-	result_track[result_q_pointer].ptr->flags = 0;
+	memset((void*)& (result_track[result_q_pointer].ptr->flags),0, sizeof(result_track[result_q_pointer].ptr->flags));
 
 	result_track[result_q_pointer].crntPosit.push_back(&ret);
 
@@ -370,7 +373,7 @@ int Hardposit::toInt(){
 }
 
 Hardposit::operator bool () const{
-	return ( this->get_val() !=0);
+	return (this->get_val() !=0);
 };
 
 Hardposit Hardposit::operator < (Hardposit const& obj){

@@ -196,12 +196,14 @@ class POSIT_Locality(coalesce: Boolean) extends Module {
 		io.mem_read.req_addr := OHToUInt(fetchOffSet(fetchArb.io.chosen)(13, BitsForOffset))
 		io.mem_read.req_tag := 0.U ;
 	}
-	for(i <- 0 until NumFPGAEntries){
-		when(entry_idx === i.U && new_input_log){
-			rb.entries(i.U).request.inFetch := 0.U(NumOperand.W).asBools
-		}.otherwise{
-			for(j <- 0 until NumOperand){
-				rb.entries(i).request.inFetch(j) := inFetch(i*NumOperand+j)
+	if(!coalesce){
+		for(i <- 0 until NumFPGAEntries){
+			when(entry_idx === i.U && new_input_log){
+				rb.entries(i.U).request.inFetch := 0.U(NumOperand.W).asBools
+			}.otherwise{
+				for(j <- 0 until NumOperand){
+					rb.entries(i).request.inFetch(j) := inFetch(i*NumOperand+j)
+				}
 			}
 		}
 	}

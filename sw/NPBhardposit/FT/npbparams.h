@@ -11,7 +11,7 @@ c  in this directory. Do not modify it by hand.
 #define	NITER_DEFAULT	6
 #define	NTOTAL	262144
 #define	CONVERTDOUBLE	FALSE
-#define COMPILETIME "20 Sep 2022"
+#define COMPILETIME "21 Sep 2022"
 #define NPBVERSION "3.0 structured"
 #define CS1 "g++ -std=gnu++11"
 #define CS2 "g++"

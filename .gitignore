@@ -26,3 +26,5 @@ hw/build_sim_nocoalesce/*
 sw/NPBhardposit/bin/*
 */bin/*.ase
 */bin/*.fpga
+*/*.ase
+*/*.fpga

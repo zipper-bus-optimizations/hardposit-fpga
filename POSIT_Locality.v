@@ -4262,10 +4262,10 @@ module POSIT_Locality(
   wire [23:0] _T_2545 = {inFetch_23,inFetch_22,inFetch_21,inFetch_20,inFetch_19,inFetch_18,_T_2538,_T_2533}; // @[POSIT_Locality.scala 192:49]
   wire [3:0] _GEN_13709 = fetchArb_io_hasChosen ? _T_2512 : _T_2512; // @[POSIT_Locality.scala 181:36]
   wire [13:0] _GEN_13710 = fetchArb_io_hasChosen ? _GEN_13683[13:0] : 14'h0; // @[POSIT_Locality.scala 181:36]
-  wire  _T_2581 = io_mem_read_req_valid | io_mem_read_resp_valid; // @[POSIT_Locality.scala 225:44]
-  wire  _T_2620 = io_request_valid | io_mem_write_valid; // @[POSIT_Locality.scala 249:39]
-  wire  _T_2621 = _T_2620 | io_mem_read_req_valid; // @[POSIT_Locality.scala 249:61]
-  wire  _T_2622 = _T_2621 | pe_io_result_valid; // @[POSIT_Locality.scala 249:86]
+  wire  _T_2581 = io_mem_read_req_valid | io_mem_read_resp_valid; // @[POSIT_Locality.scala 227:44]
+  wire  _T_2620 = io_request_valid | io_mem_write_valid; // @[POSIT_Locality.scala 251:39]
+  wire  _T_2621 = _T_2620 | io_mem_read_req_valid; // @[POSIT_Locality.scala 251:61]
+  wire  _T_2622 = _T_2621 | pe_io_result_valid; // @[POSIT_Locality.scala 251:86]
   wire  _GEN_13765 = io_mem_read_resp_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
   wire  _GEN_13766 = _GEN_13765 & _T_295; // @[POSIT_Locality.scala 143:55]
   wire  _GEN_13767 = io_mem_read_resp_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
@@ -10491,7 +10491,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 226:31]
+          $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 228:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10502,7 +10502,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 227:31]
+          $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 229:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10513,7 +10513,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 228:31]
+          $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 230:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10524,7 +10524,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 229:31]
+          $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 231:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10535,7 +10535,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 230:31]
+          $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 232:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10546,7 +10546,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 231:31]
+          $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 233:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10557,7 +10557,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t-mem_write:\n"); // @[POSIT_Locality.scala 234:31]
+          $fwrite(32'h80000002,"\t-mem_write:\n"); // @[POSIT_Locality.scala 236:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10568,7 +10568,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_mem_write_valid); // @[POSIT_Locality.scala 235:31]
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_mem_write_valid); // @[POSIT_Locality.scala 237:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10579,7 +10579,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_mem_write_ready); // @[POSIT_Locality.scala 236:31]
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_mem_write_ready); // @[POSIT_Locality.scala 238:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10590,7 +10590,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 237:31]
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 239:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10601,7 +10601,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_mem_write_bits_wr_addr); // @[POSIT_Locality.scala 238:31]
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_mem_write_bits_wr_addr); // @[POSIT_Locality.scala 240:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10612,7 +10612,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-result: \n"); // @[POSIT_Locality.scala 239:31]
+          $fwrite(32'h80000002,"\t\t\t-result: \n"); // @[POSIT_Locality.scala 241:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10623,7 +10623,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-isZero: %b\n",io_mem_write_bits_result_isZero); // @[POSIT_Locality.scala 240:31]
+          $fwrite(32'h80000002,"\t\t\t\t-isZero: %b\n",io_mem_write_bits_result_isZero); // @[POSIT_Locality.scala 242:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10634,7 +10634,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-isNaR: %b\n",io_mem_write_bits_result_isNaR); // @[POSIT_Locality.scala 241:31]
+          $fwrite(32'h80000002,"\t\t\t\t-isNaR: %b\n",io_mem_write_bits_result_isNaR); // @[POSIT_Locality.scala 243:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10645,7 +10645,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-lt: %b\n",io_mem_write_bits_result_lt); // @[POSIT_Locality.scala 242:31]
+          $fwrite(32'h80000002,"\t\t\t\t-lt: %b\n",io_mem_write_bits_result_lt); // @[POSIT_Locality.scala 244:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10656,7 +10656,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-eq: %b\n",io_mem_write_bits_result_eq); // @[POSIT_Locality.scala 243:31]
+          $fwrite(32'h80000002,"\t\t\t\t-eq: %b\n",io_mem_write_bits_result_eq); // @[POSIT_Locality.scala 245:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10667,7 +10667,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-gt: %b\n",io_mem_write_bits_result_gt); // @[POSIT_Locality.scala 244:31]
+          $fwrite(32'h80000002,"\t\t\t\t-gt: %b\n",io_mem_write_bits_result_gt); // @[POSIT_Locality.scala 246:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10678,7 +10678,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-exceptions: %x\n",io_mem_write_bits_result_exceptions); // @[POSIT_Locality.scala 245:31]
+          $fwrite(32'h80000002,"\t\t\t\t-exceptions: %x\n",io_mem_write_bits_result_exceptions); // @[POSIT_Locality.scala 247:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10689,7 +10689,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-out: %b\n",io_mem_write_bits_result_out); // @[POSIT_Locality.scala 246:31]
+          $fwrite(32'h80000002,"\t\t\t\t-out: %b\n",io_mem_write_bits_result_out); // @[POSIT_Locality.scala 248:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10700,7 +10700,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 250:31]
+          $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 252:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10711,7 +10711,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 251:31]
+          $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 253:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10722,7 +10722,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 252:31]
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 254:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10733,7 +10733,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 253:31]
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 255:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10744,7 +10744,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 254:31]
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 256:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10755,7 +10755,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 255:31]
+          $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 257:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10766,7 +10766,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 256:31]
+          $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 258:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10777,7 +10777,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 257:31]
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 259:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10788,7 +10788,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 259:39]
+          $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 261:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10799,7 +10799,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 260:39]
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 262:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10810,7 +10810,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 261:39]
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 263:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10821,7 +10821,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 259:39]
+          $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 261:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10832,7 +10832,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 260:39]
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 262:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10843,7 +10843,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 261:39]
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 263:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10854,7 +10854,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 259:39]
+          $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 261:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10865,7 +10865,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 260:39]
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 262:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10876,7 +10876,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 261:39]
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 263:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10887,7 +10887,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t-fetchArb:\n"); // @[POSIT_Locality.scala 264:31]
+          $fwrite(32'h80000002,"\t-fetchArb:\n"); // @[POSIT_Locality.scala 266:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10898,7 +10898,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-validity:%b\n",fetchArb_io_validity); // @[POSIT_Locality.scala 265:31]
+          $fwrite(32'h80000002,"\t\t-validity:%b\n",fetchArb_io_validity); // @[POSIT_Locality.scala 267:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10909,7 +10909,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-priority:%x\n",fetchArb_io_priority); // @[POSIT_Locality.scala 266:31]
+          $fwrite(32'h80000002,"\t\t-priority:%x\n",fetchArb_io_priority); // @[POSIT_Locality.scala 268:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10920,7 +10920,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-chosen:%x\n",fetchArb_io_chosen); // @[POSIT_Locality.scala 267:31]
+          $fwrite(32'h80000002,"\t\t-chosen:%x\n",fetchArb_io_chosen); // @[POSIT_Locality.scala 269:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10931,7 +10931,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",fetchArb_io_hasChosen); // @[POSIT_Locality.scala 268:31]
+          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",fetchArb_io_hasChosen); // @[POSIT_Locality.scala 270:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10942,7 +10942,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t-dispatchArb\n"); // @[POSIT_Locality.scala 270:31]
+          $fwrite(32'h80000002,"\t-dispatchArb\n"); // @[POSIT_Locality.scala 272:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10953,7 +10953,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-validity:%b\n",dispatchArb_io_validity); // @[POSIT_Locality.scala 271:31]
+          $fwrite(32'h80000002,"\t\t-validity:%b\n",dispatchArb_io_validity); // @[POSIT_Locality.scala 273:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10964,7 +10964,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-priority:%x\n",dispatchArb_io_priority); // @[POSIT_Locality.scala 272:31]
+          $fwrite(32'h80000002,"\t\t-priority:%x\n",dispatchArb_io_priority); // @[POSIT_Locality.scala 274:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10975,7 +10975,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-chosen:%x\n",dispatchArb_io_chosen); // @[POSIT_Locality.scala 273:31]
+          $fwrite(32'h80000002,"\t\t-chosen:%x\n",dispatchArb_io_chosen); // @[POSIT_Locality.scala 275:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10986,7 +10986,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",dispatchArb_io_hasChosen); // @[POSIT_Locality.scala 274:31]
+          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",dispatchArb_io_hasChosen); // @[POSIT_Locality.scala 276:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10997,7 +10997,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 276:31]
+          $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 278:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11008,7 +11008,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 277:31]
+          $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 279:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11019,7 +11019,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,rb_entries_0_valid,rb_entries_0_dispatched,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,rb_entries_0_request_inFetch_0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,rb_entries_0_request_inFetch_1,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,rb_entries_0_request_inFetch_2,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,rb_entries_0_valid,rb_entries_0_dispatched,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,rb_entries_0_request_inFetch_0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,rb_entries_0_request_inFetch_1,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,rb_entries_0_request_inFetch_2,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11030,7 +11030,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,rb_entries_1_valid,rb_entries_1_dispatched,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,rb_entries_1_request_inFetch_0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,rb_entries_1_request_inFetch_1,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,rb_entries_1_request_inFetch_2,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,rb_entries_1_valid,rb_entries_1_dispatched,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,rb_entries_1_request_inFetch_0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,rb_entries_1_request_inFetch_1,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,rb_entries_1_request_inFetch_2,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11041,7 +11041,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,rb_entries_2_valid,rb_entries_2_dispatched,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,rb_entries_2_request_inFetch_0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,rb_entries_2_request_inFetch_1,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,rb_entries_2_request_inFetch_2,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,rb_entries_2_valid,rb_entries_2_dispatched,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,rb_entries_2_request_inFetch_0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,rb_entries_2_request_inFetch_1,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,rb_entries_2_request_inFetch_2,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11052,7 +11052,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,rb_entries_3_valid,rb_entries_3_dispatched,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,rb_entries_3_request_inFetch_0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,rb_entries_3_request_inFetch_1,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,rb_entries_3_request_inFetch_2,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,rb_entries_3_valid,rb_entries_3_dispatched,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,rb_entries_3_request_inFetch_0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,rb_entries_3_request_inFetch_1,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,rb_entries_3_request_inFetch_2,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11063,7 +11063,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h4,rb_entries_4_completed,rb_entries_4_valid,rb_entries_4_dispatched,rb_entries_4_written,rb_entries_4_wr_addr,rb_entries_4_request_inst,rb_entries_4_request_mode,rb_entries_4_request_operands_0_value,rb_entries_4_request_operands_0_mode,rb_entries_4_request_inFetch_0,rb_entries_4_request_operands_1_value,rb_entries_4_request_operands_1_mode,rb_entries_4_request_inFetch_1,rb_entries_4_request_operands_2_value,rb_entries_4_request_operands_2_mode,rb_entries_4_request_inFetch_2,rb_entries_4_result_isZero,rb_entries_4_result_isNaR,rb_entries_4_result_out,rb_entries_4_result_lt,rb_entries_4_result_eq,rb_entries_4_result_gt,rb_entries_4_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h4,rb_entries_4_completed,rb_entries_4_valid,rb_entries_4_dispatched,rb_entries_4_written,rb_entries_4_wr_addr,rb_entries_4_request_inst,rb_entries_4_request_mode,rb_entries_4_request_operands_0_value,rb_entries_4_request_operands_0_mode,rb_entries_4_request_inFetch_0,rb_entries_4_request_operands_1_value,rb_entries_4_request_operands_1_mode,rb_entries_4_request_inFetch_1,rb_entries_4_request_operands_2_value,rb_entries_4_request_operands_2_mode,rb_entries_4_request_inFetch_2,rb_entries_4_result_isZero,rb_entries_4_result_isNaR,rb_entries_4_result_out,rb_entries_4_result_lt,rb_entries_4_result_eq,rb_entries_4_result_gt,rb_entries_4_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11074,7 +11074,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h5,rb_entries_5_completed,rb_entries_5_valid,rb_entries_5_dispatched,rb_entries_5_written,rb_entries_5_wr_addr,rb_entries_5_request_inst,rb_entries_5_request_mode,rb_entries_5_request_operands_0_value,rb_entries_5_request_operands_0_mode,rb_entries_5_request_inFetch_0,rb_entries_5_request_operands_1_value,rb_entries_5_request_operands_1_mode,rb_entries_5_request_inFetch_1,rb_entries_5_request_operands_2_value,rb_entries_5_request_operands_2_mode,rb_entries_5_request_inFetch_2,rb_entries_5_result_isZero,rb_entries_5_result_isNaR,rb_entries_5_result_out,rb_entries_5_result_lt,rb_entries_5_result_eq,rb_entries_5_result_gt,rb_entries_5_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h5,rb_entries_5_completed,rb_entries_5_valid,rb_entries_5_dispatched,rb_entries_5_written,rb_entries_5_wr_addr,rb_entries_5_request_inst,rb_entries_5_request_mode,rb_entries_5_request_operands_0_value,rb_entries_5_request_operands_0_mode,rb_entries_5_request_inFetch_0,rb_entries_5_request_operands_1_value,rb_entries_5_request_operands_1_mode,rb_entries_5_request_inFetch_1,rb_entries_5_request_operands_2_value,rb_entries_5_request_operands_2_mode,rb_entries_5_request_inFetch_2,rb_entries_5_result_isZero,rb_entries_5_result_isNaR,rb_entries_5_result_out,rb_entries_5_result_lt,rb_entries_5_result_eq,rb_entries_5_result_gt,rb_entries_5_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11085,7 +11085,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h6,rb_entries_6_completed,rb_entries_6_valid,rb_entries_6_dispatched,rb_entries_6_written,rb_entries_6_wr_addr,rb_entries_6_request_inst,rb_entries_6_request_mode,rb_entries_6_request_operands_0_value,rb_entries_6_request_operands_0_mode,rb_entries_6_request_inFetch_0,rb_entries_6_request_operands_1_value,rb_entries_6_request_operands_1_mode,rb_entries_6_request_inFetch_1,rb_entries_6_request_operands_2_value,rb_entries_6_request_operands_2_mode,rb_entries_6_request_inFetch_2,rb_entries_6_result_isZero,rb_entries_6_result_isNaR,rb_entries_6_result_out,rb_entries_6_result_lt,rb_entries_6_result_eq,rb_entries_6_result_gt,rb_entries_6_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h6,rb_entries_6_completed,rb_entries_6_valid,rb_entries_6_dispatched,rb_entries_6_written,rb_entries_6_wr_addr,rb_entries_6_request_inst,rb_entries_6_request_mode,rb_entries_6_request_operands_0_value,rb_entries_6_request_operands_0_mode,rb_entries_6_request_inFetch_0,rb_entries_6_request_operands_1_value,rb_entries_6_request_operands_1_mode,rb_entries_6_request_inFetch_1,rb_entries_6_request_operands_2_value,rb_entries_6_request_operands_2_mode,rb_entries_6_request_inFetch_2,rb_entries_6_result_isZero,rb_entries_6_result_isNaR,rb_entries_6_result_out,rb_entries_6_result_lt,rb_entries_6_result_eq,rb_entries_6_result_gt,rb_entries_6_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11096,7 +11096,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h7,rb_entries_7_completed,rb_entries_7_valid,rb_entries_7_dispatched,rb_entries_7_written,rb_entries_7_wr_addr,rb_entries_7_request_inst,rb_entries_7_request_mode,rb_entries_7_request_operands_0_value,rb_entries_7_request_operands_0_mode,rb_entries_7_request_inFetch_0,rb_entries_7_request_operands_1_value,rb_entries_7_request_operands_1_mode,rb_entries_7_request_inFetch_1,rb_entries_7_request_operands_2_value,rb_entries_7_request_operands_2_mode,rb_entries_7_request_inFetch_2,rb_entries_7_result_isZero,rb_entries_7_result_isNaR,rb_entries_7_result_out,rb_entries_7_result_lt,rb_entries_7_result_eq,rb_entries_7_result_gt,rb_entries_7_result_exceptions); // @[POSIT_Locality.scala 284:39]
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h7,rb_entries_7_completed,rb_entries_7_valid,rb_entries_7_dispatched,rb_entries_7_written,rb_entries_7_wr_addr,rb_entries_7_request_inst,rb_entries_7_request_mode,rb_entries_7_request_operands_0_value,rb_entries_7_request_operands_0_mode,rb_entries_7_request_inFetch_0,rb_entries_7_request_operands_1_value,rb_entries_7_request_operands_1_mode,rb_entries_7_request_inFetch_1,rb_entries_7_request_operands_2_value,rb_entries_7_request_operands_2_mode,rb_entries_7_request_inFetch_2,rb_entries_7_result_isZero,rb_entries_7_result_isNaR,rb_entries_7_result_out,rb_entries_7_result_lt,rb_entries_7_result_eq,rb_entries_7_result_gt,rb_entries_7_result_exceptions); // @[POSIT_Locality.scala 286:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11107,7 +11107,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"reg_infetch_cacheline:%b\n",8'h0); // @[POSIT_Locality.scala 290:31]
+          $fwrite(32'h80000002,"reg_infetch_cacheline:%b\n",8'h0); // @[POSIT_Locality.scala 292:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11118,7 +11118,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 292:31]
+          $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 294:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11129,7 +11129,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 296:31]
+          $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 298:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11140,7 +11140,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %b | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 297:31]
+          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %b | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 299:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11151,7 +11151,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 298:31]
+          $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 300:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11162,7 +11162,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 300:31]
+          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 302:31]
         end
     `ifdef PRINTF_COND
       end
