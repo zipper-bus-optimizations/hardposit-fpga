@@ -765,7 +765,7 @@ static void sparse(
 		for (k = jajp1; k < rowstr[j+1]; k++) {
 			i = colidx[k];
 			x[i] = x[i] + a[k];
-			if ( mark[i] == FALSE && (!(x[i] == hp32(0.0)))) {
+			if ( mark[i] == FALSE && (!(x[i] == 0.0))) {
 				mark[i] = TRUE;
 				nzrow = nzrow + 1;
 				nzloc[nzrow] = i;
@@ -780,7 +780,7 @@ static void sparse(
 			mark[i] = FALSE;
 			xi = x[i];
 			x[i] = 0.0;
-			if ( !(xi == hp32(0.0))) {
+			if ( !(xi == 0.0)) {
 				nza = nza + 1;
 				a[nza] = xi;
 				colidx[nza] = i;

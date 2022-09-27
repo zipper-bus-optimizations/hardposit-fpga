@@ -62,9 +62,9 @@ class Hardposit {
 		Hardposit& operator- ();
 		Hardposit operator / (Hardposit const& obj);
 		Hardposit operator * (Hardposit const& obj);
-		Hardposit operator < (Hardposit const& obj);
-		Hardposit operator > (Hardposit const& obj);
-		Hardposit operator == (Hardposit const& obj);
+		bool operator < (Hardposit& obj);
+		bool operator > (Hardposit& obj);
+		bool operator == (Hardposit& obj);
 		Hardposit sqrt();
 		Hardposit FMA(Hardposit const& obj1, Hardposit const& obj2);
 		static void get_val_at_slot(const uint8_t& pos, bool keep);
@@ -114,18 +114,18 @@ inline Hardposit operator-(const double& a, const Hardposit& b){
 	return hp32(a)-b;
 }
 
-inline bool  operator!=(const Hardposit& b, const float& a){
-	return ! (hp32(a)==b).val;
+inline bool  operator!=(Hardposit& b, const float& a){
+	return ! (hp32(a)==b);
 }
-inline bool operator==(const Hardposit& b, const float& a){
-	return (hp32(a)==b).val;
+inline bool operator==(Hardposit& b, const float& a){
+	return hp32(a)==b;
 }
 
-inline bool  operator!=(const Hardposit& b, const double& a){
-	return ! (hp32(a)==b).val;
+inline bool  operator!=(Hardposit& b, const double& a){
+	return ! hp32(a)==b;
 }
-inline bool operator==(const Hardposit& b, const double& a){
-	return (hp32(a)==b).val;
+inline bool operator==(Hardposit& b, const double& a){
+	return hp32(a)==b;
 }
 
 

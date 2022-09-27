@@ -88,7 +88,7 @@ int init_accel(){
 		uint64_t write_setup = 0;
 		write_setup += ((result->io_address())>>6);
 		write_setup += (WRITE_GRANULARITY << 42);
-	  __sync_synchronize();
+	  	__sync_synchronize();
 		accel->write_csr64(0, read_setup);
 		accel->write_csr64(8, write_setup);
 	}
@@ -117,22 +117,7 @@ void Hardposit::get_val_at_slot(const uint8_t& pos, bool keep){
 		for(auto it = result_track[pos].crntPosit.begin(); it != result_track[pos].crntPosit.end(); ++it){
 			(*it)->in_fpga = keep;
 			if(!(*it)->valid){
-				switch (static_cast<Inst>((*it)->val))
-				{
-					case LT:
-						tmp = ptr->flags & 4;
-						break;
-					case EQ:
-						tmp = ptr->flags & 2;
-						break;
-					case GT:
-						tmp = ptr->flags & 1;
-						break;
-					default:
-						tmp = ptr->result;
-						break;
-				}
-				(*it)->val = tmp;
+				(*it)->val = ptr->result;
 				(*it)->valid = true;
 			}
 		}
@@ -147,7 +132,7 @@ uint32_t Hardposit::get_val(){
 		if(!this->in_fpga){
 			assert(("in_fpga should be true but now false", this->in_fpga));
 		}
-		get_val_at_slot(this->location, true);
+		get_val_at_slot(this->location, this->in_fpga);
 	}
 	// std::cout <<"get_val success"<<std::endl;
 	return this->val;
@@ -197,6 +182,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 		Operand op;
 		op.val = this->get_val();
 		op.valid_w_id = id + 2;
+		// std::cout <<"cacheline: "<<std::bitset<16>(cacheline)<<" offset: "<< offset<<" id: "<<(int)id<<std::endl;
 		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
 		// std::cout <<"offset: "<<offset<<" cacheline: "<<std::bitset<16>(cacheline) <<std::endl;
 		req_q_pointer++;
@@ -212,6 +198,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 		Operand op;
 		op.val = obj1.get_val();
 		op.valid_w_id = id + 2;
+		// std::cout <<"cacheline: "<<std::bitset<16>(cacheline)<<" offset: "<< offset<<" id: "<<id<<std::endl;
 		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
 		req_q_pointer++;
 	}
@@ -376,18 +363,27 @@ Hardposit::operator bool () const{
 	return (this->get_val() !=0);
 };
 
-Hardposit Hardposit::operator < (Hardposit const& obj){
-	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
-	result.val = LT;
-	return result;
+bool Hardposit::operator < (Hardposit& obj){
+	posit32 a;
+	posit32 b;
+	a.value = this->get_val();
+	b.value = obj.get_val();
+
+	return a < b;
 }
-Hardposit Hardposit::operator > (Hardposit const& obj){
-	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
-	result.val = GT;
-	return result;
+bool Hardposit::operator > (Hardposit& obj){
+	posit32 a;
+	posit32 b;
+	a.value = this->get_val();
+	b.value = obj.get_val();
+
+	return a > b;
 }
-Hardposit Hardposit::operator == (Hardposit const& obj){
-	Hardposit result = this->compute(obj, Hardposit(), CMP, false);
-	result.val = EQ;
-	return result;
+bool Hardposit::operator == (Hardposit& obj){
+	posit32 a;
+	posit32 b;
+	a.value = this->get_val();
+	b.value = obj.get_val();
+
+	return a == b;
 }

@@ -11,7 +11,7 @@ sim_coalesce: rtl/sources_coalesce.txt rtl/POSIT_Locality_coalesce.v rtl/Posit.s
 
 sim_nocoalesce: rtl/sources_nocoalesce.txt rtl/POSIT_Locality_nocoalesce.v rtl/Posit.sv
 	rm -rf build_sim_nocoalesce
-	afu_sim_setup --source rtl/sources_coalesce.txt build_sim_nocoalesce
+	afu_sim_setup --source rtl/sources_nocoalesce.txt build_sim_nocoalesce
 	cd build_sim_nocoalesce && make
 
 rebuild_coalesce: clean_coalesce build_coalesce

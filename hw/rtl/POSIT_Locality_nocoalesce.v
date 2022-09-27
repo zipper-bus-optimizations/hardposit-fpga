@@ -2476,348 +2476,300 @@ module POSIT_Locality(
   reg [31:0] _RAND_11;
   reg [1:0] rb_entries_0_request_mode; // @[POSIT_Locality.scala 16:25]
   reg [31:0] _RAND_12;
-  reg  rb_entries_0_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_13;
-  reg  rb_entries_0_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_14;
-  reg  rb_entries_0_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_15;
   reg  rb_entries_0_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_16;
+  reg [31:0] _RAND_13;
   reg  rb_entries_0_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_17;
+  reg [31:0] _RAND_14;
   reg [31:0] rb_entries_0_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_18;
+  reg [31:0] _RAND_15;
   reg  rb_entries_0_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_19;
+  reg [31:0] _RAND_16;
   reg  rb_entries_0_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_20;
+  reg [31:0] _RAND_17;
   reg  rb_entries_0_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_21;
+  reg [31:0] _RAND_18;
   reg [4:0] rb_entries_0_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_22;
+  reg [31:0] _RAND_19;
   reg  rb_entries_1_completed; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_23;
+  reg [31:0] _RAND_20;
   reg  rb_entries_1_valid; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_24;
+  reg [31:0] _RAND_21;
   reg  rb_entries_1_dispatched; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_25;
+  reg [31:0] _RAND_22;
   reg  rb_entries_1_written; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_26;
+  reg [31:0] _RAND_23;
   reg [7:0] rb_entries_1_wr_addr; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_27;
+  reg [31:0] _RAND_24;
   reg [31:0] rb_entries_1_request_operands_0_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_28;
+  reg [31:0] _RAND_25;
   reg [1:0] rb_entries_1_request_operands_0_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_29;
+  reg [31:0] _RAND_26;
   reg [31:0] rb_entries_1_request_operands_1_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_30;
+  reg [31:0] _RAND_27;
   reg [1:0] rb_entries_1_request_operands_1_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_31;
+  reg [31:0] _RAND_28;
   reg [31:0] rb_entries_1_request_operands_2_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_32;
+  reg [31:0] _RAND_29;
   reg [1:0] rb_entries_1_request_operands_2_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_33;
+  reg [31:0] _RAND_30;
   reg [2:0] rb_entries_1_request_inst; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_34;
+  reg [31:0] _RAND_31;
   reg [1:0] rb_entries_1_request_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_35;
-  reg  rb_entries_1_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_36;
-  reg  rb_entries_1_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_37;
-  reg  rb_entries_1_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_38;
+  reg [31:0] _RAND_32;
   reg  rb_entries_1_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_39;
+  reg [31:0] _RAND_33;
   reg  rb_entries_1_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_40;
+  reg [31:0] _RAND_34;
   reg [31:0] rb_entries_1_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_41;
+  reg [31:0] _RAND_35;
   reg  rb_entries_1_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_42;
+  reg [31:0] _RAND_36;
   reg  rb_entries_1_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_43;
+  reg [31:0] _RAND_37;
   reg  rb_entries_1_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_44;
+  reg [31:0] _RAND_38;
   reg [4:0] rb_entries_1_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_45;
+  reg [31:0] _RAND_39;
   reg  rb_entries_2_completed; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_46;
+  reg [31:0] _RAND_40;
   reg  rb_entries_2_valid; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_47;
+  reg [31:0] _RAND_41;
   reg  rb_entries_2_dispatched; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_48;
+  reg [31:0] _RAND_42;
   reg  rb_entries_2_written; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_49;
+  reg [31:0] _RAND_43;
   reg [7:0] rb_entries_2_wr_addr; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_50;
+  reg [31:0] _RAND_44;
   reg [31:0] rb_entries_2_request_operands_0_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_51;
+  reg [31:0] _RAND_45;
   reg [1:0] rb_entries_2_request_operands_0_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_52;
+  reg [31:0] _RAND_46;
   reg [31:0] rb_entries_2_request_operands_1_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_53;
+  reg [31:0] _RAND_47;
   reg [1:0] rb_entries_2_request_operands_1_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_54;
+  reg [31:0] _RAND_48;
   reg [31:0] rb_entries_2_request_operands_2_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_55;
+  reg [31:0] _RAND_49;
   reg [1:0] rb_entries_2_request_operands_2_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_56;
+  reg [31:0] _RAND_50;
   reg [2:0] rb_entries_2_request_inst; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_57;
+  reg [31:0] _RAND_51;
   reg [1:0] rb_entries_2_request_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_58;
-  reg  rb_entries_2_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_59;
-  reg  rb_entries_2_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_60;
-  reg  rb_entries_2_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_61;
+  reg [31:0] _RAND_52;
   reg  rb_entries_2_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_62;
+  reg [31:0] _RAND_53;
   reg  rb_entries_2_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_63;
+  reg [31:0] _RAND_54;
   reg [31:0] rb_entries_2_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_64;
+  reg [31:0] _RAND_55;
   reg  rb_entries_2_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_65;
+  reg [31:0] _RAND_56;
   reg  rb_entries_2_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_66;
+  reg [31:0] _RAND_57;
   reg  rb_entries_2_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_67;
+  reg [31:0] _RAND_58;
   reg [4:0] rb_entries_2_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_68;
+  reg [31:0] _RAND_59;
   reg  rb_entries_3_completed; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_69;
+  reg [31:0] _RAND_60;
   reg  rb_entries_3_valid; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_70;
+  reg [31:0] _RAND_61;
   reg  rb_entries_3_dispatched; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_71;
+  reg [31:0] _RAND_62;
   reg  rb_entries_3_written; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_72;
+  reg [31:0] _RAND_63;
   reg [7:0] rb_entries_3_wr_addr; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_73;
+  reg [31:0] _RAND_64;
   reg [31:0] rb_entries_3_request_operands_0_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_74;
+  reg [31:0] _RAND_65;
   reg [1:0] rb_entries_3_request_operands_0_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_75;
+  reg [31:0] _RAND_66;
   reg [31:0] rb_entries_3_request_operands_1_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_76;
+  reg [31:0] _RAND_67;
   reg [1:0] rb_entries_3_request_operands_1_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_77;
+  reg [31:0] _RAND_68;
   reg [31:0] rb_entries_3_request_operands_2_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_78;
+  reg [31:0] _RAND_69;
   reg [1:0] rb_entries_3_request_operands_2_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_79;
+  reg [31:0] _RAND_70;
   reg [2:0] rb_entries_3_request_inst; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_80;
+  reg [31:0] _RAND_71;
   reg [1:0] rb_entries_3_request_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_81;
-  reg  rb_entries_3_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_82;
-  reg  rb_entries_3_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_83;
-  reg  rb_entries_3_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_84;
+  reg [31:0] _RAND_72;
   reg  rb_entries_3_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_85;
+  reg [31:0] _RAND_73;
   reg  rb_entries_3_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_86;
+  reg [31:0] _RAND_74;
   reg [31:0] rb_entries_3_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_87;
+  reg [31:0] _RAND_75;
   reg  rb_entries_3_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_88;
+  reg [31:0] _RAND_76;
   reg  rb_entries_3_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_89;
+  reg [31:0] _RAND_77;
   reg  rb_entries_3_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_90;
+  reg [31:0] _RAND_78;
   reg [4:0] rb_entries_3_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_91;
+  reg [31:0] _RAND_79;
   reg  rb_entries_4_completed; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_92;
+  reg [31:0] _RAND_80;
   reg  rb_entries_4_valid; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_93;
+  reg [31:0] _RAND_81;
   reg  rb_entries_4_dispatched; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_94;
+  reg [31:0] _RAND_82;
   reg  rb_entries_4_written; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_95;
+  reg [31:0] _RAND_83;
   reg [7:0] rb_entries_4_wr_addr; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_96;
+  reg [31:0] _RAND_84;
   reg [31:0] rb_entries_4_request_operands_0_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_97;
+  reg [31:0] _RAND_85;
   reg [1:0] rb_entries_4_request_operands_0_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_98;
+  reg [31:0] _RAND_86;
   reg [31:0] rb_entries_4_request_operands_1_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_99;
+  reg [31:0] _RAND_87;
   reg [1:0] rb_entries_4_request_operands_1_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_100;
+  reg [31:0] _RAND_88;
   reg [31:0] rb_entries_4_request_operands_2_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_101;
+  reg [31:0] _RAND_89;
   reg [1:0] rb_entries_4_request_operands_2_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_102;
+  reg [31:0] _RAND_90;
   reg [2:0] rb_entries_4_request_inst; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_103;
+  reg [31:0] _RAND_91;
   reg [1:0] rb_entries_4_request_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_104;
-  reg  rb_entries_4_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_105;
-  reg  rb_entries_4_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_106;
-  reg  rb_entries_4_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_107;
+  reg [31:0] _RAND_92;
   reg  rb_entries_4_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_108;
+  reg [31:0] _RAND_93;
   reg  rb_entries_4_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_109;
+  reg [31:0] _RAND_94;
   reg [31:0] rb_entries_4_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_110;
+  reg [31:0] _RAND_95;
   reg  rb_entries_4_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_111;
+  reg [31:0] _RAND_96;
   reg  rb_entries_4_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_112;
+  reg [31:0] _RAND_97;
   reg  rb_entries_4_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_113;
+  reg [31:0] _RAND_98;
   reg [4:0] rb_entries_4_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_114;
+  reg [31:0] _RAND_99;
   reg  rb_entries_5_completed; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_115;
+  reg [31:0] _RAND_100;
   reg  rb_entries_5_valid; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_116;
+  reg [31:0] _RAND_101;
   reg  rb_entries_5_dispatched; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_117;
+  reg [31:0] _RAND_102;
   reg  rb_entries_5_written; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_118;
+  reg [31:0] _RAND_103;
   reg [7:0] rb_entries_5_wr_addr; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_119;
+  reg [31:0] _RAND_104;
   reg [31:0] rb_entries_5_request_operands_0_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_120;
+  reg [31:0] _RAND_105;
   reg [1:0] rb_entries_5_request_operands_0_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_121;
+  reg [31:0] _RAND_106;
   reg [31:0] rb_entries_5_request_operands_1_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_122;
+  reg [31:0] _RAND_107;
   reg [1:0] rb_entries_5_request_operands_1_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_123;
+  reg [31:0] _RAND_108;
   reg [31:0] rb_entries_5_request_operands_2_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_124;
+  reg [31:0] _RAND_109;
   reg [1:0] rb_entries_5_request_operands_2_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_125;
+  reg [31:0] _RAND_110;
   reg [2:0] rb_entries_5_request_inst; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_126;
+  reg [31:0] _RAND_111;
   reg [1:0] rb_entries_5_request_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_127;
-  reg  rb_entries_5_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_128;
-  reg  rb_entries_5_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_129;
-  reg  rb_entries_5_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_130;
+  reg [31:0] _RAND_112;
   reg  rb_entries_5_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_131;
+  reg [31:0] _RAND_113;
   reg  rb_entries_5_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_132;
+  reg [31:0] _RAND_114;
   reg [31:0] rb_entries_5_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_133;
+  reg [31:0] _RAND_115;
   reg  rb_entries_5_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_134;
+  reg [31:0] _RAND_116;
   reg  rb_entries_5_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_135;
+  reg [31:0] _RAND_117;
   reg  rb_entries_5_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_136;
+  reg [31:0] _RAND_118;
   reg [4:0] rb_entries_5_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_137;
+  reg [31:0] _RAND_119;
   reg  rb_entries_6_completed; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_138;
+  reg [31:0] _RAND_120;
   reg  rb_entries_6_valid; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_139;
+  reg [31:0] _RAND_121;
   reg  rb_entries_6_dispatched; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_140;
+  reg [31:0] _RAND_122;
   reg  rb_entries_6_written; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_141;
+  reg [31:0] _RAND_123;
   reg [7:0] rb_entries_6_wr_addr; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_142;
+  reg [31:0] _RAND_124;
   reg [31:0] rb_entries_6_request_operands_0_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_143;
+  reg [31:0] _RAND_125;
   reg [1:0] rb_entries_6_request_operands_0_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_144;
+  reg [31:0] _RAND_126;
   reg [31:0] rb_entries_6_request_operands_1_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_145;
+  reg [31:0] _RAND_127;
   reg [1:0] rb_entries_6_request_operands_1_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_146;
+  reg [31:0] _RAND_128;
   reg [31:0] rb_entries_6_request_operands_2_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_147;
+  reg [31:0] _RAND_129;
   reg [1:0] rb_entries_6_request_operands_2_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_148;
+  reg [31:0] _RAND_130;
   reg [2:0] rb_entries_6_request_inst; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_149;
+  reg [31:0] _RAND_131;
   reg [1:0] rb_entries_6_request_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_150;
-  reg  rb_entries_6_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_151;
-  reg  rb_entries_6_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_152;
-  reg  rb_entries_6_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_153;
+  reg [31:0] _RAND_132;
   reg  rb_entries_6_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_154;
+  reg [31:0] _RAND_133;
   reg  rb_entries_6_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_155;
+  reg [31:0] _RAND_134;
   reg [31:0] rb_entries_6_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_156;
+  reg [31:0] _RAND_135;
   reg  rb_entries_6_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_157;
+  reg [31:0] _RAND_136;
   reg  rb_entries_6_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_158;
+  reg [31:0] _RAND_137;
   reg  rb_entries_6_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_159;
+  reg [31:0] _RAND_138;
   reg [4:0] rb_entries_6_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_160;
+  reg [31:0] _RAND_139;
   reg  rb_entries_7_completed; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_161;
+  reg [31:0] _RAND_140;
   reg  rb_entries_7_valid; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_162;
+  reg [31:0] _RAND_141;
   reg  rb_entries_7_dispatched; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_163;
+  reg [31:0] _RAND_142;
   reg  rb_entries_7_written; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_164;
+  reg [31:0] _RAND_143;
   reg [7:0] rb_entries_7_wr_addr; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_165;
+  reg [31:0] _RAND_144;
   reg [31:0] rb_entries_7_request_operands_0_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_166;
+  reg [31:0] _RAND_145;
   reg [1:0] rb_entries_7_request_operands_0_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_167;
+  reg [31:0] _RAND_146;
   reg [31:0] rb_entries_7_request_operands_1_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_168;
+  reg [31:0] _RAND_147;
   reg [1:0] rb_entries_7_request_operands_1_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_169;
+  reg [31:0] _RAND_148;
   reg [31:0] rb_entries_7_request_operands_2_value; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_170;
+  reg [31:0] _RAND_149;
   reg [1:0] rb_entries_7_request_operands_2_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_171;
+  reg [31:0] _RAND_150;
   reg [2:0] rb_entries_7_request_inst; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_172;
+  reg [31:0] _RAND_151;
   reg [1:0] rb_entries_7_request_mode; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_173;
-  reg  rb_entries_7_request_inFetch_0; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_174;
-  reg  rb_entries_7_request_inFetch_1; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_175;
-  reg  rb_entries_7_request_inFetch_2; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_176;
+  reg [31:0] _RAND_152;
   reg  rb_entries_7_result_isZero; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_177;
+  reg [31:0] _RAND_153;
   reg  rb_entries_7_result_isNaR; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_178;
+  reg [31:0] _RAND_154;
   reg [31:0] rb_entries_7_result_out; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_179;
+  reg [31:0] _RAND_155;
   reg  rb_entries_7_result_lt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_180;
+  reg [31:0] _RAND_156;
   reg  rb_entries_7_result_eq; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_181;
+  reg [31:0] _RAND_157;
   reg  rb_entries_7_result_gt; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_182;
+  reg [31:0] _RAND_158;
   reg [4:0] rb_entries_7_result_exceptions; // @[POSIT_Locality.scala 16:25]
-  reg [31:0] _RAND_183;
+  reg [31:0] _RAND_159;
   wire  _GEN_37 = 3'h1 == io_request_bits_wr_addr[2:0] ? rb_entries_1_valid : rb_entries_0_valid; // @[POSIT_Locality.scala 21:80]
   wire  _GEN_39 = 3'h1 == io_request_bits_wr_addr[2:0] ? rb_entries_1_written : rb_entries_0_written; // @[POSIT_Locality.scala 21:80]
   wire  _GEN_67 = 3'h2 == io_request_bits_wr_addr[2:0] ? rb_entries_2_valid : _GEN_37; // @[POSIT_Locality.scala 21:80]
@@ -2844,22 +2796,22 @@ module POSIT_Locality(
   wire  _GEN_965 = 3'h5 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_5_completed; // @[POSIT_Locality.scala 27:49]
   wire  _GEN_966 = 3'h6 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_6_completed; // @[POSIT_Locality.scala 27:49]
   wire  _GEN_967 = 3'h7 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_7_completed; // @[POSIT_Locality.scala 27:49]
-  wire  _GEN_13735 = 3'h0 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_968 = _GEN_13735 | rb_entries_0_valid; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_13736 = 3'h1 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_969 = _GEN_13736 | rb_entries_1_valid; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_13737 = 3'h2 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_970 = _GEN_13737 | rb_entries_2_valid; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_13738 = 3'h3 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_971 = _GEN_13738 | rb_entries_3_valid; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_13739 = 3'h4 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_972 = _GEN_13739 | rb_entries_4_valid; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_13740 = 3'h5 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_973 = _GEN_13740 | rb_entries_5_valid; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_13741 = 3'h6 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_974 = _GEN_13741 | rb_entries_6_valid; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_13742 = 3'h7 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
-  wire  _GEN_975 = _GEN_13742 | rb_entries_7_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13690 = 3'h0 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_968 = _GEN_13690 | rb_entries_0_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13691 = 3'h1 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_969 = _GEN_13691 | rb_entries_1_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13692 = 3'h2 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_970 = _GEN_13692 | rb_entries_2_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13693 = 3'h3 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_971 = _GEN_13693 | rb_entries_3_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13694 = 3'h4 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_972 = _GEN_13694 | rb_entries_4_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13695 = 3'h5 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_973 = _GEN_13695 | rb_entries_5_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13696 = 3'h6 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_974 = _GEN_13696 | rb_entries_6_valid; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_13697 = 3'h7 == io_request_bits_wr_addr[2:0]; // @[POSIT_Locality.scala 28:45]
+  wire  _GEN_975 = _GEN_13697 | rb_entries_7_valid; // @[POSIT_Locality.scala 28:45]
   wire  _GEN_976 = 3'h0 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_0_written; // @[POSIT_Locality.scala 29:47]
   wire  _GEN_977 = 3'h1 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_1_written; // @[POSIT_Locality.scala 29:47]
   wire  _GEN_978 = 3'h2 == io_request_bits_wr_addr[2:0] ? 1'h0 : rb_entries_2_written; // @[POSIT_Locality.scala 29:47]
@@ -2981,7 +2933,7 @@ module POSIT_Locality(
   wire [1:0] _GEN_1206 = new_input_log ? _GEN_1054 : rb_entries_6_request_operands_2_mode; // @[POSIT_Locality.scala 25:28]
   wire [1:0] _GEN_1207 = new_input_log ? _GEN_1055 : rb_entries_7_request_operands_2_mode; // @[POSIT_Locality.scala 25:28]
   reg [2:0] value; // @[Counter.scala 29:33]
-  reg [31:0] _RAND_184;
+  reg [31:0] _RAND_160;
   wire [2:0] _T_35 = value + 3'h1; // @[Counter.scala 39:22]
   wire  _GEN_1302 = 3'h1 == value ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 45:33]
   wire  _GEN_1332 = 3'h2 == value ? rb_entries_2_completed : _GEN_1302; // @[POSIT_Locality.scala 45:33]
@@ -3048,22 +3000,22 @@ module POSIT_Locality(
   wire  _GEN_1473 = 3'h6 == value ? rb_entries_6_result_eq : _GEN_1443; // @[POSIT_Locality.scala 45:33]
   wire  _GEN_1474 = 3'h6 == value ? rb_entries_6_result_gt : _GEN_1444; // @[POSIT_Locality.scala 45:33]
   wire [4:0] _GEN_1475 = 3'h6 == value ? rb_entries_6_result_exceptions : _GEN_1445; // @[POSIT_Locality.scala 45:33]
-  wire  _GEN_13743 = 3'h0 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1506 = _GEN_13743 | _GEN_1128; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_13744 = 3'h1 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1507 = _GEN_13744 | _GEN_1129; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_13745 = 3'h2 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1508 = _GEN_13745 | _GEN_1130; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_13746 = 3'h3 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1509 = _GEN_13746 | _GEN_1131; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_13747 = 3'h4 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1510 = _GEN_13747 | _GEN_1132; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_13748 = 3'h5 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1511 = _GEN_13748 | _GEN_1133; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_13749 = 3'h6 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1512 = _GEN_13749 | _GEN_1134; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_13750 = 3'h7 == value; // @[POSIT_Locality.scala 47:47]
-  wire  _GEN_1513 = _GEN_13750 | _GEN_1135; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13698 = 3'h0 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1506 = _GEN_13698 | _GEN_1128; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13699 = 3'h1 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1507 = _GEN_13699 | _GEN_1129; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13700 = 3'h2 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1508 = _GEN_13700 | _GEN_1130; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13701 = 3'h3 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1509 = _GEN_13701 | _GEN_1131; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13702 = 3'h4 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1510 = _GEN_13702 | _GEN_1132; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13703 = 3'h5 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1511 = _GEN_13703 | _GEN_1133; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13704 = 3'h6 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1512 = _GEN_13704 | _GEN_1134; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_13705 = 3'h7 == value; // @[POSIT_Locality.scala 47:47]
+  wire  _GEN_1513 = _GEN_13705 | _GEN_1135; // @[POSIT_Locality.scala 47:47]
   wire  singleOpValidVec_0 = rb_entries_0_request_operands_0_mode == 2'h0; // @[POSIT_Locality.scala 68:52]
   wire  _T_42 = rb_entries_0_request_operands_1_mode == 2'h0; // @[POSIT_Locality.scala 70:139]
   wire  singleOpValidVec_1 = singleOpValidVec_0 & _T_42; // @[POSIT_Locality.scala 70:96]
@@ -3217,22 +3169,22 @@ module POSIT_Locality(
   wire [31:0] _rb_entries_result_idx_result_out = pe_io_result_bits_out; // @[POSIT_Locality.scala 109:47 POSIT_Locality.scala 109:47]
   wire  _rb_entries_result_idx_result_isNaR = pe_io_result_bits_isNaR; // @[POSIT_Locality.scala 109:47 POSIT_Locality.scala 109:47]
   wire  _rb_entries_result_idx_result_isZero = pe_io_result_bits_isZero; // @[POSIT_Locality.scala 109:47 POSIT_Locality.scala 109:47]
-  wire  _GEN_13751 = 3'h0 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1828 = _GEN_13751 | _GEN_1112; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_13752 = 3'h1 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1829 = _GEN_13752 | _GEN_1113; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_13753 = 3'h2 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1830 = _GEN_13753 | _GEN_1114; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_13754 = 3'h3 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1831 = _GEN_13754 | _GEN_1115; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_13755 = 3'h4 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1832 = _GEN_13755 | _GEN_1116; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_13756 = 3'h5 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1833 = _GEN_13756 | _GEN_1117; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_13757 = 3'h6 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1834 = _GEN_13757 | _GEN_1118; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_13758 = 3'h7 == result_idx; // @[POSIT_Locality.scala 110:50]
-  wire  _GEN_1835 = _GEN_13758 | _GEN_1119; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13706 = 3'h0 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1828 = _GEN_13706 | _GEN_1112; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13707 = 3'h1 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1829 = _GEN_13707 | _GEN_1113; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13708 = 3'h2 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1830 = _GEN_13708 | _GEN_1114; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13709 = 3'h3 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1831 = _GEN_13709 | _GEN_1115; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13710 = 3'h4 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1832 = _GEN_13710 | _GEN_1116; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13711 = 3'h5 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1833 = _GEN_13711 | _GEN_1117; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13712 = 3'h6 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1834 = _GEN_13712 | _GEN_1118; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_13713 = 3'h7 == result_idx; // @[POSIT_Locality.scala 110:50]
+  wire  _GEN_1835 = _GEN_13713 | _GEN_1119; // @[POSIT_Locality.scala 110:50]
   wire  _T_165 = rb_entries_0_request_operands_0_mode == 2'h1; // @[POSIT_Locality.scala 116:69]
   wire  _GEN_1936 = 3'h1 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_1_completed : rb_entries_0_completed; // @[POSIT_Locality.scala 117:100]
   wire  _GEN_1966 = 3'h2 == rb_entries_0_request_operands_0_value[2:0] ? rb_entries_2_completed : _GEN_1936; // @[POSIT_Locality.scala 117:100]
@@ -3425,6 +3377,8 @@ module POSIT_Locality(
   wire  _GEN_13188 = 3'h5 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_5_completed : _GEN_13158; // @[POSIT_Locality.scala 117:100]
   wire  _GEN_13218 = 3'h6 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_6_completed : _GEN_13188; // @[POSIT_Locality.scala 117:100]
   wire  _GEN_13248 = 3'h7 == rb_entries_7_request_operands_2_value[2:0] ? rb_entries_7_completed : _GEN_13218; // @[POSIT_Locality.scala 117:100]
+  reg [3:0] reg_infetch_cacheline; // @[POSIT_Locality.scala 127:45]
+  reg [31:0] _RAND_161;
   wire  _T_247 = 3'h7 == rb_entries_0_request_operands_0_value[2:0]; // @[Mux.scala 68:19]
   wire  _T_248 = _T_247 & io_mem_read_data[481]; // @[Mux.scala 68:16]
   wire  _T_249 = 3'h6 == rb_entries_0_request_operands_0_value[2:0]; // @[Mux.scala 68:19]
@@ -4097,223 +4051,226 @@ module POSIT_Locality(
   wire  _T_2270 = _T_2268 & _T_2240; // @[POSIT_Locality.scala 138:49]
   wire  _T_2272 = _T_2265 == rb_entries_7_request_operands_2_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_2273 = _T_2270 & _T_2272; // @[POSIT_Locality.scala 139:49]
-  wire  _T_2303 = rb_entries_0_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2304 = ~rb_entries_0_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_0 = _T_2303 & _T_2304; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2308 = rb_entries_0_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2309 = ~rb_entries_0_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_1 = _T_2308 & _T_2309; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2313 = rb_entries_0_valid & rb_entries_0_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2314 = ~rb_entries_0_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_2 = _T_2313 & _T_2314; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2318 = rb_entries_1_valid & rb_entries_1_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2319 = ~rb_entries_1_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_3 = _T_2318 & _T_2319; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2323 = rb_entries_1_valid & rb_entries_1_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2324 = ~rb_entries_1_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_4 = _T_2323 & _T_2324; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2328 = rb_entries_1_valid & rb_entries_1_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2329 = ~rb_entries_1_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_5 = _T_2328 & _T_2329; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2333 = rb_entries_2_valid & rb_entries_2_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2334 = ~rb_entries_2_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_6 = _T_2333 & _T_2334; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2338 = rb_entries_2_valid & rb_entries_2_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2339 = ~rb_entries_2_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_7 = _T_2338 & _T_2339; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2343 = rb_entries_2_valid & rb_entries_2_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2344 = ~rb_entries_2_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_8 = _T_2343 & _T_2344; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2348 = rb_entries_3_valid & rb_entries_3_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2349 = ~rb_entries_3_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_9 = _T_2348 & _T_2349; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2353 = rb_entries_3_valid & rb_entries_3_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2354 = ~rb_entries_3_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_10 = _T_2353 & _T_2354; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2358 = rb_entries_3_valid & rb_entries_3_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2359 = ~rb_entries_3_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_11 = _T_2358 & _T_2359; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2363 = rb_entries_4_valid & rb_entries_4_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2364 = ~rb_entries_4_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_12 = _T_2363 & _T_2364; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2368 = rb_entries_4_valid & rb_entries_4_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2369 = ~rb_entries_4_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_13 = _T_2368 & _T_2369; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2373 = rb_entries_4_valid & rb_entries_4_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2374 = ~rb_entries_4_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_14 = _T_2373 & _T_2374; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2378 = rb_entries_5_valid & rb_entries_5_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2379 = ~rb_entries_5_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_15 = _T_2378 & _T_2379; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2383 = rb_entries_5_valid & rb_entries_5_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2384 = ~rb_entries_5_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_16 = _T_2383 & _T_2384; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2388 = rb_entries_5_valid & rb_entries_5_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2389 = ~rb_entries_5_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_17 = _T_2388 & _T_2389; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2393 = rb_entries_6_valid & rb_entries_6_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2394 = ~rb_entries_6_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_18 = _T_2393 & _T_2394; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2398 = rb_entries_6_valid & rb_entries_6_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2399 = ~rb_entries_6_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_19 = _T_2398 & _T_2399; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2403 = rb_entries_6_valid & rb_entries_6_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2404 = ~rb_entries_6_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_20 = _T_2403 & _T_2404; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2408 = rb_entries_7_valid & rb_entries_7_request_operands_0_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2409 = ~rb_entries_7_request_inFetch_0; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_21 = _T_2408 & _T_2409; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2413 = rb_entries_7_valid & rb_entries_7_request_operands_1_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2414 = ~rb_entries_7_request_inFetch_1; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_22 = _T_2413 & _T_2414; // @[POSIT_Locality.scala 166:146]
-  wire  _T_2418 = rb_entries_7_valid & rb_entries_7_request_operands_2_mode[1]; // @[POSIT_Locality.scala 166:91]
-  wire  _T_2419 = ~rb_entries_7_request_inFetch_2; // @[POSIT_Locality.scala 166:150]
-  wire  waitingToBeFetched_23 = _T_2418 & _T_2419; // @[POSIT_Locality.scala 166:146]
-  wire [5:0] _T_2425 = {waitingToBeFetched_5,waitingToBeFetched_4,waitingToBeFetched_3,waitingToBeFetched_2,waitingToBeFetched_1,waitingToBeFetched_0}; // @[POSIT_Locality.scala 173:52]
-  wire [11:0] _T_2431 = {waitingToBeFetched_11,waitingToBeFetched_10,waitingToBeFetched_9,waitingToBeFetched_8,waitingToBeFetched_7,waitingToBeFetched_6,_T_2425}; // @[POSIT_Locality.scala 173:52]
-  wire [5:0] _T_2436 = {waitingToBeFetched_17,waitingToBeFetched_16,waitingToBeFetched_15,waitingToBeFetched_14,waitingToBeFetched_13,waitingToBeFetched_12}; // @[POSIT_Locality.scala 173:52]
-  wire [11:0] _T_2442 = {waitingToBeFetched_23,waitingToBeFetched_22,waitingToBeFetched_21,waitingToBeFetched_20,waitingToBeFetched_19,waitingToBeFetched_18,_T_2436}; // @[POSIT_Locality.scala 173:52]
-  wire [5:0] _T_2448 = {rb_entries_1_request_inFetch_2,rb_entries_1_request_inFetch_1,rb_entries_1_request_inFetch_0,rb_entries_0_request_inFetch_2,rb_entries_0_request_inFetch_1,rb_entries_0_request_inFetch_0}; // @[POSIT_Locality.scala 183:42]
-  wire [11:0] _T_2454 = {rb_entries_3_request_inFetch_2,rb_entries_3_request_inFetch_1,rb_entries_3_request_inFetch_0,rb_entries_2_request_inFetch_2,rb_entries_2_request_inFetch_1,rb_entries_2_request_inFetch_0,_T_2448}; // @[POSIT_Locality.scala 183:42]
-  wire [5:0] _T_2459 = {rb_entries_5_request_inFetch_2,rb_entries_5_request_inFetch_1,rb_entries_5_request_inFetch_0,rb_entries_4_request_inFetch_2,rb_entries_4_request_inFetch_1,rb_entries_4_request_inFetch_0}; // @[POSIT_Locality.scala 183:42]
-  wire [23:0] _T_2466 = {rb_entries_7_request_inFetch_2,rb_entries_7_request_inFetch_1,rb_entries_7_request_inFetch_0,rb_entries_6_request_inFetch_2,rb_entries_6_request_inFetch_1,rb_entries_6_request_inFetch_0,_T_2459,_T_2454}; // @[POSIT_Locality.scala 183:42]
+  wire  _T_2303 = rb_entries_0_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _GEN_13714 = {{7'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_2305 = rb_entries_0_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2306 = _T_2305 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_0 = _T_2303 & _T_2306; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2310 = rb_entries_0_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2312 = rb_entries_0_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2313 = _T_2312 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_1 = _T_2310 & _T_2313; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2317 = rb_entries_0_valid & rb_entries_0_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2319 = rb_entries_0_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2320 = _T_2319 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_2 = _T_2317 & _T_2320; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2324 = rb_entries_1_valid & rb_entries_1_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2326 = rb_entries_1_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2327 = _T_2326 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_3 = _T_2324 & _T_2327; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2331 = rb_entries_1_valid & rb_entries_1_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2333 = rb_entries_1_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2334 = _T_2333 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_4 = _T_2331 & _T_2334; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2338 = rb_entries_1_valid & rb_entries_1_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2340 = rb_entries_1_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2341 = _T_2340 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_5 = _T_2338 & _T_2341; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2345 = rb_entries_2_valid & rb_entries_2_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2347 = rb_entries_2_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2348 = _T_2347 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_6 = _T_2345 & _T_2348; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2352 = rb_entries_2_valid & rb_entries_2_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2354 = rb_entries_2_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2355 = _T_2354 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_7 = _T_2352 & _T_2355; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2359 = rb_entries_2_valid & rb_entries_2_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2361 = rb_entries_2_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2362 = _T_2361 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_8 = _T_2359 & _T_2362; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2366 = rb_entries_3_valid & rb_entries_3_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2368 = rb_entries_3_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2369 = _T_2368 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_9 = _T_2366 & _T_2369; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2373 = rb_entries_3_valid & rb_entries_3_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2375 = rb_entries_3_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2376 = _T_2375 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_10 = _T_2373 & _T_2376; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2380 = rb_entries_3_valid & rb_entries_3_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2382 = rb_entries_3_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2383 = _T_2382 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_11 = _T_2380 & _T_2383; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2387 = rb_entries_4_valid & rb_entries_4_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2389 = rb_entries_4_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2390 = _T_2389 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_12 = _T_2387 & _T_2390; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2394 = rb_entries_4_valid & rb_entries_4_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2396 = rb_entries_4_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2397 = _T_2396 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_13 = _T_2394 & _T_2397; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2401 = rb_entries_4_valid & rb_entries_4_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2403 = rb_entries_4_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2404 = _T_2403 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_14 = _T_2401 & _T_2404; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2408 = rb_entries_5_valid & rb_entries_5_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2410 = rb_entries_5_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2411 = _T_2410 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_15 = _T_2408 & _T_2411; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2415 = rb_entries_5_valid & rb_entries_5_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2417 = rb_entries_5_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2418 = _T_2417 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_16 = _T_2415 & _T_2418; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2422 = rb_entries_5_valid & rb_entries_5_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2424 = rb_entries_5_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2425 = _T_2424 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_17 = _T_2422 & _T_2425; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2429 = rb_entries_6_valid & rb_entries_6_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2431 = rb_entries_6_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2432 = _T_2431 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_18 = _T_2429 & _T_2432; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2436 = rb_entries_6_valid & rb_entries_6_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2438 = rb_entries_6_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2439 = _T_2438 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_19 = _T_2436 & _T_2439; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2443 = rb_entries_6_valid & rb_entries_6_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2445 = rb_entries_6_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2446 = _T_2445 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_20 = _T_2443 & _T_2446; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2450 = rb_entries_7_valid & rb_entries_7_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2452 = rb_entries_7_request_operands_0_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2453 = _T_2452 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_21 = _T_2450 & _T_2453; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2457 = rb_entries_7_valid & rb_entries_7_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2459 = rb_entries_7_request_operands_1_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2460 = _T_2459 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_22 = _T_2457 & _T_2460; // @[POSIT_Locality.scala 163:146]
+  wire  _T_2464 = rb_entries_7_valid & rb_entries_7_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
+  wire [10:0] _T_2466 = rb_entries_7_request_operands_2_value[13:3] & _GEN_13714; // @[POSIT_Locality.scala 163:210]
+  wire  _T_2467 = _T_2466 == 11'h0; // @[POSIT_Locality.scala 163:236]
+  wire  waitingToBeFetched_23 = _T_2464 & _T_2467; // @[POSIT_Locality.scala 163:146]
+  wire [5:0] _T_2473 = {waitingToBeFetched_5,waitingToBeFetched_4,waitingToBeFetched_3,waitingToBeFetched_2,waitingToBeFetched_1,waitingToBeFetched_0}; // @[POSIT_Locality.scala 173:52]
+  wire [11:0] _T_2479 = {waitingToBeFetched_11,waitingToBeFetched_10,waitingToBeFetched_9,waitingToBeFetched_8,waitingToBeFetched_7,waitingToBeFetched_6,_T_2473}; // @[POSIT_Locality.scala 173:52]
+  wire [5:0] _T_2484 = {waitingToBeFetched_17,waitingToBeFetched_16,waitingToBeFetched_15,waitingToBeFetched_14,waitingToBeFetched_13,waitingToBeFetched_12}; // @[POSIT_Locality.scala 173:52]
+  wire [11:0] _T_2490 = {waitingToBeFetched_23,waitingToBeFetched_22,waitingToBeFetched_21,waitingToBeFetched_20,waitingToBeFetched_19,waitingToBeFetched_18,_T_2484}; // @[POSIT_Locality.scala 173:52]
   wire [47:0] fetchOffSet_0 = {{16'd0}, rb_entries_0_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
   wire [47:0] fetchOffSet_1 = {{16'd0}, rb_entries_0_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13661 = 5'h1 == fetchArb_io_chosen ? fetchOffSet_1 : fetchOffSet_0; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13661 = 5'h1 == fetchArb_io_chosen ? fetchOffSet_1 : fetchOffSet_0; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_2 = {{16'd0}, rb_entries_0_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13662 = 5'h2 == fetchArb_io_chosen ? fetchOffSet_2 : _GEN_13661; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13662 = 5'h2 == fetchArb_io_chosen ? fetchOffSet_2 : _GEN_13661; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_3 = {{16'd0}, rb_entries_1_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13663 = 5'h3 == fetchArb_io_chosen ? fetchOffSet_3 : _GEN_13662; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13663 = 5'h3 == fetchArb_io_chosen ? fetchOffSet_3 : _GEN_13662; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_4 = {{16'd0}, rb_entries_1_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13664 = 5'h4 == fetchArb_io_chosen ? fetchOffSet_4 : _GEN_13663; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13664 = 5'h4 == fetchArb_io_chosen ? fetchOffSet_4 : _GEN_13663; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_5 = {{16'd0}, rb_entries_1_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13665 = 5'h5 == fetchArb_io_chosen ? fetchOffSet_5 : _GEN_13664; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13665 = 5'h5 == fetchArb_io_chosen ? fetchOffSet_5 : _GEN_13664; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_6 = {{16'd0}, rb_entries_2_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13666 = 5'h6 == fetchArb_io_chosen ? fetchOffSet_6 : _GEN_13665; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13666 = 5'h6 == fetchArb_io_chosen ? fetchOffSet_6 : _GEN_13665; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_7 = {{16'd0}, rb_entries_2_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13667 = 5'h7 == fetchArb_io_chosen ? fetchOffSet_7 : _GEN_13666; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13667 = 5'h7 == fetchArb_io_chosen ? fetchOffSet_7 : _GEN_13666; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_8 = {{16'd0}, rb_entries_2_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13668 = 5'h8 == fetchArb_io_chosen ? fetchOffSet_8 : _GEN_13667; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13668 = 5'h8 == fetchArb_io_chosen ? fetchOffSet_8 : _GEN_13667; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_9 = {{16'd0}, rb_entries_3_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13669 = 5'h9 == fetchArb_io_chosen ? fetchOffSet_9 : _GEN_13668; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13669 = 5'h9 == fetchArb_io_chosen ? fetchOffSet_9 : _GEN_13668; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_10 = {{16'd0}, rb_entries_3_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13670 = 5'ha == fetchArb_io_chosen ? fetchOffSet_10 : _GEN_13669; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13670 = 5'ha == fetchArb_io_chosen ? fetchOffSet_10 : _GEN_13669; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_11 = {{16'd0}, rb_entries_3_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13671 = 5'hb == fetchArb_io_chosen ? fetchOffSet_11 : _GEN_13670; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13671 = 5'hb == fetchArb_io_chosen ? fetchOffSet_11 : _GEN_13670; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_12 = {{16'd0}, rb_entries_4_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13672 = 5'hc == fetchArb_io_chosen ? fetchOffSet_12 : _GEN_13671; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13672 = 5'hc == fetchArb_io_chosen ? fetchOffSet_12 : _GEN_13671; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_13 = {{16'd0}, rb_entries_4_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13673 = 5'hd == fetchArb_io_chosen ? fetchOffSet_13 : _GEN_13672; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13673 = 5'hd == fetchArb_io_chosen ? fetchOffSet_13 : _GEN_13672; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_14 = {{16'd0}, rb_entries_4_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13674 = 5'he == fetchArb_io_chosen ? fetchOffSet_14 : _GEN_13673; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13674 = 5'he == fetchArb_io_chosen ? fetchOffSet_14 : _GEN_13673; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_15 = {{16'd0}, rb_entries_5_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13675 = 5'hf == fetchArb_io_chosen ? fetchOffSet_15 : _GEN_13674; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13675 = 5'hf == fetchArb_io_chosen ? fetchOffSet_15 : _GEN_13674; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_16 = {{16'd0}, rb_entries_5_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13676 = 5'h10 == fetchArb_io_chosen ? fetchOffSet_16 : _GEN_13675; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13676 = 5'h10 == fetchArb_io_chosen ? fetchOffSet_16 : _GEN_13675; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_17 = {{16'd0}, rb_entries_5_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13677 = 5'h11 == fetchArb_io_chosen ? fetchOffSet_17 : _GEN_13676; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13677 = 5'h11 == fetchArb_io_chosen ? fetchOffSet_17 : _GEN_13676; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_18 = {{16'd0}, rb_entries_6_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13678 = 5'h12 == fetchArb_io_chosen ? fetchOffSet_18 : _GEN_13677; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13678 = 5'h12 == fetchArb_io_chosen ? fetchOffSet_18 : _GEN_13677; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_19 = {{16'd0}, rb_entries_6_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13679 = 5'h13 == fetchArb_io_chosen ? fetchOffSet_19 : _GEN_13678; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13679 = 5'h13 == fetchArb_io_chosen ? fetchOffSet_19 : _GEN_13678; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_20 = {{16'd0}, rb_entries_6_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13680 = 5'h14 == fetchArb_io_chosen ? fetchOffSet_20 : _GEN_13679; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13680 = 5'h14 == fetchArb_io_chosen ? fetchOffSet_20 : _GEN_13679; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_21 = {{16'd0}, rb_entries_7_request_operands_0_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13681 = 5'h15 == fetchArb_io_chosen ? fetchOffSet_21 : _GEN_13680; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13681 = 5'h15 == fetchArb_io_chosen ? fetchOffSet_21 : _GEN_13680; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_22 = {{16'd0}, rb_entries_7_request_operands_1_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13682 = 5'h16 == fetchArb_io_chosen ? fetchOffSet_22 : _GEN_13681; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13682 = 5'h16 == fetchArb_io_chosen ? fetchOffSet_22 : _GEN_13681; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_23 = {{16'd0}, rb_entries_7_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
-  wire [47:0] _GEN_13683 = 5'h17 == fetchArb_io_chosen ? fetchOffSet_23 : _GEN_13682; // @[POSIT_Locality.scala 185:81]
+  wire [47:0] _GEN_13683 = 5'h17 == fetchArb_io_chosen ? fetchOffSet_23 : _GEN_13682; // @[POSIT_Locality.scala 182:62]
+  wire [10:0] _T_2493 = _GEN_13683[13:3] & _GEN_13714; // @[POSIT_Locality.scala 182:82]
+  wire  _T_2494 = _T_2493 != 11'h0; // @[POSIT_Locality.scala 182:107]
+  wire  _T_2495 = 1'h1 ^ _T_2494; // @[POSIT_Locality.scala 184:49]
   wire  _T_2499 = _GEN_13683[13:11] != 3'h0; // @[OneHot.scala 32:14]
-  wire [7:0] _GEN_13759 = {{5'd0}, _GEN_13683[13:11]}; // @[OneHot.scala 32:28]
-  wire [7:0] _T_2500 = _GEN_13759 | _GEN_13683[10:3]; // @[OneHot.scala 32:28]
+  wire [7:0] _GEN_13739 = {{5'd0}, _GEN_13683[13:11]}; // @[OneHot.scala 32:28]
+  wire [7:0] _T_2500 = _GEN_13739 | _GEN_13683[10:3]; // @[OneHot.scala 32:28]
   wire  _T_2503 = _T_2500[7:4] != 4'h0; // @[OneHot.scala 32:14]
   wire [3:0] _T_2504 = _T_2500[7:4] | _T_2500[3:0]; // @[OneHot.scala 32:28]
   wire  _T_2507 = _T_2504[3:2] != 2'h0; // @[OneHot.scala 32:14]
   wire [1:0] _T_2508 = _T_2504[3:2] | _T_2504[1:0]; // @[OneHot.scala 32:28]
   wire [3:0] _T_2512 = {_T_2499,_T_2503,_T_2507,_T_2508[1]}; // @[Cat.scala 30:58]
-  wire  inFetch_2 = fetchArb_io_hasChosen ? _T_2466[2] : rb_entries_0_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_1 = fetchArb_io_hasChosen ? _T_2466[1] : rb_entries_0_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_0 = fetchArb_io_hasChosen ? _T_2466[0] : rb_entries_0_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_5 = fetchArb_io_hasChosen ? _T_2466[5] : rb_entries_1_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_4 = fetchArb_io_hasChosen ? _T_2466[4] : rb_entries_1_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_3 = fetchArb_io_hasChosen ? _T_2466[3] : rb_entries_1_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire [5:0] _T_2527 = {inFetch_5,inFetch_4,inFetch_3,inFetch_2,inFetch_1,inFetch_0}; // @[POSIT_Locality.scala 192:49]
-  wire  inFetch_8 = fetchArb_io_hasChosen ? _T_2466[8] : rb_entries_2_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_7 = fetchArb_io_hasChosen ? _T_2466[7] : rb_entries_2_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_6 = fetchArb_io_hasChosen ? _T_2466[6] : rb_entries_2_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_11 = fetchArb_io_hasChosen ? _T_2466[11] : rb_entries_3_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_10 = fetchArb_io_hasChosen ? _T_2466[10] : rb_entries_3_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_9 = fetchArb_io_hasChosen ? _T_2466[9] : rb_entries_3_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire [11:0] _T_2533 = {inFetch_11,inFetch_10,inFetch_9,inFetch_8,inFetch_7,inFetch_6,_T_2527}; // @[POSIT_Locality.scala 192:49]
-  wire  inFetch_14 = fetchArb_io_hasChosen ? _T_2466[14] : rb_entries_4_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_13 = fetchArb_io_hasChosen ? _T_2466[13] : rb_entries_4_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_12 = fetchArb_io_hasChosen ? _T_2466[12] : rb_entries_4_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_17 = fetchArb_io_hasChosen ? _T_2466[17] : rb_entries_5_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_16 = fetchArb_io_hasChosen ? _T_2466[16] : rb_entries_5_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_15 = fetchArb_io_hasChosen ? _T_2466[15] : rb_entries_5_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire [5:0] _T_2538 = {inFetch_17,inFetch_16,inFetch_15,inFetch_14,inFetch_13,inFetch_12}; // @[POSIT_Locality.scala 192:49]
-  wire  inFetch_20 = fetchArb_io_hasChosen ? _T_2466[20] : rb_entries_6_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_19 = fetchArb_io_hasChosen ? _T_2466[19] : rb_entries_6_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_18 = fetchArb_io_hasChosen ? _T_2466[18] : rb_entries_6_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_23 = fetchArb_io_hasChosen ? _T_2466[23] : rb_entries_7_request_inFetch_2; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_22 = fetchArb_io_hasChosen ? _T_2466[22] : rb_entries_7_request_inFetch_1; // @[POSIT_Locality.scala 181:36]
-  wire  inFetch_21 = fetchArb_io_hasChosen ? _T_2466[21] : rb_entries_7_request_inFetch_0; // @[POSIT_Locality.scala 181:36]
-  wire [23:0] _T_2545 = {inFetch_23,inFetch_22,inFetch_21,inFetch_20,inFetch_19,inFetch_18,_T_2538,_T_2533}; // @[POSIT_Locality.scala 192:49]
-  wire [3:0] _GEN_13709 = fetchArb_io_hasChosen ? _T_2512 : _T_2512; // @[POSIT_Locality.scala 181:36]
-  wire [13:0] _GEN_13710 = fetchArb_io_hasChosen ? _GEN_13683[13:0] : 14'h0; // @[POSIT_Locality.scala 181:36]
-  wire  _T_2581 = io_mem_read_req_valid | io_mem_read_resp_valid; // @[POSIT_Locality.scala 227:44]
-  wire  _T_2620 = io_request_valid | io_mem_write_valid; // @[POSIT_Locality.scala 251:39]
-  wire  _T_2621 = _T_2620 | io_mem_read_req_valid; // @[POSIT_Locality.scala 251:61]
-  wire  _T_2622 = _T_2621 | pe_io_result_valid; // @[POSIT_Locality.scala 251:86]
-  wire  _GEN_13765 = io_mem_read_resp_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13766 = _GEN_13765 & _T_295; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13767 = io_mem_read_resp_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13768 = _GEN_13767 & _T_381; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13769 = io_mem_read_resp_valid & rb_entries_0_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13770 = _GEN_13769 & _T_467; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13771 = io_mem_read_resp_valid & rb_entries_1_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13772 = _GEN_13771 & _T_553; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13773 = io_mem_read_resp_valid & rb_entries_1_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13774 = _GEN_13773 & _T_639; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13775 = io_mem_read_resp_valid & rb_entries_1_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13776 = _GEN_13775 & _T_725; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13777 = io_mem_read_resp_valid & rb_entries_2_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13778 = _GEN_13777 & _T_811; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13779 = io_mem_read_resp_valid & rb_entries_2_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13780 = _GEN_13779 & _T_897; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13781 = io_mem_read_resp_valid & rb_entries_2_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13782 = _GEN_13781 & _T_983; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13783 = io_mem_read_resp_valid & rb_entries_3_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13784 = _GEN_13783 & _T_1069; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13785 = io_mem_read_resp_valid & rb_entries_3_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13786 = _GEN_13785 & _T_1155; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13787 = io_mem_read_resp_valid & rb_entries_3_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13788 = _GEN_13787 & _T_1241; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13789 = io_mem_read_resp_valid & rb_entries_4_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13790 = _GEN_13789 & _T_1327; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13791 = io_mem_read_resp_valid & rb_entries_4_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13792 = _GEN_13791 & _T_1413; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13793 = io_mem_read_resp_valid & rb_entries_4_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13794 = _GEN_13793 & _T_1499; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13795 = io_mem_read_resp_valid & rb_entries_5_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13796 = _GEN_13795 & _T_1585; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13797 = io_mem_read_resp_valid & rb_entries_5_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13798 = _GEN_13797 & _T_1671; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13799 = io_mem_read_resp_valid & rb_entries_5_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13800 = _GEN_13799 & _T_1757; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13801 = io_mem_read_resp_valid & rb_entries_6_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13802 = _GEN_13801 & _T_1843; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13803 = io_mem_read_resp_valid & rb_entries_6_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13804 = _GEN_13803 & _T_1929; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13805 = io_mem_read_resp_valid & rb_entries_6_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13806 = _GEN_13805 & _T_2015; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13807 = io_mem_read_resp_valid & rb_entries_7_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13808 = _GEN_13807 & _T_2101; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13809 = io_mem_read_resp_valid & rb_entries_7_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13810 = _GEN_13809 & _T_2187; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13811 = io_mem_read_resp_valid & rb_entries_7_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_13812 = _GEN_13811 & _T_2273; // @[POSIT_Locality.scala 143:55]
+  wire [3:0] _GEN_13685 = fetchArb_io_hasChosen ? _T_2512 : _T_2512; // @[POSIT_Locality.scala 181:36]
+  wire [13:0] _GEN_13686 = fetchArb_io_hasChosen ? _GEN_13683[13:0] : 14'h0; // @[POSIT_Locality.scala 181:36]
+  wire [10:0] _T_2541 = _GEN_13714 | io_mem_read_resp_tag[13:3]; // @[POSIT_Locality.scala 226:56]
+  wire [10:0] _T_2543 = _T_2541 ^ io_mem_read_resp_tag[13:3]; // @[POSIT_Locality.scala 226:99]
+  wire [10:0] _T_2545 = _GEN_13714 | io_mem_read_req_tag[13:3]; // @[POSIT_Locality.scala 227:53]
+  wire [10:0] _T_2547 = _T_2543 | io_mem_read_req_tag[13:3]; // @[POSIT_Locality.scala 228:52]
+  wire [10:0] _GEN_13687 = io_mem_read_req_valid ? _T_2547 : _T_2543; // @[POSIT_Locality.scala 230:52]
+  wire [10:0] _GEN_13688 = io_mem_read_req_valid ? _T_2545 : {{7'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 236:52]
+  wire [10:0] _GEN_13689 = io_mem_read_resp_valid ? _GEN_13687 : _GEN_13688; // @[POSIT_Locality.scala 229:45]
+  wire  _T_2548 = io_mem_read_req_valid | io_mem_read_resp_valid; // @[POSIT_Locality.scala 242:44]
+  wire  _T_2587 = io_request_valid | io_mem_write_valid; // @[POSIT_Locality.scala 266:39]
+  wire  _T_2588 = _T_2587 | io_mem_read_req_valid; // @[POSIT_Locality.scala 266:61]
+  wire  _T_2589 = _T_2588 | pe_io_result_valid; // @[POSIT_Locality.scala 266:86]
+  wire  _GEN_13747 = io_mem_read_resp_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13748 = _GEN_13747 & _T_295; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13749 = io_mem_read_resp_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13750 = _GEN_13749 & _T_381; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13751 = io_mem_read_resp_valid & rb_entries_0_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13752 = _GEN_13751 & _T_467; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13753 = io_mem_read_resp_valid & rb_entries_1_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13754 = _GEN_13753 & _T_553; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13755 = io_mem_read_resp_valid & rb_entries_1_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13756 = _GEN_13755 & _T_639; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13757 = io_mem_read_resp_valid & rb_entries_1_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13758 = _GEN_13757 & _T_725; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13759 = io_mem_read_resp_valid & rb_entries_2_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13760 = _GEN_13759 & _T_811; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13761 = io_mem_read_resp_valid & rb_entries_2_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13762 = _GEN_13761 & _T_897; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13763 = io_mem_read_resp_valid & rb_entries_2_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13764 = _GEN_13763 & _T_983; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13765 = io_mem_read_resp_valid & rb_entries_3_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13766 = _GEN_13765 & _T_1069; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13767 = io_mem_read_resp_valid & rb_entries_3_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13768 = _GEN_13767 & _T_1155; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13769 = io_mem_read_resp_valid & rb_entries_3_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13770 = _GEN_13769 & _T_1241; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13771 = io_mem_read_resp_valid & rb_entries_4_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13772 = _GEN_13771 & _T_1327; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13773 = io_mem_read_resp_valid & rb_entries_4_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13774 = _GEN_13773 & _T_1413; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13775 = io_mem_read_resp_valid & rb_entries_4_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13776 = _GEN_13775 & _T_1499; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13777 = io_mem_read_resp_valid & rb_entries_5_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13778 = _GEN_13777 & _T_1585; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13779 = io_mem_read_resp_valid & rb_entries_5_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13780 = _GEN_13779 & _T_1671; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13781 = io_mem_read_resp_valid & rb_entries_5_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13782 = _GEN_13781 & _T_1757; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13783 = io_mem_read_resp_valid & rb_entries_6_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13784 = _GEN_13783 & _T_1843; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13785 = io_mem_read_resp_valid & rb_entries_6_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13786 = _GEN_13785 & _T_1929; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13787 = io_mem_read_resp_valid & rb_entries_6_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13788 = _GEN_13787 & _T_2015; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13789 = io_mem_read_resp_valid & rb_entries_7_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13790 = _GEN_13789 & _T_2101; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13791 = io_mem_read_resp_valid & rb_entries_7_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13792 = _GEN_13791 & _T_2187; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13793 = io_mem_read_resp_valid & rb_entries_7_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_13794 = _GEN_13793 & _T_2273; // @[POSIT_Locality.scala 143:55]
   Posit pe ( // @[POSIT_Locality.scala 12:24]
     .clock(pe_clock),
     .reset(pe_reset),
@@ -4358,9 +4315,9 @@ module POSIT_Locality(
   assign io_mem_write_bits_result_gt = 3'h7 == value ? rb_entries_7_result_gt : _GEN_1474; // @[POSIT_Locality.scala 55:34]
   assign io_mem_write_bits_result_exceptions = 3'h7 == value ? rb_entries_7_result_exceptions : _GEN_1475; // @[POSIT_Locality.scala 55:34]
   assign io_mem_write_bits_wr_addr = 3'h7 == value ? rb_entries_7_wr_addr : _GEN_1456; // @[POSIT_Locality.scala 54:35]
-  assign io_mem_read_req_valid = fetchArb_io_hasChosen; // @[POSIT_Locality.scala 184:39 POSIT_Locality.scala 195:39]
-  assign io_mem_read_req_addr = {{38'd0}, _GEN_13709}; // @[POSIT_Locality.scala 185:38 POSIT_Locality.scala 196:38]
-  assign io_mem_read_req_tag = {{2'd0}, _GEN_13710}; // @[POSIT_Locality.scala 187:37 POSIT_Locality.scala 197:37]
+  assign io_mem_read_req_valid = fetchArb_io_hasChosen & _T_2495; // @[POSIT_Locality.scala 184:39 POSIT_Locality.scala 195:39]
+  assign io_mem_read_req_addr = {{38'd0}, _GEN_13685}; // @[POSIT_Locality.scala 185:38 POSIT_Locality.scala 196:38]
+  assign io_mem_read_req_tag = {{2'd0}, _GEN_13686}; // @[POSIT_Locality.scala 187:37 POSIT_Locality.scala 197:37]
   assign pe_clock = clock;
   assign pe_reset = reset;
   assign pe_io_request_valid = dispatchArb_io_hasChosen & pe_io_request_ready; // @[POSIT_Locality.scala 93:37 POSIT_Locality.scala 95:37]
@@ -4373,7 +4330,7 @@ module POSIT_Locality(
   assign pe_io_in_idx = dispatchArb_io_chosen; // @[POSIT_Locality.scala 97:22]
   assign dispatchArb_io_validity = {_T_110,_T_107}; // @[POSIT_Locality.scala 80:33]
   assign dispatchArb_io_priority = {{2'd0}, wbCountOn}; // @[POSIT_Locality.scala 81:33]
-  assign fetchArb_io_validity = {_T_2442,_T_2431}; // @[POSIT_Locality.scala 173:30]
+  assign fetchArb_io_validity = {_T_2490,_T_2479}; // @[POSIT_Locality.scala 173:30]
   assign fetchArb_io_priority = {{4'd0}, wbCountOn}; // @[POSIT_Locality.scala 174:30]
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
 `define RANDOMIZE
@@ -4460,691 +4417,599 @@ initial begin
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_13 = {1{`RANDOM}};
-  rb_entries_0_request_inFetch_0 = _RAND_13[0:0];
+  rb_entries_0_result_isZero = _RAND_13[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_14 = {1{`RANDOM}};
-  rb_entries_0_request_inFetch_1 = _RAND_14[0:0];
+  rb_entries_0_result_isNaR = _RAND_14[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_15 = {1{`RANDOM}};
-  rb_entries_0_request_inFetch_2 = _RAND_15[0:0];
+  rb_entries_0_result_out = _RAND_15[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_16 = {1{`RANDOM}};
-  rb_entries_0_result_isZero = _RAND_16[0:0];
+  rb_entries_0_result_lt = _RAND_16[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_17 = {1{`RANDOM}};
-  rb_entries_0_result_isNaR = _RAND_17[0:0];
+  rb_entries_0_result_eq = _RAND_17[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_18 = {1{`RANDOM}};
-  rb_entries_0_result_out = _RAND_18[31:0];
+  rb_entries_0_result_gt = _RAND_18[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_19 = {1{`RANDOM}};
-  rb_entries_0_result_lt = _RAND_19[0:0];
+  rb_entries_0_result_exceptions = _RAND_19[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_20 = {1{`RANDOM}};
-  rb_entries_0_result_eq = _RAND_20[0:0];
+  rb_entries_1_completed = _RAND_20[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_21 = {1{`RANDOM}};
-  rb_entries_0_result_gt = _RAND_21[0:0];
+  rb_entries_1_valid = _RAND_21[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_22 = {1{`RANDOM}};
-  rb_entries_0_result_exceptions = _RAND_22[4:0];
+  rb_entries_1_dispatched = _RAND_22[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_23 = {1{`RANDOM}};
-  rb_entries_1_completed = _RAND_23[0:0];
+  rb_entries_1_written = _RAND_23[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_24 = {1{`RANDOM}};
-  rb_entries_1_valid = _RAND_24[0:0];
+  rb_entries_1_wr_addr = _RAND_24[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_25 = {1{`RANDOM}};
-  rb_entries_1_dispatched = _RAND_25[0:0];
+  rb_entries_1_request_operands_0_value = _RAND_25[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_26 = {1{`RANDOM}};
-  rb_entries_1_written = _RAND_26[0:0];
+  rb_entries_1_request_operands_0_mode = _RAND_26[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_27 = {1{`RANDOM}};
-  rb_entries_1_wr_addr = _RAND_27[7:0];
+  rb_entries_1_request_operands_1_value = _RAND_27[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_28 = {1{`RANDOM}};
-  rb_entries_1_request_operands_0_value = _RAND_28[31:0];
+  rb_entries_1_request_operands_1_mode = _RAND_28[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_29 = {1{`RANDOM}};
-  rb_entries_1_request_operands_0_mode = _RAND_29[1:0];
+  rb_entries_1_request_operands_2_value = _RAND_29[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_30 = {1{`RANDOM}};
-  rb_entries_1_request_operands_1_value = _RAND_30[31:0];
+  rb_entries_1_request_operands_2_mode = _RAND_30[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_31 = {1{`RANDOM}};
-  rb_entries_1_request_operands_1_mode = _RAND_31[1:0];
+  rb_entries_1_request_inst = _RAND_31[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_32 = {1{`RANDOM}};
-  rb_entries_1_request_operands_2_value = _RAND_32[31:0];
+  rb_entries_1_request_mode = _RAND_32[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_33 = {1{`RANDOM}};
-  rb_entries_1_request_operands_2_mode = _RAND_33[1:0];
+  rb_entries_1_result_isZero = _RAND_33[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_34 = {1{`RANDOM}};
-  rb_entries_1_request_inst = _RAND_34[2:0];
+  rb_entries_1_result_isNaR = _RAND_34[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_35 = {1{`RANDOM}};
-  rb_entries_1_request_mode = _RAND_35[1:0];
+  rb_entries_1_result_out = _RAND_35[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_36 = {1{`RANDOM}};
-  rb_entries_1_request_inFetch_0 = _RAND_36[0:0];
+  rb_entries_1_result_lt = _RAND_36[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_37 = {1{`RANDOM}};
-  rb_entries_1_request_inFetch_1 = _RAND_37[0:0];
+  rb_entries_1_result_eq = _RAND_37[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_38 = {1{`RANDOM}};
-  rb_entries_1_request_inFetch_2 = _RAND_38[0:0];
+  rb_entries_1_result_gt = _RAND_38[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_39 = {1{`RANDOM}};
-  rb_entries_1_result_isZero = _RAND_39[0:0];
+  rb_entries_1_result_exceptions = _RAND_39[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_40 = {1{`RANDOM}};
-  rb_entries_1_result_isNaR = _RAND_40[0:0];
+  rb_entries_2_completed = _RAND_40[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_41 = {1{`RANDOM}};
-  rb_entries_1_result_out = _RAND_41[31:0];
+  rb_entries_2_valid = _RAND_41[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_42 = {1{`RANDOM}};
-  rb_entries_1_result_lt = _RAND_42[0:0];
+  rb_entries_2_dispatched = _RAND_42[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_43 = {1{`RANDOM}};
-  rb_entries_1_result_eq = _RAND_43[0:0];
+  rb_entries_2_written = _RAND_43[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_44 = {1{`RANDOM}};
-  rb_entries_1_result_gt = _RAND_44[0:0];
+  rb_entries_2_wr_addr = _RAND_44[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_45 = {1{`RANDOM}};
-  rb_entries_1_result_exceptions = _RAND_45[4:0];
+  rb_entries_2_request_operands_0_value = _RAND_45[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_46 = {1{`RANDOM}};
-  rb_entries_2_completed = _RAND_46[0:0];
+  rb_entries_2_request_operands_0_mode = _RAND_46[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_47 = {1{`RANDOM}};
-  rb_entries_2_valid = _RAND_47[0:0];
+  rb_entries_2_request_operands_1_value = _RAND_47[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_48 = {1{`RANDOM}};
-  rb_entries_2_dispatched = _RAND_48[0:0];
+  rb_entries_2_request_operands_1_mode = _RAND_48[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_49 = {1{`RANDOM}};
-  rb_entries_2_written = _RAND_49[0:0];
+  rb_entries_2_request_operands_2_value = _RAND_49[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_50 = {1{`RANDOM}};
-  rb_entries_2_wr_addr = _RAND_50[7:0];
+  rb_entries_2_request_operands_2_mode = _RAND_50[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_51 = {1{`RANDOM}};
-  rb_entries_2_request_operands_0_value = _RAND_51[31:0];
+  rb_entries_2_request_inst = _RAND_51[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_52 = {1{`RANDOM}};
-  rb_entries_2_request_operands_0_mode = _RAND_52[1:0];
+  rb_entries_2_request_mode = _RAND_52[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_53 = {1{`RANDOM}};
-  rb_entries_2_request_operands_1_value = _RAND_53[31:0];
+  rb_entries_2_result_isZero = _RAND_53[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_54 = {1{`RANDOM}};
-  rb_entries_2_request_operands_1_mode = _RAND_54[1:0];
+  rb_entries_2_result_isNaR = _RAND_54[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_55 = {1{`RANDOM}};
-  rb_entries_2_request_operands_2_value = _RAND_55[31:0];
+  rb_entries_2_result_out = _RAND_55[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_56 = {1{`RANDOM}};
-  rb_entries_2_request_operands_2_mode = _RAND_56[1:0];
+  rb_entries_2_result_lt = _RAND_56[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_57 = {1{`RANDOM}};
-  rb_entries_2_request_inst = _RAND_57[2:0];
+  rb_entries_2_result_eq = _RAND_57[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_58 = {1{`RANDOM}};
-  rb_entries_2_request_mode = _RAND_58[1:0];
+  rb_entries_2_result_gt = _RAND_58[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_59 = {1{`RANDOM}};
-  rb_entries_2_request_inFetch_0 = _RAND_59[0:0];
+  rb_entries_2_result_exceptions = _RAND_59[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_60 = {1{`RANDOM}};
-  rb_entries_2_request_inFetch_1 = _RAND_60[0:0];
+  rb_entries_3_completed = _RAND_60[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_61 = {1{`RANDOM}};
-  rb_entries_2_request_inFetch_2 = _RAND_61[0:0];
+  rb_entries_3_valid = _RAND_61[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_62 = {1{`RANDOM}};
-  rb_entries_2_result_isZero = _RAND_62[0:0];
+  rb_entries_3_dispatched = _RAND_62[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_63 = {1{`RANDOM}};
-  rb_entries_2_result_isNaR = _RAND_63[0:0];
+  rb_entries_3_written = _RAND_63[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_64 = {1{`RANDOM}};
-  rb_entries_2_result_out = _RAND_64[31:0];
+  rb_entries_3_wr_addr = _RAND_64[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_65 = {1{`RANDOM}};
-  rb_entries_2_result_lt = _RAND_65[0:0];
+  rb_entries_3_request_operands_0_value = _RAND_65[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_66 = {1{`RANDOM}};
-  rb_entries_2_result_eq = _RAND_66[0:0];
+  rb_entries_3_request_operands_0_mode = _RAND_66[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_67 = {1{`RANDOM}};
-  rb_entries_2_result_gt = _RAND_67[0:0];
+  rb_entries_3_request_operands_1_value = _RAND_67[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_68 = {1{`RANDOM}};
-  rb_entries_2_result_exceptions = _RAND_68[4:0];
+  rb_entries_3_request_operands_1_mode = _RAND_68[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_69 = {1{`RANDOM}};
-  rb_entries_3_completed = _RAND_69[0:0];
+  rb_entries_3_request_operands_2_value = _RAND_69[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_70 = {1{`RANDOM}};
-  rb_entries_3_valid = _RAND_70[0:0];
+  rb_entries_3_request_operands_2_mode = _RAND_70[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_71 = {1{`RANDOM}};
-  rb_entries_3_dispatched = _RAND_71[0:0];
+  rb_entries_3_request_inst = _RAND_71[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_72 = {1{`RANDOM}};
-  rb_entries_3_written = _RAND_72[0:0];
+  rb_entries_3_request_mode = _RAND_72[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_73 = {1{`RANDOM}};
-  rb_entries_3_wr_addr = _RAND_73[7:0];
+  rb_entries_3_result_isZero = _RAND_73[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_74 = {1{`RANDOM}};
-  rb_entries_3_request_operands_0_value = _RAND_74[31:0];
+  rb_entries_3_result_isNaR = _RAND_74[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_75 = {1{`RANDOM}};
-  rb_entries_3_request_operands_0_mode = _RAND_75[1:0];
+  rb_entries_3_result_out = _RAND_75[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_76 = {1{`RANDOM}};
-  rb_entries_3_request_operands_1_value = _RAND_76[31:0];
+  rb_entries_3_result_lt = _RAND_76[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_77 = {1{`RANDOM}};
-  rb_entries_3_request_operands_1_mode = _RAND_77[1:0];
+  rb_entries_3_result_eq = _RAND_77[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_78 = {1{`RANDOM}};
-  rb_entries_3_request_operands_2_value = _RAND_78[31:0];
+  rb_entries_3_result_gt = _RAND_78[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_79 = {1{`RANDOM}};
-  rb_entries_3_request_operands_2_mode = _RAND_79[1:0];
+  rb_entries_3_result_exceptions = _RAND_79[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_80 = {1{`RANDOM}};
-  rb_entries_3_request_inst = _RAND_80[2:0];
+  rb_entries_4_completed = _RAND_80[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_81 = {1{`RANDOM}};
-  rb_entries_3_request_mode = _RAND_81[1:0];
+  rb_entries_4_valid = _RAND_81[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_82 = {1{`RANDOM}};
-  rb_entries_3_request_inFetch_0 = _RAND_82[0:0];
+  rb_entries_4_dispatched = _RAND_82[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_83 = {1{`RANDOM}};
-  rb_entries_3_request_inFetch_1 = _RAND_83[0:0];
+  rb_entries_4_written = _RAND_83[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_84 = {1{`RANDOM}};
-  rb_entries_3_request_inFetch_2 = _RAND_84[0:0];
+  rb_entries_4_wr_addr = _RAND_84[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_85 = {1{`RANDOM}};
-  rb_entries_3_result_isZero = _RAND_85[0:0];
+  rb_entries_4_request_operands_0_value = _RAND_85[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_86 = {1{`RANDOM}};
-  rb_entries_3_result_isNaR = _RAND_86[0:0];
+  rb_entries_4_request_operands_0_mode = _RAND_86[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_87 = {1{`RANDOM}};
-  rb_entries_3_result_out = _RAND_87[31:0];
+  rb_entries_4_request_operands_1_value = _RAND_87[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_88 = {1{`RANDOM}};
-  rb_entries_3_result_lt = _RAND_88[0:0];
+  rb_entries_4_request_operands_1_mode = _RAND_88[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_89 = {1{`RANDOM}};
-  rb_entries_3_result_eq = _RAND_89[0:0];
+  rb_entries_4_request_operands_2_value = _RAND_89[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_90 = {1{`RANDOM}};
-  rb_entries_3_result_gt = _RAND_90[0:0];
+  rb_entries_4_request_operands_2_mode = _RAND_90[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_91 = {1{`RANDOM}};
-  rb_entries_3_result_exceptions = _RAND_91[4:0];
+  rb_entries_4_request_inst = _RAND_91[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_92 = {1{`RANDOM}};
-  rb_entries_4_completed = _RAND_92[0:0];
+  rb_entries_4_request_mode = _RAND_92[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_93 = {1{`RANDOM}};
-  rb_entries_4_valid = _RAND_93[0:0];
+  rb_entries_4_result_isZero = _RAND_93[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_94 = {1{`RANDOM}};
-  rb_entries_4_dispatched = _RAND_94[0:0];
+  rb_entries_4_result_isNaR = _RAND_94[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_95 = {1{`RANDOM}};
-  rb_entries_4_written = _RAND_95[0:0];
+  rb_entries_4_result_out = _RAND_95[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_96 = {1{`RANDOM}};
-  rb_entries_4_wr_addr = _RAND_96[7:0];
+  rb_entries_4_result_lt = _RAND_96[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_97 = {1{`RANDOM}};
-  rb_entries_4_request_operands_0_value = _RAND_97[31:0];
+  rb_entries_4_result_eq = _RAND_97[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_98 = {1{`RANDOM}};
-  rb_entries_4_request_operands_0_mode = _RAND_98[1:0];
+  rb_entries_4_result_gt = _RAND_98[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_99 = {1{`RANDOM}};
-  rb_entries_4_request_operands_1_value = _RAND_99[31:0];
+  rb_entries_4_result_exceptions = _RAND_99[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_100 = {1{`RANDOM}};
-  rb_entries_4_request_operands_1_mode = _RAND_100[1:0];
+  rb_entries_5_completed = _RAND_100[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_101 = {1{`RANDOM}};
-  rb_entries_4_request_operands_2_value = _RAND_101[31:0];
+  rb_entries_5_valid = _RAND_101[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_102 = {1{`RANDOM}};
-  rb_entries_4_request_operands_2_mode = _RAND_102[1:0];
+  rb_entries_5_dispatched = _RAND_102[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_103 = {1{`RANDOM}};
-  rb_entries_4_request_inst = _RAND_103[2:0];
+  rb_entries_5_written = _RAND_103[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_104 = {1{`RANDOM}};
-  rb_entries_4_request_mode = _RAND_104[1:0];
+  rb_entries_5_wr_addr = _RAND_104[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_105 = {1{`RANDOM}};
-  rb_entries_4_request_inFetch_0 = _RAND_105[0:0];
+  rb_entries_5_request_operands_0_value = _RAND_105[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_106 = {1{`RANDOM}};
-  rb_entries_4_request_inFetch_1 = _RAND_106[0:0];
+  rb_entries_5_request_operands_0_mode = _RAND_106[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_107 = {1{`RANDOM}};
-  rb_entries_4_request_inFetch_2 = _RAND_107[0:0];
+  rb_entries_5_request_operands_1_value = _RAND_107[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_108 = {1{`RANDOM}};
-  rb_entries_4_result_isZero = _RAND_108[0:0];
+  rb_entries_5_request_operands_1_mode = _RAND_108[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_109 = {1{`RANDOM}};
-  rb_entries_4_result_isNaR = _RAND_109[0:0];
+  rb_entries_5_request_operands_2_value = _RAND_109[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_110 = {1{`RANDOM}};
-  rb_entries_4_result_out = _RAND_110[31:0];
+  rb_entries_5_request_operands_2_mode = _RAND_110[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_111 = {1{`RANDOM}};
-  rb_entries_4_result_lt = _RAND_111[0:0];
+  rb_entries_5_request_inst = _RAND_111[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_112 = {1{`RANDOM}};
-  rb_entries_4_result_eq = _RAND_112[0:0];
+  rb_entries_5_request_mode = _RAND_112[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_113 = {1{`RANDOM}};
-  rb_entries_4_result_gt = _RAND_113[0:0];
+  rb_entries_5_result_isZero = _RAND_113[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_114 = {1{`RANDOM}};
-  rb_entries_4_result_exceptions = _RAND_114[4:0];
+  rb_entries_5_result_isNaR = _RAND_114[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_115 = {1{`RANDOM}};
-  rb_entries_5_completed = _RAND_115[0:0];
+  rb_entries_5_result_out = _RAND_115[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_116 = {1{`RANDOM}};
-  rb_entries_5_valid = _RAND_116[0:0];
+  rb_entries_5_result_lt = _RAND_116[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_117 = {1{`RANDOM}};
-  rb_entries_5_dispatched = _RAND_117[0:0];
+  rb_entries_5_result_eq = _RAND_117[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_118 = {1{`RANDOM}};
-  rb_entries_5_written = _RAND_118[0:0];
+  rb_entries_5_result_gt = _RAND_118[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_119 = {1{`RANDOM}};
-  rb_entries_5_wr_addr = _RAND_119[7:0];
+  rb_entries_5_result_exceptions = _RAND_119[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_120 = {1{`RANDOM}};
-  rb_entries_5_request_operands_0_value = _RAND_120[31:0];
+  rb_entries_6_completed = _RAND_120[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_121 = {1{`RANDOM}};
-  rb_entries_5_request_operands_0_mode = _RAND_121[1:0];
+  rb_entries_6_valid = _RAND_121[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_122 = {1{`RANDOM}};
-  rb_entries_5_request_operands_1_value = _RAND_122[31:0];
+  rb_entries_6_dispatched = _RAND_122[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_123 = {1{`RANDOM}};
-  rb_entries_5_request_operands_1_mode = _RAND_123[1:0];
+  rb_entries_6_written = _RAND_123[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_124 = {1{`RANDOM}};
-  rb_entries_5_request_operands_2_value = _RAND_124[31:0];
+  rb_entries_6_wr_addr = _RAND_124[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_125 = {1{`RANDOM}};
-  rb_entries_5_request_operands_2_mode = _RAND_125[1:0];
+  rb_entries_6_request_operands_0_value = _RAND_125[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_126 = {1{`RANDOM}};
-  rb_entries_5_request_inst = _RAND_126[2:0];
+  rb_entries_6_request_operands_0_mode = _RAND_126[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_127 = {1{`RANDOM}};
-  rb_entries_5_request_mode = _RAND_127[1:0];
+  rb_entries_6_request_operands_1_value = _RAND_127[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_128 = {1{`RANDOM}};
-  rb_entries_5_request_inFetch_0 = _RAND_128[0:0];
+  rb_entries_6_request_operands_1_mode = _RAND_128[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_129 = {1{`RANDOM}};
-  rb_entries_5_request_inFetch_1 = _RAND_129[0:0];
+  rb_entries_6_request_operands_2_value = _RAND_129[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_130 = {1{`RANDOM}};
-  rb_entries_5_request_inFetch_2 = _RAND_130[0:0];
+  rb_entries_6_request_operands_2_mode = _RAND_130[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_131 = {1{`RANDOM}};
-  rb_entries_5_result_isZero = _RAND_131[0:0];
+  rb_entries_6_request_inst = _RAND_131[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_132 = {1{`RANDOM}};
-  rb_entries_5_result_isNaR = _RAND_132[0:0];
+  rb_entries_6_request_mode = _RAND_132[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_133 = {1{`RANDOM}};
-  rb_entries_5_result_out = _RAND_133[31:0];
+  rb_entries_6_result_isZero = _RAND_133[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_134 = {1{`RANDOM}};
-  rb_entries_5_result_lt = _RAND_134[0:0];
+  rb_entries_6_result_isNaR = _RAND_134[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_135 = {1{`RANDOM}};
-  rb_entries_5_result_eq = _RAND_135[0:0];
+  rb_entries_6_result_out = _RAND_135[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_136 = {1{`RANDOM}};
-  rb_entries_5_result_gt = _RAND_136[0:0];
+  rb_entries_6_result_lt = _RAND_136[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_137 = {1{`RANDOM}};
-  rb_entries_5_result_exceptions = _RAND_137[4:0];
+  rb_entries_6_result_eq = _RAND_137[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_138 = {1{`RANDOM}};
-  rb_entries_6_completed = _RAND_138[0:0];
+  rb_entries_6_result_gt = _RAND_138[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_139 = {1{`RANDOM}};
-  rb_entries_6_valid = _RAND_139[0:0];
+  rb_entries_6_result_exceptions = _RAND_139[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_140 = {1{`RANDOM}};
-  rb_entries_6_dispatched = _RAND_140[0:0];
+  rb_entries_7_completed = _RAND_140[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_141 = {1{`RANDOM}};
-  rb_entries_6_written = _RAND_141[0:0];
+  rb_entries_7_valid = _RAND_141[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_142 = {1{`RANDOM}};
-  rb_entries_6_wr_addr = _RAND_142[7:0];
+  rb_entries_7_dispatched = _RAND_142[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_143 = {1{`RANDOM}};
-  rb_entries_6_request_operands_0_value = _RAND_143[31:0];
+  rb_entries_7_written = _RAND_143[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_144 = {1{`RANDOM}};
-  rb_entries_6_request_operands_0_mode = _RAND_144[1:0];
+  rb_entries_7_wr_addr = _RAND_144[7:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_145 = {1{`RANDOM}};
-  rb_entries_6_request_operands_1_value = _RAND_145[31:0];
+  rb_entries_7_request_operands_0_value = _RAND_145[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_146 = {1{`RANDOM}};
-  rb_entries_6_request_operands_1_mode = _RAND_146[1:0];
+  rb_entries_7_request_operands_0_mode = _RAND_146[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_147 = {1{`RANDOM}};
-  rb_entries_6_request_operands_2_value = _RAND_147[31:0];
+  rb_entries_7_request_operands_1_value = _RAND_147[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_148 = {1{`RANDOM}};
-  rb_entries_6_request_operands_2_mode = _RAND_148[1:0];
+  rb_entries_7_request_operands_1_mode = _RAND_148[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_149 = {1{`RANDOM}};
-  rb_entries_6_request_inst = _RAND_149[2:0];
+  rb_entries_7_request_operands_2_value = _RAND_149[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_150 = {1{`RANDOM}};
-  rb_entries_6_request_mode = _RAND_150[1:0];
+  rb_entries_7_request_operands_2_mode = _RAND_150[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_151 = {1{`RANDOM}};
-  rb_entries_6_request_inFetch_0 = _RAND_151[0:0];
+  rb_entries_7_request_inst = _RAND_151[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_152 = {1{`RANDOM}};
-  rb_entries_6_request_inFetch_1 = _RAND_152[0:0];
+  rb_entries_7_request_mode = _RAND_152[1:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_153 = {1{`RANDOM}};
-  rb_entries_6_request_inFetch_2 = _RAND_153[0:0];
+  rb_entries_7_result_isZero = _RAND_153[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_154 = {1{`RANDOM}};
-  rb_entries_6_result_isZero = _RAND_154[0:0];
+  rb_entries_7_result_isNaR = _RAND_154[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_155 = {1{`RANDOM}};
-  rb_entries_6_result_isNaR = _RAND_155[0:0];
+  rb_entries_7_result_out = _RAND_155[31:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_156 = {1{`RANDOM}};
-  rb_entries_6_result_out = _RAND_156[31:0];
+  rb_entries_7_result_lt = _RAND_156[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_157 = {1{`RANDOM}};
-  rb_entries_6_result_lt = _RAND_157[0:0];
+  rb_entries_7_result_eq = _RAND_157[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_158 = {1{`RANDOM}};
-  rb_entries_6_result_eq = _RAND_158[0:0];
+  rb_entries_7_result_gt = _RAND_158[0:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_159 = {1{`RANDOM}};
-  rb_entries_6_result_gt = _RAND_159[0:0];
+  rb_entries_7_result_exceptions = _RAND_159[4:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_160 = {1{`RANDOM}};
-  rb_entries_6_result_exceptions = _RAND_160[4:0];
+  value = _RAND_160[2:0];
   `endif // RANDOMIZE_REG_INIT
   `ifdef RANDOMIZE_REG_INIT
   _RAND_161 = {1{`RANDOM}};
-  rb_entries_7_completed = _RAND_161[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_162 = {1{`RANDOM}};
-  rb_entries_7_valid = _RAND_162[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_163 = {1{`RANDOM}};
-  rb_entries_7_dispatched = _RAND_163[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_164 = {1{`RANDOM}};
-  rb_entries_7_written = _RAND_164[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_165 = {1{`RANDOM}};
-  rb_entries_7_wr_addr = _RAND_165[7:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_166 = {1{`RANDOM}};
-  rb_entries_7_request_operands_0_value = _RAND_166[31:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_167 = {1{`RANDOM}};
-  rb_entries_7_request_operands_0_mode = _RAND_167[1:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_168 = {1{`RANDOM}};
-  rb_entries_7_request_operands_1_value = _RAND_168[31:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_169 = {1{`RANDOM}};
-  rb_entries_7_request_operands_1_mode = _RAND_169[1:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_170 = {1{`RANDOM}};
-  rb_entries_7_request_operands_2_value = _RAND_170[31:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_171 = {1{`RANDOM}};
-  rb_entries_7_request_operands_2_mode = _RAND_171[1:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_172 = {1{`RANDOM}};
-  rb_entries_7_request_inst = _RAND_172[2:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_173 = {1{`RANDOM}};
-  rb_entries_7_request_mode = _RAND_173[1:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_174 = {1{`RANDOM}};
-  rb_entries_7_request_inFetch_0 = _RAND_174[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_175 = {1{`RANDOM}};
-  rb_entries_7_request_inFetch_1 = _RAND_175[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_176 = {1{`RANDOM}};
-  rb_entries_7_request_inFetch_2 = _RAND_176[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_177 = {1{`RANDOM}};
-  rb_entries_7_result_isZero = _RAND_177[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_178 = {1{`RANDOM}};
-  rb_entries_7_result_isNaR = _RAND_178[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_179 = {1{`RANDOM}};
-  rb_entries_7_result_out = _RAND_179[31:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_180 = {1{`RANDOM}};
-  rb_entries_7_result_lt = _RAND_180[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_181 = {1{`RANDOM}};
-  rb_entries_7_result_eq = _RAND_181[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_182 = {1{`RANDOM}};
-  rb_entries_7_result_gt = _RAND_182[0:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_183 = {1{`RANDOM}};
-  rb_entries_7_result_exceptions = _RAND_183[4:0];
-  `endif // RANDOMIZE_REG_INIT
-  `ifdef RANDOMIZE_REG_INIT
-  _RAND_184 = {1{`RANDOM}};
-  value = _RAND_184[2:0];
+  reg_infetch_cacheline = _RAND_161[3:0];
   `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
@@ -5644,27 +5509,6 @@ end // initial
       if (3'h0 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_0_request_mode <= io_request_bits_mode;
       end
-    end
-    if (reset) begin
-      rb_entries_0_request_inFetch_0 <= 1'h0;
-    end else if (_T_113) begin
-      rb_entries_0_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_0_request_inFetch_0 <= _T_2466[0];
-    end
-    if (reset) begin
-      rb_entries_0_request_inFetch_1 <= 1'h0;
-    end else if (_T_113) begin
-      rb_entries_0_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_0_request_inFetch_1 <= _T_2466[1];
-    end
-    if (reset) begin
-      rb_entries_0_request_inFetch_2 <= 1'h0;
-    end else if (_T_113) begin
-      rb_entries_0_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_0_request_inFetch_2 <= _T_2466[2];
     end
     if (reset) begin
       rb_entries_0_result_isZero <= 1'h0;
@@ -6267,27 +6111,6 @@ end // initial
       end
     end
     if (reset) begin
-      rb_entries_1_request_inFetch_0 <= 1'h0;
-    end else if (_T_119) begin
-      rb_entries_1_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_1_request_inFetch_0 <= _T_2466[3];
-    end
-    if (reset) begin
-      rb_entries_1_request_inFetch_1 <= 1'h0;
-    end else if (_T_119) begin
-      rb_entries_1_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_1_request_inFetch_1 <= _T_2466[4];
-    end
-    if (reset) begin
-      rb_entries_1_request_inFetch_2 <= 1'h0;
-    end else if (_T_119) begin
-      rb_entries_1_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_1_request_inFetch_2 <= _T_2466[5];
-    end
-    if (reset) begin
       rb_entries_1_result_isZero <= 1'h0;
     end else if (_T_164) begin
       if (3'h1 == result_idx) begin
@@ -6886,27 +6709,6 @@ end // initial
       if (3'h2 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_2_request_mode <= io_request_bits_mode;
       end
-    end
-    if (reset) begin
-      rb_entries_2_request_inFetch_0 <= 1'h0;
-    end else if (_T_125) begin
-      rb_entries_2_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_2_request_inFetch_0 <= _T_2466[6];
-    end
-    if (reset) begin
-      rb_entries_2_request_inFetch_1 <= 1'h0;
-    end else if (_T_125) begin
-      rb_entries_2_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_2_request_inFetch_1 <= _T_2466[7];
-    end
-    if (reset) begin
-      rb_entries_2_request_inFetch_2 <= 1'h0;
-    end else if (_T_125) begin
-      rb_entries_2_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_2_request_inFetch_2 <= _T_2466[8];
     end
     if (reset) begin
       rb_entries_2_result_isZero <= 1'h0;
@@ -7509,27 +7311,6 @@ end // initial
       end
     end
     if (reset) begin
-      rb_entries_3_request_inFetch_0 <= 1'h0;
-    end else if (_T_131) begin
-      rb_entries_3_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_3_request_inFetch_0 <= _T_2466[9];
-    end
-    if (reset) begin
-      rb_entries_3_request_inFetch_1 <= 1'h0;
-    end else if (_T_131) begin
-      rb_entries_3_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_3_request_inFetch_1 <= _T_2466[10];
-    end
-    if (reset) begin
-      rb_entries_3_request_inFetch_2 <= 1'h0;
-    end else if (_T_131) begin
-      rb_entries_3_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_3_request_inFetch_2 <= _T_2466[11];
-    end
-    if (reset) begin
       rb_entries_3_result_isZero <= 1'h0;
     end else if (_T_164) begin
       if (3'h3 == result_idx) begin
@@ -8128,27 +7909,6 @@ end // initial
       if (3'h4 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_4_request_mode <= io_request_bits_mode;
       end
-    end
-    if (reset) begin
-      rb_entries_4_request_inFetch_0 <= 1'h0;
-    end else if (_T_137) begin
-      rb_entries_4_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_4_request_inFetch_0 <= _T_2466[12];
-    end
-    if (reset) begin
-      rb_entries_4_request_inFetch_1 <= 1'h0;
-    end else if (_T_137) begin
-      rb_entries_4_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_4_request_inFetch_1 <= _T_2466[13];
-    end
-    if (reset) begin
-      rb_entries_4_request_inFetch_2 <= 1'h0;
-    end else if (_T_137) begin
-      rb_entries_4_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_4_request_inFetch_2 <= _T_2466[14];
     end
     if (reset) begin
       rb_entries_4_result_isZero <= 1'h0;
@@ -8751,27 +8511,6 @@ end // initial
       end
     end
     if (reset) begin
-      rb_entries_5_request_inFetch_0 <= 1'h0;
-    end else if (_T_143) begin
-      rb_entries_5_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_5_request_inFetch_0 <= _T_2466[15];
-    end
-    if (reset) begin
-      rb_entries_5_request_inFetch_1 <= 1'h0;
-    end else if (_T_143) begin
-      rb_entries_5_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_5_request_inFetch_1 <= _T_2466[16];
-    end
-    if (reset) begin
-      rb_entries_5_request_inFetch_2 <= 1'h0;
-    end else if (_T_143) begin
-      rb_entries_5_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_5_request_inFetch_2 <= _T_2466[17];
-    end
-    if (reset) begin
       rb_entries_5_result_isZero <= 1'h0;
     end else if (_T_164) begin
       if (3'h5 == result_idx) begin
@@ -9370,27 +9109,6 @@ end // initial
       if (3'h6 == io_request_bits_wr_addr[2:0]) begin
         rb_entries_6_request_mode <= io_request_bits_mode;
       end
-    end
-    if (reset) begin
-      rb_entries_6_request_inFetch_0 <= 1'h0;
-    end else if (_T_149) begin
-      rb_entries_6_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_6_request_inFetch_0 <= _T_2466[18];
-    end
-    if (reset) begin
-      rb_entries_6_request_inFetch_1 <= 1'h0;
-    end else if (_T_149) begin
-      rb_entries_6_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_6_request_inFetch_1 <= _T_2466[19];
-    end
-    if (reset) begin
-      rb_entries_6_request_inFetch_2 <= 1'h0;
-    end else if (_T_149) begin
-      rb_entries_6_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_6_request_inFetch_2 <= _T_2466[20];
     end
     if (reset) begin
       rb_entries_6_result_isZero <= 1'h0;
@@ -9993,27 +9711,6 @@ end // initial
       end
     end
     if (reset) begin
-      rb_entries_7_request_inFetch_0 <= 1'h0;
-    end else if (_T_155) begin
-      rb_entries_7_request_inFetch_0 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_7_request_inFetch_0 <= _T_2466[21];
-    end
-    if (reset) begin
-      rb_entries_7_request_inFetch_1 <= 1'h0;
-    end else if (_T_155) begin
-      rb_entries_7_request_inFetch_1 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_7_request_inFetch_1 <= _T_2466[22];
-    end
-    if (reset) begin
-      rb_entries_7_request_inFetch_2 <= 1'h0;
-    end else if (_T_155) begin
-      rb_entries_7_request_inFetch_2 <= 1'h0;
-    end else if (fetchArb_io_hasChosen) begin
-      rb_entries_7_request_inFetch_2 <= _T_2466[23];
-    end
-    if (reset) begin
       rb_entries_7_result_isZero <= 1'h0;
     end else if (_T_164) begin
       if (3'h7 == result_idx) begin
@@ -10123,6 +9820,11 @@ end // initial
     end else if (wbCountOn) begin
       value <= _T_35;
     end
+    if (reset) begin
+      reg_infetch_cacheline <= 4'h0;
+    end else begin
+      reg_infetch_cacheline <= _GEN_13689[3:0];
+    end
     `ifndef SYNTHESIS
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
@@ -10171,7 +9873,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13766 & _T_11) begin
+        if (_GEN_13748 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h0,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10182,7 +9884,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13768 & _T_11) begin
+        if (_GEN_13750 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h0,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10193,7 +9895,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13770 & _T_11) begin
+        if (_GEN_13752 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h0,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10204,7 +9906,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13772 & _T_11) begin
+        if (_GEN_13754 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h1,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10215,7 +9917,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13774 & _T_11) begin
+        if (_GEN_13756 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h1,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10226,7 +9928,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13776 & _T_11) begin
+        if (_GEN_13758 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h1,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10237,7 +9939,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13778 & _T_11) begin
+        if (_GEN_13760 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h2,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10248,7 +9950,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13780 & _T_11) begin
+        if (_GEN_13762 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h2,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10259,7 +9961,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13782 & _T_11) begin
+        if (_GEN_13764 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h2,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10270,7 +9972,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13784 & _T_11) begin
+        if (_GEN_13766 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h3,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10281,7 +9983,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13786 & _T_11) begin
+        if (_GEN_13768 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h3,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10292,7 +9994,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13788 & _T_11) begin
+        if (_GEN_13770 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h3,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10303,7 +10005,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13790 & _T_11) begin
+        if (_GEN_13772 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h4,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10314,7 +10016,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13792 & _T_11) begin
+        if (_GEN_13774 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h4,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10325,7 +10027,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13794 & _T_11) begin
+        if (_GEN_13776 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h4,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10336,7 +10038,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13796 & _T_11) begin
+        if (_GEN_13778 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h5,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10347,7 +10049,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13798 & _T_11) begin
+        if (_GEN_13780 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h5,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10358,7 +10060,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13800 & _T_11) begin
+        if (_GEN_13782 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h5,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10369,7 +10071,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13802 & _T_11) begin
+        if (_GEN_13784 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h6,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10380,7 +10082,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13804 & _T_11) begin
+        if (_GEN_13786 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h6,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10391,7 +10093,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13806 & _T_11) begin
+        if (_GEN_13788 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h6,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10402,7 +10104,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13808 & _T_11) begin
+        if (_GEN_13790 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h7,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10413,7 +10115,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13810 & _T_11) begin
+        if (_GEN_13792 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h7,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10424,7 +10126,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_13812 & _T_11) begin
+        if (_GEN_13794 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h7,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -10469,7 +10171,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (fetchArb_io_hasChosen & _T_11) begin
-          $fwrite(32'h80000002,"filter: %b\n",1'h0); // @[POSIT_Locality.scala 191:23]
+          $fwrite(32'h80000002,"filter: %b\n",_T_2494); // @[POSIT_Locality.scala 191:23]
         end
     `ifdef PRINTF_COND
       end
@@ -10479,8 +10181,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (fetchArb_io_hasChosen & _T_11) begin
-          $fwrite(32'h80000002,"infetch: %b\n",_T_2545); // @[POSIT_Locality.scala 192:23]
+        if (_T_2548 & _T_11) begin
+          $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 243:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10490,8 +10192,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 228:31]
+        if (_T_2548 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 244:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10501,8 +10203,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 229:31]
+        if (_T_2548 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 245:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10512,8 +10214,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 230:31]
+        if (_T_2548 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 246:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10523,8 +10225,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 231:31]
+        if (_T_2548 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 247:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10534,19 +10236,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 232:31]
-        end
-    `ifdef PRINTF_COND
-      end
-    `endif
-    `endif // SYNTHESIS
-    `ifndef SYNTHESIS
-    `ifdef PRINTF_COND
-      if (`PRINTF_COND) begin
-    `endif
-        if (_T_2581 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 233:31]
+        if (_T_2548 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 248:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10557,7 +10248,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t-mem_write:\n"); // @[POSIT_Locality.scala 236:31]
+          $fwrite(32'h80000002,"\t-mem_write:\n"); // @[POSIT_Locality.scala 251:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10568,7 +10259,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_mem_write_valid); // @[POSIT_Locality.scala 237:31]
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_mem_write_valid); // @[POSIT_Locality.scala 252:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10579,7 +10270,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_mem_write_ready); // @[POSIT_Locality.scala 238:31]
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_mem_write_ready); // @[POSIT_Locality.scala 253:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10590,7 +10281,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 239:31]
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 254:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10601,7 +10292,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_mem_write_bits_wr_addr); // @[POSIT_Locality.scala 240:31]
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_mem_write_bits_wr_addr); // @[POSIT_Locality.scala 255:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10612,7 +10303,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-result: \n"); // @[POSIT_Locality.scala 241:31]
+          $fwrite(32'h80000002,"\t\t\t-result: \n"); // @[POSIT_Locality.scala 256:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10623,7 +10314,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-isZero: %b\n",io_mem_write_bits_result_isZero); // @[POSIT_Locality.scala 242:31]
+          $fwrite(32'h80000002,"\t\t\t\t-isZero: %b\n",io_mem_write_bits_result_isZero); // @[POSIT_Locality.scala 257:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10634,7 +10325,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-isNaR: %b\n",io_mem_write_bits_result_isNaR); // @[POSIT_Locality.scala 243:31]
+          $fwrite(32'h80000002,"\t\t\t\t-isNaR: %b\n",io_mem_write_bits_result_isNaR); // @[POSIT_Locality.scala 258:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10645,7 +10336,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-lt: %b\n",io_mem_write_bits_result_lt); // @[POSIT_Locality.scala 244:31]
+          $fwrite(32'h80000002,"\t\t\t\t-lt: %b\n",io_mem_write_bits_result_lt); // @[POSIT_Locality.scala 259:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10656,7 +10347,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-eq: %b\n",io_mem_write_bits_result_eq); // @[POSIT_Locality.scala 245:31]
+          $fwrite(32'h80000002,"\t\t\t\t-eq: %b\n",io_mem_write_bits_result_eq); // @[POSIT_Locality.scala 260:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10667,7 +10358,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-gt: %b\n",io_mem_write_bits_result_gt); // @[POSIT_Locality.scala 246:31]
+          $fwrite(32'h80000002,"\t\t\t\t-gt: %b\n",io_mem_write_bits_result_gt); // @[POSIT_Locality.scala 261:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10678,7 +10369,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-exceptions: %x\n",io_mem_write_bits_result_exceptions); // @[POSIT_Locality.scala 247:31]
+          $fwrite(32'h80000002,"\t\t\t\t-exceptions: %x\n",io_mem_write_bits_result_exceptions); // @[POSIT_Locality.scala 262:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10689,7 +10380,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (io_mem_write_valid & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-out: %b\n",io_mem_write_bits_result_out); // @[POSIT_Locality.scala 248:31]
+          $fwrite(32'h80000002,"\t\t\t\t-out: %b\n",io_mem_write_bits_result_out); // @[POSIT_Locality.scala 263:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10699,8 +10390,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 252:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 267:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10710,8 +10401,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 253:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 268:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10721,8 +10412,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 254:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 269:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10732,8 +10423,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 255:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 270:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10743,8 +10434,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 256:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 271:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10754,8 +10445,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 257:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 272:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10765,8 +10456,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 258:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 273:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10776,8 +10467,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 259:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 274:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10787,8 +10478,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 261:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 276:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10798,8 +10489,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 262:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 277:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10809,8 +10500,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 263:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 278:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10820,8 +10511,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 261:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 276:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10831,8 +10522,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 262:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 277:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10842,8 +10533,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 263:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 278:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10853,8 +10544,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 261:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 276:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10864,8 +10555,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 262:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 277:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10875,8 +10566,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 263:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 278:39]
         end
     `ifdef PRINTF_COND
       end
@@ -10886,8 +10577,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t-fetchArb:\n"); // @[POSIT_Locality.scala 266:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t-fetchArb:\n"); // @[POSIT_Locality.scala 281:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10897,8 +10588,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-validity:%b\n",fetchArb_io_validity); // @[POSIT_Locality.scala 267:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-validity:%b\n",fetchArb_io_validity); // @[POSIT_Locality.scala 282:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10908,8 +10599,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-priority:%x\n",fetchArb_io_priority); // @[POSIT_Locality.scala 268:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-priority:%x\n",fetchArb_io_priority); // @[POSIT_Locality.scala 283:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10919,8 +10610,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-chosen:%x\n",fetchArb_io_chosen); // @[POSIT_Locality.scala 269:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-chosen:%x\n",fetchArb_io_chosen); // @[POSIT_Locality.scala 284:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10930,8 +10621,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",fetchArb_io_hasChosen); // @[POSIT_Locality.scala 270:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",fetchArb_io_hasChosen); // @[POSIT_Locality.scala 285:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10941,8 +10632,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t-dispatchArb\n"); // @[POSIT_Locality.scala 272:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t-dispatchArb\n"); // @[POSIT_Locality.scala 287:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10952,8 +10643,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-validity:%b\n",dispatchArb_io_validity); // @[POSIT_Locality.scala 273:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-validity:%b\n",dispatchArb_io_validity); // @[POSIT_Locality.scala 288:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10963,8 +10654,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-priority:%x\n",dispatchArb_io_priority); // @[POSIT_Locality.scala 274:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-priority:%x\n",dispatchArb_io_priority); // @[POSIT_Locality.scala 289:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10974,8 +10665,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-chosen:%x\n",dispatchArb_io_chosen); // @[POSIT_Locality.scala 275:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-chosen:%x\n",dispatchArb_io_chosen); // @[POSIT_Locality.scala 290:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10985,8 +10676,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",dispatchArb_io_hasChosen); // @[POSIT_Locality.scala 276:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",dispatchArb_io_hasChosen); // @[POSIT_Locality.scala 291:31]
         end
     `ifdef PRINTF_COND
       end
@@ -10996,8 +10687,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 278:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 293:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11007,8 +10698,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 279:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 294:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11018,8 +10709,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,rb_entries_0_valid,rb_entries_0_dispatched,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,rb_entries_0_request_inFetch_0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,rb_entries_0_request_inFetch_1,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,rb_entries_0_request_inFetch_2,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,rb_entries_0_valid,rb_entries_0_dispatched,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,1'h0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,1'h0,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,1'h0,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11029,8 +10720,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,rb_entries_1_valid,rb_entries_1_dispatched,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,rb_entries_1_request_inFetch_0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,rb_entries_1_request_inFetch_1,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,rb_entries_1_request_inFetch_2,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,rb_entries_1_valid,rb_entries_1_dispatched,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,1'h0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,1'h0,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,1'h0,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11040,8 +10731,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,rb_entries_2_valid,rb_entries_2_dispatched,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,rb_entries_2_request_inFetch_0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,rb_entries_2_request_inFetch_1,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,rb_entries_2_request_inFetch_2,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,rb_entries_2_valid,rb_entries_2_dispatched,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,1'h0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,1'h0,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,1'h0,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11051,8 +10742,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,rb_entries_3_valid,rb_entries_3_dispatched,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,rb_entries_3_request_inFetch_0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,rb_entries_3_request_inFetch_1,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,rb_entries_3_request_inFetch_2,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,rb_entries_3_valid,rb_entries_3_dispatched,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,1'h0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,1'h0,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,1'h0,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11062,8 +10753,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h4,rb_entries_4_completed,rb_entries_4_valid,rb_entries_4_dispatched,rb_entries_4_written,rb_entries_4_wr_addr,rb_entries_4_request_inst,rb_entries_4_request_mode,rb_entries_4_request_operands_0_value,rb_entries_4_request_operands_0_mode,rb_entries_4_request_inFetch_0,rb_entries_4_request_operands_1_value,rb_entries_4_request_operands_1_mode,rb_entries_4_request_inFetch_1,rb_entries_4_request_operands_2_value,rb_entries_4_request_operands_2_mode,rb_entries_4_request_inFetch_2,rb_entries_4_result_isZero,rb_entries_4_result_isNaR,rb_entries_4_result_out,rb_entries_4_result_lt,rb_entries_4_result_eq,rb_entries_4_result_gt,rb_entries_4_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h4,rb_entries_4_completed,rb_entries_4_valid,rb_entries_4_dispatched,rb_entries_4_written,rb_entries_4_wr_addr,rb_entries_4_request_inst,rb_entries_4_request_mode,rb_entries_4_request_operands_0_value,rb_entries_4_request_operands_0_mode,1'h0,rb_entries_4_request_operands_1_value,rb_entries_4_request_operands_1_mode,1'h0,rb_entries_4_request_operands_2_value,rb_entries_4_request_operands_2_mode,1'h0,rb_entries_4_result_isZero,rb_entries_4_result_isNaR,rb_entries_4_result_out,rb_entries_4_result_lt,rb_entries_4_result_eq,rb_entries_4_result_gt,rb_entries_4_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11073,8 +10764,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h5,rb_entries_5_completed,rb_entries_5_valid,rb_entries_5_dispatched,rb_entries_5_written,rb_entries_5_wr_addr,rb_entries_5_request_inst,rb_entries_5_request_mode,rb_entries_5_request_operands_0_value,rb_entries_5_request_operands_0_mode,rb_entries_5_request_inFetch_0,rb_entries_5_request_operands_1_value,rb_entries_5_request_operands_1_mode,rb_entries_5_request_inFetch_1,rb_entries_5_request_operands_2_value,rb_entries_5_request_operands_2_mode,rb_entries_5_request_inFetch_2,rb_entries_5_result_isZero,rb_entries_5_result_isNaR,rb_entries_5_result_out,rb_entries_5_result_lt,rb_entries_5_result_eq,rb_entries_5_result_gt,rb_entries_5_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h5,rb_entries_5_completed,rb_entries_5_valid,rb_entries_5_dispatched,rb_entries_5_written,rb_entries_5_wr_addr,rb_entries_5_request_inst,rb_entries_5_request_mode,rb_entries_5_request_operands_0_value,rb_entries_5_request_operands_0_mode,1'h0,rb_entries_5_request_operands_1_value,rb_entries_5_request_operands_1_mode,1'h0,rb_entries_5_request_operands_2_value,rb_entries_5_request_operands_2_mode,1'h0,rb_entries_5_result_isZero,rb_entries_5_result_isNaR,rb_entries_5_result_out,rb_entries_5_result_lt,rb_entries_5_result_eq,rb_entries_5_result_gt,rb_entries_5_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11084,8 +10775,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h6,rb_entries_6_completed,rb_entries_6_valid,rb_entries_6_dispatched,rb_entries_6_written,rb_entries_6_wr_addr,rb_entries_6_request_inst,rb_entries_6_request_mode,rb_entries_6_request_operands_0_value,rb_entries_6_request_operands_0_mode,rb_entries_6_request_inFetch_0,rb_entries_6_request_operands_1_value,rb_entries_6_request_operands_1_mode,rb_entries_6_request_inFetch_1,rb_entries_6_request_operands_2_value,rb_entries_6_request_operands_2_mode,rb_entries_6_request_inFetch_2,rb_entries_6_result_isZero,rb_entries_6_result_isNaR,rb_entries_6_result_out,rb_entries_6_result_lt,rb_entries_6_result_eq,rb_entries_6_result_gt,rb_entries_6_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h6,rb_entries_6_completed,rb_entries_6_valid,rb_entries_6_dispatched,rb_entries_6_written,rb_entries_6_wr_addr,rb_entries_6_request_inst,rb_entries_6_request_mode,rb_entries_6_request_operands_0_value,rb_entries_6_request_operands_0_mode,1'h0,rb_entries_6_request_operands_1_value,rb_entries_6_request_operands_1_mode,1'h0,rb_entries_6_request_operands_2_value,rb_entries_6_request_operands_2_mode,1'h0,rb_entries_6_result_isZero,rb_entries_6_result_isNaR,rb_entries_6_result_out,rb_entries_6_result_lt,rb_entries_6_result_eq,rb_entries_6_result_gt,rb_entries_6_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11095,8 +10786,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h7,rb_entries_7_completed,rb_entries_7_valid,rb_entries_7_dispatched,rb_entries_7_written,rb_entries_7_wr_addr,rb_entries_7_request_inst,rb_entries_7_request_mode,rb_entries_7_request_operands_0_value,rb_entries_7_request_operands_0_mode,rb_entries_7_request_inFetch_0,rb_entries_7_request_operands_1_value,rb_entries_7_request_operands_1_mode,rb_entries_7_request_inFetch_1,rb_entries_7_request_operands_2_value,rb_entries_7_request_operands_2_mode,rb_entries_7_request_inFetch_2,rb_entries_7_result_isZero,rb_entries_7_result_isNaR,rb_entries_7_result_out,rb_entries_7_result_lt,rb_entries_7_result_eq,rb_entries_7_result_gt,rb_entries_7_result_exceptions); // @[POSIT_Locality.scala 286:39]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",3'h7,rb_entries_7_completed,rb_entries_7_valid,rb_entries_7_dispatched,rb_entries_7_written,rb_entries_7_wr_addr,rb_entries_7_request_inst,rb_entries_7_request_mode,rb_entries_7_request_operands_0_value,rb_entries_7_request_operands_0_mode,1'h0,rb_entries_7_request_operands_1_value,rb_entries_7_request_operands_1_mode,1'h0,rb_entries_7_request_operands_2_value,rb_entries_7_request_operands_2_mode,1'h0,rb_entries_7_result_isZero,rb_entries_7_result_isNaR,rb_entries_7_result_out,rb_entries_7_result_lt,rb_entries_7_result_eq,rb_entries_7_result_gt,rb_entries_7_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
       end
@@ -11106,8 +10797,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"reg_infetch_cacheline:%b\n",8'h0); // @[POSIT_Locality.scala 292:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"reg_infetch_cacheline:%b\n",reg_infetch_cacheline); // @[POSIT_Locality.scala 307:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11117,8 +10808,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 294:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 309:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11128,8 +10819,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 298:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 313:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11139,8 +10830,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %b | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 299:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %b | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 314:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11150,8 +10841,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 300:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 315:31]
         end
     `ifdef PRINTF_COND
       end
@@ -11161,8 +10852,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_2622 & _T_11) begin
-          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 302:31]
+        if (_T_2589 & _T_11) begin
+          $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 317:31]
         end
     `ifdef PRINTF_COND
       end
