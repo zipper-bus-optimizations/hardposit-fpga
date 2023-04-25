@@ -18,7 +18,7 @@ object Params{
 	val SizeOfCacheline = 64
 	val ReadGranularity = 8
 	val NumOperandPerCacheline =  SizeOfCacheline/ReadGranularity
-	val NumCacheline = NumOperandEntries / NumOperandPerCacheline
+	val NumCacheline = ceil(NumOperandEntries / NumOperandPerCacheline.toDouble).toInt
 	val BitsForOffset = log2Ceil(NumOperandPerCacheline)
 	val BitsForCacheline = NumCacheline
 	val BitsForId = 1

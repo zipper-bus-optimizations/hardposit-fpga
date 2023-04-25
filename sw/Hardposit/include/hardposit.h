@@ -5,6 +5,7 @@
 #include <opae/cxx/core/version.h>
 #include <cstdint>
 #include <list>
+#include <climits>
 #include "config.h"
 #include "softposit.h"
 #include "softposit_types.h"
@@ -36,20 +37,77 @@ struct Performance_array{
 	bool valid = 0;
 };
 
-class Hardposit {
+template <class T>
+class Counter
+{
+  private:
+      static uint64_t created;
+	  static uint64_t living;
+		static uint64_t most;
+  public:
+    Counter()
+    {
+		if (created < ULLONG_MAX) {
+			created++;
+	   		living++;
+		}
+	   if (most < living) {
+		most = living;
+	   }
+    }  
+    Counter(const Counter &c)
+    {
+       if (created < ULLONG_MAX) {
+			created++;
+	   		living++;
+		}
+	   if (most < living) {
+		most = living;
+	   }
+    }   
+    ~Counter()
+    {
+		if (living > 0) {
+			living--;
+		}
+       
+    }    
+    static uint64_t getCreated() {
+
+         return created;
+    }
+	static uint64_t getMost() {
+		return most;
+	}
+};
+
+template<class T> 
+uint64_t Counter<T>::living = 0; 
+template<class T>
+uint64_t Counter<T>::created = 0;
+template<class T>
+uint64_t Counter<T>::most = 0;
+
+class Hardposit: private Counter<Hardposit> {
 	public:
 
+		using Counter<Hardposit>::getCreated;
+		using Counter<Hardposit>::getMost;
 		uint32_t val;
 		bool valid;
 		bool in_fpga;
 		uint8_t location;
-
+		bool was_computed = false;
+		uint64_t global_location = 0;
+		
 		void print_val();
 		uint32_t get_val();
 		Hardposit(uint32_t in_val);
 		Hardposit(int in_val);
 		Hardposit(float in_val);
 		Hardposit(double in_val);
+    Hardposit(const Hardposit& obj);
+ 
 		Hardposit(): Hardposit((uint32_t)0){
 			this->valid = true; 
 			this->location = 0;
@@ -72,6 +130,10 @@ class Hardposit {
 		Hardposit& operator = (float const& obj);
 		double toDouble();
 		int toInt();
+		inline void setInFpga(bool infpga){
+			this->in_fpga = infpga;
+			return;
+		}
 		operator bool () const;
 };
 

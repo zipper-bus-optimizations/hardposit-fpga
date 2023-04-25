@@ -12,6 +12,7 @@ struct Operand{
 
 static const uint64_t NUM_OPERAND = 3;
 static const uint64_t NUM_FPGA_ENTRIES = 8;
+static const uint64_t SIMULATED_ENTRIES = 8;
 static const uint64_t NUM_OPERAND_ENTRIES  = exp2(ceil(log2(NUM_OPERAND*NUM_FPGA_ENTRIES)));
 static const uint64_t WRITE_GRANULARITY = 64;
 static const uint64_t READ_GRANULARITY = exp2(ceil(log2(sizeof(Operand))));

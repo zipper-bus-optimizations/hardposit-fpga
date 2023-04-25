@@ -22,20 +22,31 @@
 #include "primitives.h"
 #include "config.h"
 using namespace opae::fpga::types;
-
+bool finish = false;
 
 static handle::ptr_t accel = nullptr;
 static uint64_t global_counter = 0;
+uint64_t total_reuse = 0;
+uint64_t total_call_memory = 0;
+uint64_t total_call_compute = 0;
+uint64_t total_effcient_compute = 0;
 shared_buffer::ptr_t req;
 shared_buffer::ptr_t result;
 uint8_t req_q_pointer = 0;
 static ResultSlot result_track[NUM_FPGA_ENTRIES];
+uint64_t distances[20];
 
 void poll_performance(){
 	memset(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULARITY), 0, sizeof(Performance_array));
 	accel->write_csr64(24, NUM_FPGA_ENTRIES);
 	volatile Performance_array* perf = (Performance_array*)(((void*)result->c_type())+(NUM_FPGA_ENTRIES*WRITE_GRANULARITY));
 	while(!perf->valid){}
+	std::cout <<"Total call memory: "<< total_call_memory<<std::endl;
+	std::cout <<"Total reuse: "<< total_reuse<<std::endl;
+	std::cout <<"Total call compute: "<< total_call_compute<<std::endl;
+	std::cout <<"Total efficient compute: "<< total_effcient_compute<<std::endl;
+	std::cout <<"Total created object: "<< Counter<Hardposit>::getCreated() << std::endl;
+	std::cout <<"Greatest living object: "<< Counter<Hardposit>::getMost() << std::endl;
 	std::cout <<"Total req: "<< perf->total_cycles<<std::endl;
 	std::cout <<"[0, 10)"<< perf->mem_req_cycles[0] <<std::endl;
 	std::cout <<"[10, 50)"<< perf->mem_req_cycles[1] <<std::endl;
@@ -50,9 +61,15 @@ void poll_performance(){
 	std::cout <<"[800, 900)"<< perf->mem_req_cycles[10] <<std::endl;
 	std::cout <<"[900, 1000)"<< perf->mem_req_cycles[11] <<std::endl;
 	std::cout <<"[1000, )"<< perf->mem_req_cycles[12] <<std::endl;
+	for(int i = 0;i < 20; i++){
+		std::cout << distances[i]/(double)total_call_memory;
+		if(i<19) std::cout<<", ";
+		else std::cout <<std::endl;
+	}
 }
 
 int close_accel(){
+	finish = true;
 	accel->reset();
 	req->release();
 	result->release();
@@ -77,8 +94,8 @@ int init_accel(){
 		accel->reset();
 		req = shared_buffer::allocate(accel, NUM_CACHELINE* SIZE_OF_CACHELINE);
 		result = shared_buffer::allocate(accel,(NUM_FPGA_ENTRIES+1)*WRITE_GRANULARITY);
-	  std::fill_n(req->c_type(), NUM_OPERAND_ENTRIES*READ_GRANULARITY, 0);
-	  std::fill_n(result->c_type(), (NUM_FPGA_ENTRIES+1)*WRITE_GRANULARITY, 0);
+	    memset((void*) req->c_type(), 0,NUM_CACHELINE* SIZE_OF_CACHELINE);
+	  	memset((void*)result->c_type(), 0,(NUM_FPGA_ENTRIES+1)*WRITE_GRANULARITY);
 
 		// open accelerator and map MMIO
 		accel->reset();
@@ -108,30 +125,38 @@ void Hardposit::print_val(){
 void Hardposit::get_val_at_slot(const uint8_t& pos, bool keep){
 	// std::cout <<"in get_val_at_slot"<<std::endl;
 	// std::cout <<"pos_to_get: "<<(int)pos <<" ptr: "<<(int)result_track[pos].ptr <<" list_size: "<< result_track[pos].crntPosit.size()<<std::endl;
-	volatile Result* ptr = result_track[pos].ptr;
-	if(ptr != nullptr){
-		while(!ptr->flags){
-			// printf("global counter: %d, pos: %d\n",global_counter, pos);
-		}
-		uint32_t tmp = 0;
-		for(auto it = result_track[pos].crntPosit.begin(); it != result_track[pos].crntPosit.end(); ++it){
-			(*it)->in_fpga = keep;
-			if(!(*it)->valid){
-				(*it)->val = ptr->result;
+	if((!result_track[pos].crntPosit.empty()) ){
+		if( (*(result_track[pos].crntPosit.begin()))->valid){
+			for(auto it = result_track[pos].crntPosit.begin(); it != result_track[pos].crntPosit.end(); ++it){
+				(*it)->setInFpga(keep);
 				(*it)->valid = true;
+				(*it)->val = (*(result_track[pos].crntPosit.begin()))->val;
+			}
+		}else{
+			volatile Result* ptr = result_track[pos].ptr;
+			if(ptr != nullptr){
+				while(!ptr->flags){
+					// printf("global counter: %d, pos: %d\n",global_counter, pos);
+				}
+				uint32_t tmp = 0;
+				for(auto it = result_track[pos].crntPosit.begin(); it != result_track[pos].crntPosit.end(); ++it){
+					(*it)->setInFpga(keep);
+					(*it)->val = ptr->result;
+					(*it)->valid = true;
+				}
 			}
 		}
 	}
 	// std::cout <<"get_val_at_slot success"<<std::endl;
-	return;
+	return; 
 }
 
 uint32_t Hardposit::get_val(){
 	// std::cout <<"in get_val"<<std::endl;
 	if(!this->valid){
-		if(!this->in_fpga){
-			assert(("in_fpga should be true but now false", this->in_fpga));
-		}
+		// if(!this->in_fpga){
+		// 	assert(("in_fpga should be true but now false", this->in_fpga));
+		// }
 		get_val_at_slot(this->location, this->in_fpga);
 	}
 	// std::cout <<"get_val success"<<std::endl;
@@ -166,15 +191,28 @@ Hardposit::Hardposit(double in_val){
 }
 Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst inst, bool mode){
 	// std::cout <<"in compute"<<std::endl;
+	total_call_compute++;
 	OpAddr ops[3];
+	uint8_t flag = 0;
 	Hardposit ret;
 	uint8_t result_q_pointer = global_counter % NUM_FPGA_ENTRIES;
 	uint64_t mask = (1<<9-1)<<4;
 	/*with reuse*/
 	#ifdef REUSE
-	if( this->in_fpga && result_q_pointer!= this->location){
+	total_call_memory++;
+	if(this->was_computed){
+		uint64_t distance = global_counter-this->global_location;
+		if(distance>=20){
+			distances[19]++;
+		}else if(distance >=1){
+			distances[distance-1]++;
+		}
+	}
+	if( this->in_fpga && (result_q_pointer%8)!= (this->location%8)){
+		total_reuse++;
 		ops[0].addr = this->location + (1 << 14);
 	}else{
+		flag = 1;
 		uint16_t offset = CALC_OFFSET(req_q_pointer);
 		uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
 		uint8_t id = CALC_ID(req_q_pointer);
@@ -183,14 +221,24 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 		op.val = this->get_val();
 		op.valid_w_id = id + 2;
 		// std::cout <<"cacheline: "<<std::bitset<16>(cacheline)<<" offset: "<< offset<<" id: "<<(int)id<<std::endl;
-		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, sizeof(op));
 		// std::cout <<"offset: "<<offset<<" cacheline: "<<std::bitset<16>(cacheline) <<std::endl;
 		req_q_pointer++;
 	}
-
-	if( obj1.in_fpga && result_q_pointer!= obj1.location ){
+	if(obj1.was_computed){
+		uint64_t distance = global_counter-obj1.global_location;
+		if(distance>=20){
+			distances[19]++;
+		}else if(distance >=1){
+			distances[distance-1]++;
+		}
+	}
+	total_call_memory++;
+	if( obj1.in_fpga &&  (result_q_pointer%8)!= (obj1.location%8)){
+		total_reuse++;
 		ops[1].addr = obj1.location + (1 << 14);
 	}else{
+		flag = 1;
 		uint16_t offset = CALC_OFFSET(req_q_pointer);
 		uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
 		uint8_t id = CALC_ID(req_q_pointer);
@@ -199,7 +247,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 		op.val = obj1.get_val();
 		op.valid_w_id = id + 2;
 		// std::cout <<"cacheline: "<<std::bitset<16>(cacheline)<<" offset: "<< offset<<" id: "<<id<<std::endl;
-		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, sizeof(op));
 		req_q_pointer++;
 	}
 	#endif
@@ -212,7 +260,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 	Operand op;
 	op.val = this->get_val();
 	op.valid_w_id = id + 2;
-	mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+	mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, sizeof(op));
 	req_q_pointer++;
 	offset = CALC_OFFSET(req_q_pointer);
 	cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
@@ -220,16 +268,27 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 	ops[1].addr = offset + cacheline + (id << 14) + (1 << 15);
 	op.val = obj1.get_val();
 	op.valid_w_id = id + 2;
-	mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+	mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, sizeof(op));
 	req_q_pointer++;
 	#endif
 
 	if(inst == Inst::FMA){
+		if(obj2.was_computed){
+			uint64_t distance = global_counter-obj2.global_location;
+			if(distance>=20){
+				distances[19]++;
+			}else if(distance >=1){
+				distances[distance-1]++;
+			}
+		}
 		/*with reuse*/
 		#ifdef REUSE
-		if(obj2.in_fpga && result_q_pointer!= obj2.location ){
+		total_call_memory++;
+		if(obj2.in_fpga && (result_q_pointer%8)!= (obj2.location%8)  ){
+			total_reuse++;
 			ops[2].addr = obj2.location  + (1 << 14);
 		}else{
+			flag = 1;
 			uint16_t offset = CALC_OFFSET(req_q_pointer);
 			uint16_t cacheline = CALC_CACHELINE_ONE_HOT(req_q_pointer);
 			uint8_t id = CALC_ID(req_q_pointer);
@@ -237,7 +296,7 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 			Operand op;
 			op.val = obj2.get_val();
 			op.valid_w_id = id + 2;
-			mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);
+			mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, sizeof(op));
 			req_q_pointer++;
 		}
 		#endif
@@ -250,28 +309,34 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 		Operand op;
 		op.val = obj2.get_val();
 		op.valid_w_id = id + 2;
-		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, READ_GRANULARITY);	
+		mempcpy(((void*)req->c_type() + CALC_OFFSET_IN_BYTE(req_q_pointer) + CALC_CACHELINE_OFFSET_IN_BYTE(req_q_pointer)), &op, sizeof(op));	
 		req_q_pointer++;
 		#endif
 	}else{
 		ops[2].addr = 0;
 	}
 
-	get_val_at_slot(result_q_pointer, false);
+	#ifdef REUSE
+	if (flag == 0) {total_effcient_compute++;}
+	#endif
+
+	get_val_at_slot((result_q_pointer+8-SIMULATED_ENTRIES)%8, false);
 	result_track[result_q_pointer].ptr = nullptr;
 	result_track[result_q_pointer].crntPosit.clear();
 
 	ret.valid = false;
 	ret.location = result_q_pointer;
-	ret.in_fpga = true;
-	
+	ret.setInFpga(true);
+	ret.was_computed = true;
+	ret.global_location = global_counter;
+
 	result_track[result_q_pointer].ptr = (Result*)((void*)result->c_type() +result_q_pointer*WRITE_GRANULARITY);
 	uint64_t write_req = 0;
 
 	write_req += result_q_pointer;
 
 
-	mempcpy((uint8_t*)&write_req+1, ops, 3*sizeof(OpAddr));
+	mempcpy(((uint8_t*)&write_req)+1, ops, 3*sizeof(OpAddr));
 	uint8_t insmod =  inst + (mode << 3);
 	write_req += ((uint64_t)insmod) << 56;
 
@@ -287,12 +352,24 @@ Hardposit Hardposit::compute(Hardposit const& obj1, Hardposit const& obj2, Inst 
 	#ifdef BASELINE
 		ret.get_val();
 	#endif
+
 	return ret;
+}
+Hardposit::Hardposit(const Hardposit& obj){
+	this->val = obj.val;
+	this->valid = obj.valid;
+	this->setInFpga(obj.in_fpga);
+	this->location = obj.location;
+	this->was_computed = obj.was_computed;
+	this->global_location = obj.global_location;
+	if(this->in_fpga){
+		result_track[this->location].crntPosit.push_back(this);
+	}
 }
 
 Hardposit::~Hardposit(){
 	// std::cout <<"in ~Hardposit"<<std::endl;
-	if(this->in_fpga){
+	if(!finish && this->in_fpga){
 		result_track[this->location].crntPosit.remove(this);
 	}
 	// std::cout <<"~Hardposit success"<<std::endl;
@@ -335,8 +412,10 @@ Hardposit& Hardposit::operator = (Hardposit const& obj){
 	}
 	this->val = obj.val;
 	this->valid = obj.valid;
-	this->in_fpga = obj.in_fpga;
+	this->setInFpga(obj.in_fpga);
 	this->location = obj.location;
+	this->was_computed = obj.was_computed;
+	this->global_location = obj.global_location;
 	if(this->in_fpga){
 		result_track[this->location].crntPosit.push_back(this);
 	}
@@ -361,7 +440,7 @@ int Hardposit::toInt(){
 
 Hardposit::operator bool () const{
 	return (this->get_val() !=0);
-};
+}
 
 bool Hardposit::operator < (Hardposit& obj){
 	posit32 a;

@@ -2759,7 +2759,8 @@ module POSIT_Locality(
   wire  _T_187 = _T_161 ? io_mem_read_data[160] : _T_185; // @[Mux.scala 68:16]
   wire  _T_189 = _T_163 ? io_mem_read_data[96] : _T_187; // @[Mux.scala 68:16]
   wire  _T_191 = _T_165 ? io_mem_read_data[32] : _T_189; // @[Mux.scala 68:16]
-  wire  _T_194 = rb_entries_0_request_operands_0_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3982 = {{3'd0}, rb_entries_0_request_operands_0_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_194 = _GEN_3982 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_196 = _T_194 & _T_166; // @[POSIT_Locality.scala 138:49]
   wire  _T_198 = _T_191 == rb_entries_0_request_operands_0_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_199 = _T_196 & _T_198; // @[POSIT_Locality.scala 139:49]
@@ -2787,7 +2788,8 @@ module POSIT_Locality(
   wire  _T_273 = _T_247 ? io_mem_read_data[160] : _T_271; // @[Mux.scala 68:16]
   wire  _T_275 = _T_249 ? io_mem_read_data[96] : _T_273; // @[Mux.scala 68:16]
   wire  _T_277 = _T_251 ? io_mem_read_data[32] : _T_275; // @[Mux.scala 68:16]
-  wire  _T_280 = rb_entries_0_request_operands_1_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3983 = {{3'd0}, rb_entries_0_request_operands_1_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_280 = _GEN_3983 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_282 = _T_280 & _T_252; // @[POSIT_Locality.scala 138:49]
   wire  _T_284 = _T_277 == rb_entries_0_request_operands_1_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_285 = _T_282 & _T_284; // @[POSIT_Locality.scala 139:49]
@@ -2815,7 +2817,8 @@ module POSIT_Locality(
   wire  _T_359 = _T_333 ? io_mem_read_data[160] : _T_357; // @[Mux.scala 68:16]
   wire  _T_361 = _T_335 ? io_mem_read_data[96] : _T_359; // @[Mux.scala 68:16]
   wire  _T_363 = _T_337 ? io_mem_read_data[32] : _T_361; // @[Mux.scala 68:16]
-  wire  _T_366 = rb_entries_0_request_operands_2_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3984 = {{3'd0}, rb_entries_0_request_operands_2_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_366 = _GEN_3984 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_368 = _T_366 & _T_338; // @[POSIT_Locality.scala 138:49]
   wire  _T_370 = _T_363 == rb_entries_0_request_operands_2_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_371 = _T_368 & _T_370; // @[POSIT_Locality.scala 139:49]
@@ -2843,7 +2846,8 @@ module POSIT_Locality(
   wire  _T_445 = _T_419 ? io_mem_read_data[160] : _T_443; // @[Mux.scala 68:16]
   wire  _T_447 = _T_421 ? io_mem_read_data[96] : _T_445; // @[Mux.scala 68:16]
   wire  _T_449 = _T_423 ? io_mem_read_data[32] : _T_447; // @[Mux.scala 68:16]
-  wire  _T_452 = rb_entries_1_request_operands_0_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3985 = {{3'd0}, rb_entries_1_request_operands_0_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_452 = _GEN_3985 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_454 = _T_452 & _T_424; // @[POSIT_Locality.scala 138:49]
   wire  _T_456 = _T_449 == rb_entries_1_request_operands_0_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_457 = _T_454 & _T_456; // @[POSIT_Locality.scala 139:49]
@@ -2871,7 +2875,8 @@ module POSIT_Locality(
   wire  _T_531 = _T_505 ? io_mem_read_data[160] : _T_529; // @[Mux.scala 68:16]
   wire  _T_533 = _T_507 ? io_mem_read_data[96] : _T_531; // @[Mux.scala 68:16]
   wire  _T_535 = _T_509 ? io_mem_read_data[32] : _T_533; // @[Mux.scala 68:16]
-  wire  _T_538 = rb_entries_1_request_operands_1_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3986 = {{3'd0}, rb_entries_1_request_operands_1_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_538 = _GEN_3986 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_540 = _T_538 & _T_510; // @[POSIT_Locality.scala 138:49]
   wire  _T_542 = _T_535 == rb_entries_1_request_operands_1_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_543 = _T_540 & _T_542; // @[POSIT_Locality.scala 139:49]
@@ -2899,7 +2904,8 @@ module POSIT_Locality(
   wire  _T_617 = _T_591 ? io_mem_read_data[160] : _T_615; // @[Mux.scala 68:16]
   wire  _T_619 = _T_593 ? io_mem_read_data[96] : _T_617; // @[Mux.scala 68:16]
   wire  _T_621 = _T_595 ? io_mem_read_data[32] : _T_619; // @[Mux.scala 68:16]
-  wire  _T_624 = rb_entries_1_request_operands_2_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3987 = {{3'd0}, rb_entries_1_request_operands_2_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_624 = _GEN_3987 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_626 = _T_624 & _T_596; // @[POSIT_Locality.scala 138:49]
   wire  _T_628 = _T_621 == rb_entries_1_request_operands_2_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_629 = _T_626 & _T_628; // @[POSIT_Locality.scala 139:49]
@@ -2927,7 +2933,8 @@ module POSIT_Locality(
   wire  _T_703 = _T_677 ? io_mem_read_data[160] : _T_701; // @[Mux.scala 68:16]
   wire  _T_705 = _T_679 ? io_mem_read_data[96] : _T_703; // @[Mux.scala 68:16]
   wire  _T_707 = _T_681 ? io_mem_read_data[32] : _T_705; // @[Mux.scala 68:16]
-  wire  _T_710 = rb_entries_2_request_operands_0_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3988 = {{3'd0}, rb_entries_2_request_operands_0_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_710 = _GEN_3988 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_712 = _T_710 & _T_682; // @[POSIT_Locality.scala 138:49]
   wire  _T_714 = _T_707 == rb_entries_2_request_operands_0_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_715 = _T_712 & _T_714; // @[POSIT_Locality.scala 139:49]
@@ -2955,7 +2962,8 @@ module POSIT_Locality(
   wire  _T_789 = _T_763 ? io_mem_read_data[160] : _T_787; // @[Mux.scala 68:16]
   wire  _T_791 = _T_765 ? io_mem_read_data[96] : _T_789; // @[Mux.scala 68:16]
   wire  _T_793 = _T_767 ? io_mem_read_data[32] : _T_791; // @[Mux.scala 68:16]
-  wire  _T_796 = rb_entries_2_request_operands_1_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3989 = {{3'd0}, rb_entries_2_request_operands_1_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_796 = _GEN_3989 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_798 = _T_796 & _T_768; // @[POSIT_Locality.scala 138:49]
   wire  _T_800 = _T_793 == rb_entries_2_request_operands_1_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_801 = _T_798 & _T_800; // @[POSIT_Locality.scala 139:49]
@@ -2983,7 +2991,8 @@ module POSIT_Locality(
   wire  _T_875 = _T_849 ? io_mem_read_data[160] : _T_873; // @[Mux.scala 68:16]
   wire  _T_877 = _T_851 ? io_mem_read_data[96] : _T_875; // @[Mux.scala 68:16]
   wire  _T_879 = _T_853 ? io_mem_read_data[32] : _T_877; // @[Mux.scala 68:16]
-  wire  _T_882 = rb_entries_2_request_operands_2_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3990 = {{3'd0}, rb_entries_2_request_operands_2_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_882 = _GEN_3990 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_884 = _T_882 & _T_854; // @[POSIT_Locality.scala 138:49]
   wire  _T_886 = _T_879 == rb_entries_2_request_operands_2_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_887 = _T_884 & _T_886; // @[POSIT_Locality.scala 139:49]
@@ -3011,7 +3020,8 @@ module POSIT_Locality(
   wire  _T_961 = _T_935 ? io_mem_read_data[160] : _T_959; // @[Mux.scala 68:16]
   wire  _T_963 = _T_937 ? io_mem_read_data[96] : _T_961; // @[Mux.scala 68:16]
   wire  _T_965 = _T_939 ? io_mem_read_data[32] : _T_963; // @[Mux.scala 68:16]
-  wire  _T_968 = rb_entries_3_request_operands_0_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3991 = {{3'd0}, rb_entries_3_request_operands_0_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_968 = _GEN_3991 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_970 = _T_968 & _T_940; // @[POSIT_Locality.scala 138:49]
   wire  _T_972 = _T_965 == rb_entries_3_request_operands_0_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_973 = _T_970 & _T_972; // @[POSIT_Locality.scala 139:49]
@@ -3039,7 +3049,8 @@ module POSIT_Locality(
   wire  _T_1047 = _T_1021 ? io_mem_read_data[160] : _T_1045; // @[Mux.scala 68:16]
   wire  _T_1049 = _T_1023 ? io_mem_read_data[96] : _T_1047; // @[Mux.scala 68:16]
   wire  _T_1051 = _T_1025 ? io_mem_read_data[32] : _T_1049; // @[Mux.scala 68:16]
-  wire  _T_1054 = rb_entries_3_request_operands_1_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3992 = {{3'd0}, rb_entries_3_request_operands_1_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_1054 = _GEN_3992 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_1056 = _T_1054 & _T_1026; // @[POSIT_Locality.scala 138:49]
   wire  _T_1058 = _T_1051 == rb_entries_3_request_operands_1_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_1059 = _T_1056 & _T_1058; // @[POSIT_Locality.scala 139:49]
@@ -3067,57 +3078,58 @@ module POSIT_Locality(
   wire  _T_1133 = _T_1107 ? io_mem_read_data[160] : _T_1131; // @[Mux.scala 68:16]
   wire  _T_1135 = _T_1109 ? io_mem_read_data[96] : _T_1133; // @[Mux.scala 68:16]
   wire  _T_1137 = _T_1111 ? io_mem_read_data[32] : _T_1135; // @[Mux.scala 68:16]
-  wire  _T_1140 = rb_entries_3_request_operands_2_value[13:0] == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
+  wire [13:0] _GEN_3993 = {{3'd0}, rb_entries_3_request_operands_2_value[13:3]}; // @[POSIT_Locality.scala 137:50]
+  wire  _T_1140 = _GEN_3993 == io_mem_read_resp_tag; // @[POSIT_Locality.scala 137:50]
   wire  _T_1142 = _T_1140 & _T_1112; // @[POSIT_Locality.scala 138:49]
   wire  _T_1144 = _T_1137 == rb_entries_3_request_operands_2_mode[0]; // @[POSIT_Locality.scala 139:59]
   wire  _T_1145 = _T_1142 & _T_1144; // @[POSIT_Locality.scala 139:49]
   wire  _T_1175 = rb_entries_0_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _GEN_3982 = {{9'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 163:210]
-  wire [10:0] _T_1177 = rb_entries_0_request_operands_0_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _GEN_3994 = {{9'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1177 = rb_entries_0_request_operands_0_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1178 = _T_1177 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_0 = _T_1175 & _T_1178; // @[POSIT_Locality.scala 163:146]
   wire  _T_1182 = rb_entries_0_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1184 = rb_entries_0_request_operands_1_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1184 = rb_entries_0_request_operands_1_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1185 = _T_1184 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_1 = _T_1182 & _T_1185; // @[POSIT_Locality.scala 163:146]
   wire  _T_1189 = rb_entries_0_valid & rb_entries_0_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1191 = rb_entries_0_request_operands_2_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1191 = rb_entries_0_request_operands_2_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1192 = _T_1191 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_2 = _T_1189 & _T_1192; // @[POSIT_Locality.scala 163:146]
   wire  _T_1196 = rb_entries_1_valid & rb_entries_1_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1198 = rb_entries_1_request_operands_0_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1198 = rb_entries_1_request_operands_0_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1199 = _T_1198 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_3 = _T_1196 & _T_1199; // @[POSIT_Locality.scala 163:146]
   wire  _T_1203 = rb_entries_1_valid & rb_entries_1_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1205 = rb_entries_1_request_operands_1_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1205 = rb_entries_1_request_operands_1_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1206 = _T_1205 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_4 = _T_1203 & _T_1206; // @[POSIT_Locality.scala 163:146]
   wire  _T_1210 = rb_entries_1_valid & rb_entries_1_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1212 = rb_entries_1_request_operands_2_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1212 = rb_entries_1_request_operands_2_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1213 = _T_1212 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_5 = _T_1210 & _T_1213; // @[POSIT_Locality.scala 163:146]
   wire  _T_1217 = rb_entries_2_valid & rb_entries_2_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1219 = rb_entries_2_request_operands_0_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1219 = rb_entries_2_request_operands_0_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1220 = _T_1219 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_6 = _T_1217 & _T_1220; // @[POSIT_Locality.scala 163:146]
   wire  _T_1224 = rb_entries_2_valid & rb_entries_2_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1226 = rb_entries_2_request_operands_1_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1226 = rb_entries_2_request_operands_1_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1227 = _T_1226 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_7 = _T_1224 & _T_1227; // @[POSIT_Locality.scala 163:146]
   wire  _T_1231 = rb_entries_2_valid & rb_entries_2_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1233 = rb_entries_2_request_operands_2_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1233 = rb_entries_2_request_operands_2_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1234 = _T_1233 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_8 = _T_1231 & _T_1234; // @[POSIT_Locality.scala 163:146]
   wire  _T_1238 = rb_entries_3_valid & rb_entries_3_request_operands_0_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1240 = rb_entries_3_request_operands_0_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1240 = rb_entries_3_request_operands_0_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1241 = _T_1240 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_9 = _T_1238 & _T_1241; // @[POSIT_Locality.scala 163:146]
   wire  _T_1245 = rb_entries_3_valid & rb_entries_3_request_operands_1_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1247 = rb_entries_3_request_operands_1_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1247 = rb_entries_3_request_operands_1_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1248 = _T_1247 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_10 = _T_1245 & _T_1248; // @[POSIT_Locality.scala 163:146]
   wire  _T_1252 = rb_entries_3_valid & rb_entries_3_request_operands_2_mode[1]; // @[POSIT_Locality.scala 163:91]
-  wire [10:0] _T_1254 = rb_entries_3_request_operands_2_value[13:3] & _GEN_3982; // @[POSIT_Locality.scala 163:210]
+  wire [10:0] _T_1254 = rb_entries_3_request_operands_2_value[13:3] & _GEN_3994; // @[POSIT_Locality.scala 163:210]
   wire  _T_1255 = _T_1254 == 11'h0; // @[POSIT_Locality.scala 163:236]
   wire  waitingToBeFetched_11 = _T_1252 & _T_1255; // @[POSIT_Locality.scala 163:146]
   wire [5:0] _T_1261 = {waitingToBeFetched_5,waitingToBeFetched_4,waitingToBeFetched_3,waitingToBeFetched_2,waitingToBeFetched_1,waitingToBeFetched_0}; // @[POSIT_Locality.scala 173:52]
@@ -3145,54 +3157,57 @@ module POSIT_Locality(
   wire [47:0] _GEN_3962 = 4'ha == fetchArb_io_chosen ? fetchOffSet_10 : _GEN_3961; // @[POSIT_Locality.scala 182:62]
   wire [47:0] fetchOffSet_11 = {{16'd0}, rb_entries_3_request_operands_2_value}; // @[POSIT_Locality.scala 157:31 POSIT_Locality.scala 168:53]
   wire [47:0] _GEN_3963 = 4'hb == fetchArb_io_chosen ? fetchOffSet_11 : _GEN_3962; // @[POSIT_Locality.scala 182:62]
-  wire [10:0] _T_1269 = _GEN_3963[13:3] & _GEN_3982; // @[POSIT_Locality.scala 182:82]
+  wire [10:0] _T_1269 = _GEN_3963[13:3] & _GEN_3994; // @[POSIT_Locality.scala 182:82]
   wire  _T_1270 = _T_1269 != 11'h0; // @[POSIT_Locality.scala 182:107]
   wire  _T_1271 = 1'h1 ^ _T_1270; // @[POSIT_Locality.scala 184:49]
   wire  _T_1275 = _GEN_3963[13:11] != 3'h0; // @[OneHot.scala 32:14]
-  wire [7:0] _GEN_3995 = {{5'd0}, _GEN_3963[13:11]}; // @[OneHot.scala 32:28]
-  wire [7:0] _T_1276 = _GEN_3995 | _GEN_3963[10:3]; // @[OneHot.scala 32:28]
+  wire [7:0] _GEN_4007 = {{5'd0}, _GEN_3963[13:11]}; // @[OneHot.scala 32:28]
+  wire [7:0] _T_1276 = _GEN_4007 | _GEN_3963[10:3]; // @[OneHot.scala 32:28]
   wire  _T_1279 = _T_1276[7:4] != 4'h0; // @[OneHot.scala 32:14]
   wire [3:0] _T_1280 = _T_1276[7:4] | _T_1276[3:0]; // @[OneHot.scala 32:28]
   wire  _T_1283 = _T_1280[3:2] != 2'h0; // @[OneHot.scala 32:14]
   wire [1:0] _T_1284 = _T_1280[3:2] | _T_1280[1:0]; // @[OneHot.scala 32:28]
   wire [3:0] _T_1288 = {_T_1275,_T_1279,_T_1283,_T_1284[1]}; // @[Cat.scala 30:58]
   wire [3:0] _GEN_3965 = fetchArb_io_hasChosen ? _T_1288 : _T_1288; // @[POSIT_Locality.scala 181:36]
-  wire [13:0] _GEN_3966 = fetchArb_io_hasChosen ? _GEN_3963[13:0] : 14'h0; // @[POSIT_Locality.scala 181:36]
-  wire [10:0] _T_1317 = _GEN_3982 | io_mem_read_resp_tag[13:3]; // @[POSIT_Locality.scala 226:56]
-  wire [10:0] _T_1319 = _T_1317 ^ io_mem_read_resp_tag[13:3]; // @[POSIT_Locality.scala 226:99]
-  wire [10:0] _T_1321 = _GEN_3982 | io_mem_read_req_tag[13:3]; // @[POSIT_Locality.scala 227:53]
-  wire [10:0] _T_1323 = _T_1319 | io_mem_read_req_tag[13:3]; // @[POSIT_Locality.scala 228:52]
-  wire [10:0] _GEN_3967 = io_mem_read_req_valid ? _T_1323 : _T_1319; // @[POSIT_Locality.scala 230:52]
-  wire [10:0] _GEN_3968 = io_mem_read_req_valid ? _T_1321 : {{9'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 236:52]
-  wire [10:0] _GEN_3969 = io_mem_read_resp_valid ? _GEN_3967 : _GEN_3968; // @[POSIT_Locality.scala 229:45]
-  wire  _T_1324 = io_mem_read_req_valid | io_mem_read_resp_valid; // @[POSIT_Locality.scala 242:44]
-  wire  _T_1363 = io_request_valid | io_mem_write_valid; // @[POSIT_Locality.scala 266:39]
-  wire  _T_1364 = _T_1363 | io_mem_read_req_valid; // @[POSIT_Locality.scala 266:61]
-  wire  _T_1365 = _T_1364 | pe_io_result_valid; // @[POSIT_Locality.scala 266:86]
-  wire  _GEN_4003 = io_mem_read_resp_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4004 = _GEN_4003 & _T_199; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4005 = io_mem_read_resp_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4006 = _GEN_4005 & _T_285; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4007 = io_mem_read_resp_valid & rb_entries_0_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4008 = _GEN_4007 & _T_371; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4009 = io_mem_read_resp_valid & rb_entries_1_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4010 = _GEN_4009 & _T_457; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4011 = io_mem_read_resp_valid & rb_entries_1_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4012 = _GEN_4011 & _T_543; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4013 = io_mem_read_resp_valid & rb_entries_1_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4014 = _GEN_4013 & _T_629; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4015 = io_mem_read_resp_valid & rb_entries_2_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4016 = _GEN_4015 & _T_715; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4017 = io_mem_read_resp_valid & rb_entries_2_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4018 = _GEN_4017 & _T_801; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4019 = io_mem_read_resp_valid & rb_entries_2_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4020 = _GEN_4019 & _T_887; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4021 = io_mem_read_resp_valid & rb_entries_3_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4022 = _GEN_4021 & _T_973; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4023 = io_mem_read_resp_valid & rb_entries_3_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4024 = _GEN_4023 & _T_1059; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4025 = io_mem_read_resp_valid & rb_entries_3_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
-  wire  _GEN_4026 = _GEN_4025 & _T_1145; // @[POSIT_Locality.scala 143:55]
+  wire [10:0] _GEN_3966 = fetchArb_io_hasChosen ? _GEN_3963[13:3] : 11'h0; // @[POSIT_Locality.scala 181:36]
+  wire [13:0] _GEN_4009 = {{12'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 211:55]
+  wire [13:0] _T_1316 = _GEN_4009 | io_mem_read_resp_tag; // @[POSIT_Locality.scala 211:55]
+  wire [13:0] _T_1317 = _T_1316 ^ io_mem_read_resp_tag; // @[POSIT_Locality.scala 211:80]
+  wire [15:0] _GEN_4010 = {{14'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 212:53]
+  wire [15:0] _T_1318 = _GEN_4010 | io_mem_read_req_tag; // @[POSIT_Locality.scala 212:53]
+  wire [15:0] _GEN_4011 = {{2'd0}, _T_1317}; // @[POSIT_Locality.scala 213:52]
+  wire [15:0] _T_1319 = _GEN_4011 | io_mem_read_req_tag; // @[POSIT_Locality.scala 213:52]
+  wire [15:0] _GEN_3967 = io_mem_read_req_valid ? _T_1319 : {{2'd0}, _T_1317}; // @[POSIT_Locality.scala 215:52]
+  wire [15:0] _GEN_3968 = io_mem_read_req_valid ? _T_1318 : {{14'd0}, reg_infetch_cacheline}; // @[POSIT_Locality.scala 221:52]
+  wire [15:0] _GEN_3969 = io_mem_read_resp_valid ? _GEN_3967 : _GEN_3968; // @[POSIT_Locality.scala 214:45]
+  wire  _T_1320 = io_mem_read_req_valid | io_mem_read_resp_valid; // @[POSIT_Locality.scala 242:44]
+  wire  _T_1359 = io_request_valid | io_mem_write_valid; // @[POSIT_Locality.scala 266:39]
+  wire  _T_1360 = _T_1359 | io_mem_read_req_valid; // @[POSIT_Locality.scala 266:61]
+  wire  _T_1361 = _T_1360 | pe_io_result_valid; // @[POSIT_Locality.scala 266:86]
+  wire  _GEN_4016 = io_mem_read_resp_valid & rb_entries_0_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4017 = _GEN_4016 & _T_199; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4018 = io_mem_read_resp_valid & rb_entries_0_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4019 = _GEN_4018 & _T_285; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4020 = io_mem_read_resp_valid & rb_entries_0_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4021 = _GEN_4020 & _T_371; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4022 = io_mem_read_resp_valid & rb_entries_1_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4023 = _GEN_4022 & _T_457; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4024 = io_mem_read_resp_valid & rb_entries_1_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4025 = _GEN_4024 & _T_543; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4026 = io_mem_read_resp_valid & rb_entries_1_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4027 = _GEN_4026 & _T_629; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4028 = io_mem_read_resp_valid & rb_entries_2_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4029 = _GEN_4028 & _T_715; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4030 = io_mem_read_resp_valid & rb_entries_2_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4031 = _GEN_4030 & _T_801; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4032 = io_mem_read_resp_valid & rb_entries_2_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4033 = _GEN_4032 & _T_887; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4034 = io_mem_read_resp_valid & rb_entries_3_request_operands_0_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4035 = _GEN_4034 & _T_973; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4036 = io_mem_read_resp_valid & rb_entries_3_request_operands_1_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4037 = _GEN_4036 & _T_1059; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4038 = io_mem_read_resp_valid & rb_entries_3_request_operands_2_mode[1]; // @[POSIT_Locality.scala 143:55]
+  wire  _GEN_4039 = _GEN_4038 & _T_1145; // @[POSIT_Locality.scala 143:55]
   Posit pe ( // @[POSIT_Locality.scala 12:24]
     .clock(pe_clock),
     .reset(pe_reset),
@@ -3239,7 +3254,7 @@ module POSIT_Locality(
   assign io_mem_write_bits_wr_addr = 2'h3 == value ? rb_entries_3_wr_addr : _GEN_704; // @[POSIT_Locality.scala 54:35]
   assign io_mem_read_req_valid = fetchArb_io_hasChosen & _T_1271; // @[POSIT_Locality.scala 184:39 POSIT_Locality.scala 195:39]
   assign io_mem_read_req_addr = {{38'd0}, _GEN_3965}; // @[POSIT_Locality.scala 185:38 POSIT_Locality.scala 196:38]
-  assign io_mem_read_req_tag = {{2'd0}, _GEN_3966}; // @[POSIT_Locality.scala 187:37 POSIT_Locality.scala 197:37]
+  assign io_mem_read_req_tag = {{5'd0}, _GEN_3966}; // @[POSIT_Locality.scala 187:37 POSIT_Locality.scala 197:37]
   assign pe_clock = clock;
   assign pe_reset = reset;
   assign pe_io_request_valid = dispatchArb_io_hasChosen & pe_io_request_ready; // @[POSIT_Locality.scala 93:37 POSIT_Locality.scala 95:37]
@@ -5787,7 +5802,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4004 & _T_11) begin
+        if (_GEN_4017 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h0,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5798,7 +5813,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4006 & _T_11) begin
+        if (_GEN_4019 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h0,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5809,7 +5824,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4008 & _T_11) begin
+        if (_GEN_4021 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h0,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5820,7 +5835,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4010 & _T_11) begin
+        if (_GEN_4023 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h1,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5831,7 +5846,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4012 & _T_11) begin
+        if (_GEN_4025 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h1,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5842,7 +5857,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4014 & _T_11) begin
+        if (_GEN_4027 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h1,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5853,7 +5868,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4016 & _T_11) begin
+        if (_GEN_4029 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h2,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5864,7 +5879,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4018 & _T_11) begin
+        if (_GEN_4031 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h2,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5875,7 +5890,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4020 & _T_11) begin
+        if (_GEN_4033 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h2,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5886,7 +5901,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4022 & _T_11) begin
+        if (_GEN_4035 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h3,8'h0); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5897,7 +5912,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4024 & _T_11) begin
+        if (_GEN_4037 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h3,8'h1); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5908,7 +5923,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_GEN_4026 & _T_11) begin
+        if (_GEN_4039 & _T_11) begin
           $fwrite(32'h80000002,"inst: %d, op: %d, mode cleared\n",8'h3,8'h2); // @[POSIT_Locality.scala 143:55]
         end
     `ifdef PRINTF_COND
@@ -5963,7 +5978,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1324 & _T_11) begin
+        if (_T_1320 & _T_11) begin
           $fwrite(32'h80000002,"\t-mem_read:\n"); // @[POSIT_Locality.scala 243:31]
         end
     `ifdef PRINTF_COND
@@ -5974,7 +5989,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1324 & _T_11) begin
+        if (_T_1320 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-req_valid: %b\n",io_mem_read_req_valid); // @[POSIT_Locality.scala 244:31]
         end
     `ifdef PRINTF_COND
@@ -5985,7 +6000,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1324 & _T_11) begin
+        if (_T_1320 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-req_addr: %x\n",io_mem_read_req_addr); // @[POSIT_Locality.scala 245:31]
         end
     `ifdef PRINTF_COND
@@ -5996,7 +6011,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1324 & _T_11) begin
+        if (_T_1320 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-resp_valid: %b\n",io_mem_read_resp_valid); // @[POSIT_Locality.scala 246:31]
         end
     `ifdef PRINTF_COND
@@ -6007,7 +6022,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1324 & _T_11) begin
+        if (_T_1320 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-data: %x\n",io_mem_read_data); // @[POSIT_Locality.scala 247:31]
         end
     `ifdef PRINTF_COND
@@ -6018,7 +6033,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1324 & _T_11) begin
+        if (_T_1320 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-resp_tag: %x\n",io_mem_read_resp_tag); // @[POSIT_Locality.scala 248:31]
         end
     `ifdef PRINTF_COND
@@ -6172,7 +6187,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"top level io:\n"); // @[POSIT_Locality.scala 267:31]
         end
     `ifdef PRINTF_COND
@@ -6183,7 +6198,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t-request:\n"); // @[POSIT_Locality.scala 268:31]
         end
     `ifdef PRINTF_COND
@@ -6194,7 +6209,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-valid: %b\n",io_request_valid); // @[POSIT_Locality.scala 269:31]
         end
     `ifdef PRINTF_COND
@@ -6205,7 +6220,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-ready: %b\n",io_request_ready); // @[POSIT_Locality.scala 270:31]
         end
     `ifdef PRINTF_COND
@@ -6216,7 +6231,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-bits:\n"); // @[POSIT_Locality.scala 271:31]
         end
     `ifdef PRINTF_COND
@@ -6227,7 +6242,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t-inst: %x\n",io_request_bits_inst); // @[POSIT_Locality.scala 272:31]
         end
     `ifdef PRINTF_COND
@@ -6238,7 +6253,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t-mode: %x\n",io_request_bits_mode); // @[POSIT_Locality.scala 273:31]
         end
     `ifdef PRINTF_COND
@@ -6249,7 +6264,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t-wr_addr: %x\n",io_request_bits_wr_addr); // @[POSIT_Locality.scala 274:31]
         end
     `ifdef PRINTF_COND
@@ -6260,7 +6275,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t-operand0:\n"); // @[POSIT_Locality.scala 276:39]
         end
     `ifdef PRINTF_COND
@@ -6271,7 +6286,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_0_value); // @[POSIT_Locality.scala 277:39]
         end
     `ifdef PRINTF_COND
@@ -6282,7 +6297,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_0_mode); // @[POSIT_Locality.scala 278:39]
         end
     `ifdef PRINTF_COND
@@ -6293,7 +6308,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t-operand1:\n"); // @[POSIT_Locality.scala 276:39]
         end
     `ifdef PRINTF_COND
@@ -6304,7 +6319,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_1_value); // @[POSIT_Locality.scala 277:39]
         end
     `ifdef PRINTF_COND
@@ -6315,7 +6330,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_1_mode); // @[POSIT_Locality.scala 278:39]
         end
     `ifdef PRINTF_COND
@@ -6326,7 +6341,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t-operand2:\n"); // @[POSIT_Locality.scala 276:39]
         end
     `ifdef PRINTF_COND
@@ -6337,7 +6352,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t\t-value: %x\n",io_request_bits_operands_2_value); // @[POSIT_Locality.scala 277:39]
         end
     `ifdef PRINTF_COND
@@ -6348,7 +6363,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t\t\t-mode: %x\n",io_request_bits_operands_2_mode); // @[POSIT_Locality.scala 278:39]
         end
     `ifdef PRINTF_COND
@@ -6359,7 +6374,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t-fetchArb:\n"); // @[POSIT_Locality.scala 281:31]
         end
     `ifdef PRINTF_COND
@@ -6370,7 +6385,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-validity:%b\n",fetchArb_io_validity); // @[POSIT_Locality.scala 282:31]
         end
     `ifdef PRINTF_COND
@@ -6381,7 +6396,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-priority:%x\n",fetchArb_io_priority); // @[POSIT_Locality.scala 283:31]
         end
     `ifdef PRINTF_COND
@@ -6392,7 +6407,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-chosen:%x\n",fetchArb_io_chosen); // @[POSIT_Locality.scala 284:31]
         end
     `ifdef PRINTF_COND
@@ -6403,7 +6418,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",fetchArb_io_hasChosen); // @[POSIT_Locality.scala 285:31]
         end
     `ifdef PRINTF_COND
@@ -6414,7 +6429,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t-dispatchArb\n"); // @[POSIT_Locality.scala 287:31]
         end
     `ifdef PRINTF_COND
@@ -6425,7 +6440,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-validity:%b\n",dispatchArb_io_validity); // @[POSIT_Locality.scala 288:31]
         end
     `ifdef PRINTF_COND
@@ -6436,7 +6451,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-priority:%x\n",dispatchArb_io_priority); // @[POSIT_Locality.scala 289:31]
         end
     `ifdef PRINTF_COND
@@ -6447,7 +6462,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-chosen:%x\n",dispatchArb_io_chosen); // @[POSIT_Locality.scala 290:31]
         end
     `ifdef PRINTF_COND
@@ -6458,7 +6473,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t\t-hasChosen:%b\n",dispatchArb_io_hasChosen); // @[POSIT_Locality.scala 291:31]
         end
     `ifdef PRINTF_COND
@@ -6469,7 +6484,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"rb data: \n"); // @[POSIT_Locality.scala 293:31]
         end
     `ifdef PRINTF_COND
@@ -6480,7 +6495,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"idx | completed | valid | dispatched | writtern | wr_addr| inst | mode | num0 | mode0 | infetch0 | num1 | mode1 | infetch1 | num2 | mode2 | infetch2 | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 294:31]
         end
     `ifdef PRINTF_COND
@@ -6491,7 +6506,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h0,rb_entries_0_completed,rb_entries_0_valid,rb_entries_0_dispatched,rb_entries_0_written,rb_entries_0_wr_addr,rb_entries_0_request_inst,rb_entries_0_request_mode,rb_entries_0_request_operands_0_value,rb_entries_0_request_operands_0_mode,1'h0,rb_entries_0_request_operands_1_value,rb_entries_0_request_operands_1_mode,1'h0,rb_entries_0_request_operands_2_value,rb_entries_0_request_operands_2_mode,1'h0,rb_entries_0_result_isZero,rb_entries_0_result_isNaR,rb_entries_0_result_out,rb_entries_0_result_lt,rb_entries_0_result_eq,rb_entries_0_result_gt,rb_entries_0_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
@@ -6502,7 +6517,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",1'h1,rb_entries_1_completed,rb_entries_1_valid,rb_entries_1_dispatched,rb_entries_1_written,rb_entries_1_wr_addr,rb_entries_1_request_inst,rb_entries_1_request_mode,rb_entries_1_request_operands_0_value,rb_entries_1_request_operands_0_mode,1'h0,rb_entries_1_request_operands_1_value,rb_entries_1_request_operands_1_mode,1'h0,rb_entries_1_request_operands_2_value,rb_entries_1_request_operands_2_mode,1'h0,rb_entries_1_result_isZero,rb_entries_1_result_isNaR,rb_entries_1_result_out,rb_entries_1_result_lt,rb_entries_1_result_eq,rb_entries_1_result_gt,rb_entries_1_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
@@ -6513,7 +6528,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h2,rb_entries_2_completed,rb_entries_2_valid,rb_entries_2_dispatched,rb_entries_2_written,rb_entries_2_wr_addr,rb_entries_2_request_inst,rb_entries_2_request_mode,rb_entries_2_request_operands_0_value,rb_entries_2_request_operands_0_mode,1'h0,rb_entries_2_request_operands_1_value,rb_entries_2_request_operands_1_mode,1'h0,rb_entries_2_request_operands_2_value,rb_entries_2_request_operands_2_mode,1'h0,rb_entries_2_result_isZero,rb_entries_2_result_isNaR,rb_entries_2_result_out,rb_entries_2_result_lt,rb_entries_2_result_eq,rb_entries_2_result_gt,rb_entries_2_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
@@ -6524,7 +6539,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"%d | %b | %b | %b | %b | %x | %x | %x | %x | %x | %b | %x | %x | %b | %x | %x | %b | %b | %b | %x | %b | %b | %b | %x\n",2'h3,rb_entries_3_completed,rb_entries_3_valid,rb_entries_3_dispatched,rb_entries_3_written,rb_entries_3_wr_addr,rb_entries_3_request_inst,rb_entries_3_request_mode,rb_entries_3_request_operands_0_value,rb_entries_3_request_operands_0_mode,1'h0,rb_entries_3_request_operands_1_value,rb_entries_3_request_operands_1_mode,1'h0,rb_entries_3_request_operands_2_value,rb_entries_3_request_operands_2_mode,1'h0,rb_entries_3_result_isZero,rb_entries_3_result_isNaR,rb_entries_3_result_out,rb_entries_3_result_lt,rb_entries_3_result_eq,rb_entries_3_result_gt,rb_entries_3_result_exceptions); // @[POSIT_Locality.scala 301:39]
         end
     `ifdef PRINTF_COND
@@ -6535,7 +6550,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"reg_infetch_cacheline:%b\n",reg_infetch_cacheline); // @[POSIT_Locality.scala 307:31]
         end
     `ifdef PRINTF_COND
@@ -6546,7 +6561,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"pe: \n"); // @[POSIT_Locality.scala 309:31]
         end
     `ifdef PRINTF_COND
@@ -6557,7 +6572,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"request: valid | ready | num 1 | num2 | num3 | inst | mode\n"); // @[POSIT_Locality.scala 313:31]
         end
     `ifdef PRINTF_COND
@@ -6568,7 +6583,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t %b | %b | %b | %b | %b | %x | %x\n",pe_io_request_valid,pe_io_request_ready,pe_io_request_bits_num1,pe_io_request_bits_num2,pe_io_request_bits_num3,pe_io_request_bits_inst,pe_io_request_bits_mode); // @[POSIT_Locality.scala 314:31]
         end
     `ifdef PRINTF_COND
@@ -6579,7 +6594,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"result: valid | ready | isZero | isNar | out | lt | eq | gt | exceptions\n"); // @[POSIT_Locality.scala 315:31]
         end
     `ifdef PRINTF_COND
@@ -6590,7 +6605,7 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_1365 & _T_11) begin
+        if (_T_1361 & _T_11) begin
           $fwrite(32'h80000002,"\t %b | %b | %b | %b | %x | %b | %b | %b | %x\n",pe_io_result_valid,pe_io_result_ready,pe_io_result_bits_isZero,pe_io_result_bits_isNaR,pe_io_result_bits_out,pe_io_result_bits_lt,pe_io_result_bits_eq,pe_io_result_bits_gt,pe_io_result_bits_exceptions); // @[POSIT_Locality.scala 317:31]
         end
     `ifdef PRINTF_COND
